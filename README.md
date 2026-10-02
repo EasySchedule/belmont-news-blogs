@@ -115,5 +115,5 @@ If the API does not answer, the roundup does not run with invented numbers.
 
 ## Related repositories
 
-- `belmont-news/site` — renders these files to HTML, holds `netlify.toml` and the
+- `belmont-news-site` — renders these files to HTML, holds `netlify.toml` and the
   GitHub Pages workflow, and syncs this repository at build time.
