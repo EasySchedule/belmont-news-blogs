@@ -130,7 +130,9 @@ test('the forward window still refuses a post beyond --future-days', () => {
   const posts = [post({ day: '2026-10-20', frontMatter: validPost({ date: '2026-10-20' }) + '\n' + VALID_SOURCES })];
   const r = archive(posts, ['--check', '--today', '2026-10-02']);
   assert.equal(r.code, 1);
-  assert.match(r.stderr, /past the newsroom date window from 2026-10-02/);
+  // The window is a forward window, so the message has to name the direction the
+  // post is wrong in. It used to say "past" for a date 18 days ahead.
+  assert.match(r.stderr, /ahead of the newsroom date window from 2026-10-02/);
 });
 
 test('--future-days widens the forward window only', () => {
