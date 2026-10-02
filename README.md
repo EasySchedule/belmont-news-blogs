@@ -29,6 +29,7 @@ node index.mjs                       # validate content/, write build/posts-inde
 node index.mjs --check               # validate only, write nothing (use this in CI)
 node index.mjs --out ../site/build/posts-index.json
 node index.mjs --today 2026-10-03    # pin newsroom today for the date window
+node --test                          # run the gate's own tests
 ```
 
 `index.mjs` reads `schema.json` for field-level validation and enforces the gates
@@ -41,12 +42,27 @@ a JSON Schema cannot express:
 5. **Slug unique** — no two posts share a slug.
 6. **Column owner** — only the roster owner of a column may file it. The Morning
    Briefing belongs to Margaret Vance and nobody else.
-7. **Sourced** — at least one source. `schema.json` sets `minItems: 1`, and an
-   explicit empty list is also rejected with the file named.
+7. **Sourced** — at least one source, and every source carries `type`, `title` and
+   `retrieved`. `schema.json` holds those rules; an explicit empty list is also
+   rejected with the file named.
 8. **Date window** — nothing dated further ahead than `--future-days` from newsroom today.
 
 An unknown front matter field is an error, so a misspelled `sourced` fails the
 build instead of quietly dropping the sources list.
+
+### The date window has no backward half
+
+`--today` is the newsroom's publishing date. It is the **forward** bound only.
+
+A post dated before `--today` is never an error. The archive is meant to
+accumulate, and a post stays filed at its own publication day forever, so a
+backward bound would fail the whole archive one day after each post shipped, for
+files nobody touched. That is the reason a writer must never backdate or delete
+a published post to make the gate pass: nothing in the gate asks you to.
+
+So `node index.mjs --check --today 2026-10-03` exits 0 on an archive whose newest
+post is dated 2026-10-02, and it will keep exiting 0 on every later date. The only
+date rule that can fail your post is the forward one.
 
 ## Front matter
 
