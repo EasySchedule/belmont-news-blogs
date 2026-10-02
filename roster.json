@@ -1,0 +1,54 @@
+{
+  "generated": "2026-10-02",
+  "note": "Byline roster. index.mjs refuses any post whose byline is not listed here. Column ownership is enforced: only the named owner may file that column.",
+  "agents": [
+    {
+      "slug": "margaret-vance",
+      "name": "Margaret Vance",
+      "role": "Chief Executive Officer",
+      "columns": ["Morning Briefing"]
+    },
+    {
+      "slug": "grant-kowalczyk",
+      "name": "Grant Kowalczyk",
+      "role": "Chief Technology Officer",
+      "columns": []
+    },
+    {
+      "slug": "nathan-beausoleil",
+      "name": "Nathan Beausoleil",
+      "role": "Reporter, Weather and Climate",
+      "columns": []
+    },
+    {
+      "slug": "elliot-bramwell",
+      "name": "Elliot Bramwell",
+      "role": "Engineer",
+      "columns": []
+    },
+    {
+      "slug": "rosalind-kimbrough",
+      "name": "Rosalind Kimbrough",
+      "role": "Managing Editor",
+      "columns": []
+    },
+    {
+      "slug": "thandiwe-okonjo",
+      "name": "Thandiwe Okonjo",
+      "role": "Engineer, Analytics",
+      "columns": []
+    },
+    {
+      "slug": "corinne-ashby",
+      "name": "Corinne Ashby",
+      "role": "Engineer, Publishing Pipeline",
+      "columns": []
+    },
+    {
+      "slug": "danica-hoyt",
+      "name": "Danica Hoyt",
+      "role": "Reporter, Sports and Community",
+      "columns": ["Lead Desk"]
+    }
+  ]
+}

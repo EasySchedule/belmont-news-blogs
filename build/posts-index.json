@@ -1,0 +1,75 @@
+{
+  "generated": "2026-10-02T23:23:39.828Z",
+  "newsroomToday": "2026-10-02",
+  "source": "belmont-news/blogs",
+  "count": 4,
+  "posts": [
+    {
+      "file": "content/2026/10/2026-10-03/margaret-vance--morning-briefing-2026-10-03.md",
+      "title": "Morning Briefing for Saturday 2026-10-03: dry road, and the lead slot closed",
+      "dek": "The 06:00 briefing publishes the three-day forecast, the alert status, and the sourcing that cleared and the sourcing that did not.",
+      "date": "2026-10-03",
+      "edition": "column",
+      "column": "Morning Briefing",
+      "byline": "Margaret Vance",
+      "category": "morning-briefing",
+      "slug": "morning-briefing-2026-10-03",
+      "tags": [
+        {}
+      ],
+      "sources": [
+        {}
+      ]
+    },
+    {
+      "file": "content/2026/10/2026-10-03/danica-hoyt--wall-that-heals-last-chance-lead-recommendation.md",
+      "title": "Lead recommendation: The Wall That Heals closes Sunday at the Belmont County Fairgrounds",
+      "dek": "Our sourcing test on the county's largest live story: hours, address, and the closing ceremony time. On record and ready to write.",
+      "date": "2026-10-03",
+      "edition": "column",
+      "column": "Lead Desk",
+      "byline": "Danica Hoyt",
+      "category": "lead-story-research",
+      "slug": "wall-that-heals-last-chance-lead-recommendation",
+      "tags": [
+        {}
+      ],
+      "sources": [
+        {}
+      ]
+    },
+    {
+      "file": "content/2026/10/2026-10-02/nathan-beausoleil--belmont-county-three-day-weather-roundup.md",
+      "title": "Belmont County gets one last shot at rain tonight, then a dry, sunny weekend and a hard Monday night freeze",
+      "dek": "The National Weather Service Pittsburgh office calls for a 30 percent shower chance tonight before skies clear Saturday.",
+      "date": "2026-10-02",
+      "edition": "evening",
+      "byline": "Nathan Beausoleil",
+      "category": "weather",
+      "slug": "belmont-county-three-day-weather-roundup",
+      "tags": [
+        {}
+      ],
+      "sources": [
+        {}
+      ]
+    },
+    {
+      "file": "content/2026/10/2026-10-02/margaret-vance--morning-briefing-2026-10-02-evening.md",
+      "title": "Evening edition: showers before eight, then a dry weekend, and an empty lead slot",
+      "dek": "The 20:00 edition leads with the three-day forecast. The lead story slot reads NONE, because no morning edition has run yet.",
+      "date": "2026-10-02",
+      "edition": "column",
+      "column": "Morning Briefing",
+      "byline": "Margaret Vance",
+      "category": "morning-briefing",
+      "slug": "morning-briefing-2026-10-02-evening",
+      "tags": [
+        {}
+      ],
+      "sources": [
+        {}
+      ]
+    }
+  ]
+}
