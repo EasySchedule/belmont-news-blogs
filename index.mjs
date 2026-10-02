@@ -295,9 +295,13 @@ for (const full of files) {
   if (data.column && agent && !(agent.columns || []).includes(data.column)) {
     errors.push(`${rel}: byline '${data.byline}' does not own the column '${data.column}'`);
   }
-  if (data.date && daysBetween(today, data.date) < 0) {
-    errors.push(`${rel}: date ${data.date} is in the past relative to newsroom today ${today}`);
-  }
+  // The date window is a forward window, as documented: it stops a post filed
+  // beyond the newsroom's planning horizon. It deliberately has no backward
+  // half. The archive keeps yesterday's posts forever, so a past-date check here
+  // would fail the whole archive one day after each post was filed, and CI would
+  // be red every morning for a file nobody changed. Filling an older day folder
+  // is legal archive work; a date that disagrees with its own folder is already
+  // an error above.
   if (data.date && daysBetween(today, data.date) > opts.futureDays) {
     errors.push(`${rel}: date ${data.date} is more than ${opts.futureDays} day(s) past the newsroom date window from ${today}`);
   }

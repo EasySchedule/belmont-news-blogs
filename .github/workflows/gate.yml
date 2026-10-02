@@ -1,0 +1,37 @@
+# The editorial build gate, on every pull request and on every push to main.
+#
+# index.mjs exits non-zero when any post fails the newsroom standard: no
+# sources, a wrong filing path, a byline that is not on the roster, a slug
+# used twice. This workflow exists so that standard cannot be skipped by
+# forgetting to run the command by hand. No step here tolerates a failure, so
+# a red post stays red.
+
+name: Sourcing gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: Editorial gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # --check validates every post and writes nothing. A non-zero exit means
+      # at least one post in the archive does not clear the standard.
+      - name: Build gate
+        run: node index.mjs --check
