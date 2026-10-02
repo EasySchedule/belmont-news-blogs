@@ -288,3 +288,6 @@ test('a correction without text fails', () => {
   assert.equal(r.code, 1);
   assert.match(r.stderr, /missing required field 'correction'/);
 });
+test('BEL-57 proof: this failing test must block the merge', () => {
+  assert.fail('intentional red: simulating a gate regression caught only by Gate tests');
+});
