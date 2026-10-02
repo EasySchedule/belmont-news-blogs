@@ -346,7 +346,7 @@ for (const full of files) {
   // is legal archive work; a date that disagrees with its own folder is already
   // an error above.
   if (data.date && daysBetween(today, data.date) > opts.futureDays) {
-    errors.push(`${rel}: date ${data.date} is more than ${opts.futureDays} day(s) past the newsroom date window from ${today}`);
+    errors.push(`${rel}: date ${data.date} is more than ${opts.futureDays} day(s) ahead of the newsroom date window from ${today}`);
   }
   if (Array.isArray(data.sources) && data.sources.length === 0) {
     errors.push(`${rel}: has an empty sources list. An unsourced post does not build.`);
