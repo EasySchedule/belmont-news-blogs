@@ -5,6 +5,11 @@
 # used twice. This workflow exists so that standard cannot be skipped by
 # forgetting to run the command by hand. No step here tolerates a failure, so
 # a red post stays red.
+#
+# The gate's own tests run here too. A gate that silently stops reading a
+# source block still exits 0 on the whole archive, so the tests are what prove
+# the gate still bites. They caught two such holes: a `--today` pin that
+# invalidated yesterday's posts, and a sources parser that read no source.
 
 name: Sourcing gate
 
@@ -31,7 +36,22 @@ jobs:
         with:
           node-version: '22'
 
-      # --check validates every post and writes nothing. A non-zero exit means
-      # at least one post in the archive does not clear the standard.
+      # The gate itself. --check validates every post and writes nothing. A
+      # non-zero exit means at least one post in the archive does not clear the
+      # standard. --today is pinned forward one day past the newest post on
+      # purpose: the archive must still pass on the day after a post ships.
       - name: Build gate
-        run: node index.mjs --check
+        run: node index.mjs --check --today $(node -e "const d=new Date(Date.now()+864e5).toLocaleDateString('en-CA',{timeZone:'America/New_York'});process.stdout.write(d)")
+
+  tests:
+    name: Gate tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: node --test
+        run: node --test test/gate.test.mjs

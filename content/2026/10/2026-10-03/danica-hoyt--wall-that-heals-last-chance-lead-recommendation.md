@@ -14,10 +14,10 @@ tags:
 sources:
   - type: document
     title: "The Wall That Heals - Belmont County, Ohio 2026, Event Schedule"
-    organization: "Belmont County Wall That Heals host committee, presenting sponsor American Legion St. Clairsville Post 159, national partner Vietnam Veterans Memorial Fund"
+    organization: "Belmont County Wall That Heals host committee"
     retrieved: 2026-10-02
     url: "https://wallthathealsohio2026.com"
-    note: "Venue, address, hours, Taps at dusk Saturday, closing ceremony 1:45 p.m. Sunday."
+    note: "Venue, address, hours, Taps at dusk Saturday, closing ceremony 1:45 p.m. Sunday. Presenting sponsor American Legion St. Clairsville Post 159; national partner Vietnam Veterans Memorial Fund."
   - type: document
     title: "The American Legion Post 159 Presents: The Wall That Heals"
     organization: "Belmont County Tourism Council"

@@ -8,16 +8,23 @@
 //   node index.mjs --help
 //
 // The build gate is the editorial standard. A post that cannot clear it does not
-// build. The gates a JSON Schema cannot express are enforced here:
+// build. schema.json holds every field-level rule; the gates a JSON Schema cannot
+// express are enforced here:
 //
 //   1. path shape      content/<YYYY>/<MM>/<YYYY-MM-DD>/<author-slug>[--<slug>].md
 //   2. folder date    the day folder equals the front matter date
 //   3. filename       the author segment equals the roster slug of the byline
-//   4. slug match     the optional second segment equals the front matter slug
+//   4. slug match     the optional second filename segment equals the front matter slug
 //   5. slug unique    no two posts share a slug
 //   6. column owner   only the roster owner of a column may file it
-//   7. sourced        at least one source, enforced by schema.json minItems
+//   7. sourced        at least one source; schema.json minItems, plus an explicit
+//                     empty list is rejected here with the file named
 //   8. date window    no post dated more than --future-days ahead of --today
+//
+// The date window is forward only. `--today` is the newsroom's publishing date,
+// never a floor the archive has to stay above: the archive keeps yesterday's
+// posts forever, so a backward half would turn the whole archive red one day
+// after each post was filed. Pin `--today` forward as far as you like.
 
 import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync } from 'node:fs';
 import { join, resolve, basename, dirname } from 'node:path';
@@ -42,8 +49,10 @@ Usage: node index.mjs [options]
   --schema <file>    front matter schema   (default ${DEFAULTS.schema})
   --roster <file>    byline roster         (default ${DEFAULTS.roster})
   --out <file>       index output          (default ${DEFAULTS.out})
-  --today <date>     pin newsroom today    (default: the America/New_York date)
-  --future-days <n>  date window           (default ${DEFAULTS.futureDays})
+  --today <date>     pin newsroom today    (default: the America/New_York date).
+                      Forward bound only. A post dated before it is not an error,
+                      so the check still passes on the day after it is filed.
+  --future-days <n>  forward date window   (default ${DEFAULTS.futureDays})
   --check            validate only, write nothing
   --help             this text
 `;
@@ -110,16 +119,34 @@ function daysBetween(a, b) {
 
 // --------------------------------------------------- minimal front matter
 
+const PAIR = /^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$/;
+
 // Deliberately small: the schema is YAML, but the front matter this repo emits
-// is a flat block of scalars plus three list shapes. Anything more exotic is an
+// is a flat block of scalars plus two list shapes. Anything more exotic is an
 // error, so a broken file fails the build instead of half-parsing.
+//
+// The two list shapes are the ones the schema declares. A list of scalars:
+//
+//   tags:
+//     - weather
+//     - fair
+//
+// and a list of mappings, where the first field rides on the `- ` marker and the
+// rest are indented continuation lines:
+//
+//   sources:
+//     - type: document
+//       title: "..."
+//
+// A `- ` marker always opens a new item. The first field of a mapping item rides
+// on the marker and the rest are continuation lines that fill the item the
+// marker opened.
 function parseFrontMatter(text, file) {
   const m = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/.exec(text);
   if (!m) fatal(`${file} has no YAML front matter block`);
   const block = m[1];
   const body = m[2] ?? '';
   const data = {};
-  let key = null;
   let listKey = null;
 
   for (const lineRaw of block.split(/\r?\n/)) {
@@ -130,35 +157,47 @@ function parseFrontMatter(text, file) {
       if (!listKey) continue;
       const item = lineRaw.trim();
       if (item === '-') { data[listKey].push({}); continue; }
-      if (item.startsWith('- ')) { data[listKey].push({}); listKey = null; pushInline(data, listKey, item.slice(2)); continue; }
+      if (item.startsWith('- ')) { data[listKey].push(newListItem(item.slice(2))); continue; }
       pushInline(data, listKey, item);
       continue;
     }
 
     const km = /^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$/.exec(lineRaw);
     if (!km) fatal(`${file} has an unparseable front matter line: ${lineRaw.trim()}`);
-    key = km[1];
     const raw = km[2].trim();
     if (raw === '') {
       // either an empty scalar or the header of a list; the next indented line decides
-      data[key] = [];
-      listKey = key;
+      data[km[1]] = [];
+      listKey = km[1];
       continue;
     }
     listKey = null;
-    data[key] = scalar(raw);
+    data[km[1]] = scalar(raw);
   }
   return { data, body };
 }
 
+// A list item opened by a `- ` marker: a bare scalar, or a one-field mapping that
+// the following continuation lines go on to fill.
+function newListItem(text) {
+  const kv = PAIR.exec(text);
+  if (!kv) return scalar(text);
+  return { [kv[1]]: scalar(kv[2].trim()) };
+}
+
+// A continuation line: another `field: value` pair of the item above it. It must
+// not open a new item, or every source of every post would collapse into one.
 function pushInline(data, listKey, text) {
   if (!listKey) return;
   const arr = data[listKey];
+  const kv = PAIR.exec(text);
+  if (!kv) { arr.push(scalar(text)); return; }
   const last = arr[arr.length - 1];
-  const kv = /^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$/.exec(text);
-  if (!kv) fatal(`unparseable list item: ${text}`);
-  if (!last || Object.keys(last).length) arr.push({});
-  arr[arr.length - 1][kv[1]] = scalar(kv[2].trim());
+  if (last !== null && typeof last === 'object' && !Array.isArray(last)) {
+    last[kv[1]] = scalar(kv[2].trim());
+    return;
+  }
+  arr.push({ [kv[1]]: scalar(kv[2].trim()) });
 }
 
 function scalar(raw) {
@@ -263,7 +302,11 @@ for (const full of files) {
   const text = readFileSync(full, 'utf8');
   const { data, body } = parseFrontMatter(text, rel);
 
-  validate(schema.properties, data, '', errors, rel);
+  // schema.json itself, not its properties map. Passing the map gave validate()
+  // a schema with no type, no enum and no properties, so it validated nothing:
+  // every rule in schema.json, minItems on sources and required on each source
+  // included, was unreachable.
+  validate(schema, data, '', errors, rel);
 
   if (data.date && data.date !== folderDay) {
     errors.push(`${rel}: front matter date ${data.date} does not match day folder ${folderDay}`);
