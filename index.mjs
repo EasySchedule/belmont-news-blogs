@@ -118,6 +118,21 @@ function daysBetween(a, b) {
   return Math.round((Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / 86400000);
 }
 
+// True when a string is a calendar day that exists, not merely one shaped like
+// one. `2026-13-45` matches /^\d{4}-\d{2}-\d{2}$/ and is not a date, and anything
+// that only checks the shape goes on to compare it as text, where it sorts after
+// every real day and so never ages out. Round-tripping through Date.UTC is what
+// turns the shape into a date.
+function isRealDay(v) {
+  if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return false;
+  const t = Date.UTC(+v.slice(0, 4), +v.slice(5, 7) - 1, +v.slice(8, 10));
+  const d = new Date(t);
+  return Number.isFinite(t)
+    && d.getUTCFullYear() === +v.slice(0, 4)
+    && d.getUTCMonth() === +v.slice(5, 7) - 1
+    && d.getUTCDate() === +v.slice(8, 10);
+}
+
 // --------------------------------------------------- minimal front matter
 
 const PAIR = /^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$/;
@@ -364,6 +379,24 @@ for (const full of files) {
   // an error above.
   if (data.date && daysBetween(today, data.date) > opts.futureDays) {
     errors.push(`${rel}: date ${data.date} is more than ${opts.futureDays} day(s) ahead of the newsroom date window from ${today}`);
+  }
+  // The optional `expires` field, when present, must be a real calendar day and
+  // must not be earlier than the post's own date. This is a new, additive check
+  // and it is not a change to the date window above: the window keeps its
+  // forward-only shape and still has no backward half, and this rule says nothing
+  // about when a post was filed, only about a field an author chose to write.
+  //
+  // It is here so a bad value is caught on the pull request that introduced it,
+  // rather than at deploy time in the site build, which refuses the same values
+  // independently. No post in the archive carries the field, so this cannot fail
+  // anything that is not already new.
+  if (data.expires !== undefined && data.expires !== null && String(data.expires).trim() !== '') {
+    const value = String(data.expires).trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || !isRealDay(value)) {
+      errors.push(`${rel}: expires must be a real calendar day as YYYY-MM-DD, got ${JSON.stringify(data.expires)}. A time of day is not accepted: the newsroom changes offset on 2026-11-01 and the listing rule cannot choose one for you.`);
+    } else if (data.date && value < String(data.date).slice(0, 10)) {
+      errors.push(`${rel}: expires ${value} is before the post's own date ${String(data.date).slice(0, 10)}. A post that expires on the day it is filed is a typo; set a later day or drop the field.`);
+    }
   }
   if (Array.isArray(data.sources) && data.sources.length === 0) {
     errors.push(`${rel}: has an empty sources list. An unsourced post does not build.`);
