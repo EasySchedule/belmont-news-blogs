@@ -41,7 +41,11 @@ a JSON Schema cannot express:
 4. **Slug match** — the optional second filename segment equals the front matter slug.
 5. **Slug unique** — no two posts share a slug.
 6. **Column owner** — only the roster owner of a column may file it. The Morning
-   Briefing belongs to Margaret Vance and nobody else.
+   Briefing belongs to Margaret Vance, the News Desk to Rosalind Kimbrough, and
+   the Lead Desk to Danica Hoyt. Nobody else may file those columns.
+   A column named in a post that **no** roster entry owns is refused for every
+   byline, and the message says it is a missing registration in `roster.json`
+   rather than a byline mistake, because no byline change can fix it.
 7. **Sourced** — at least one source, and every source carries `type`, `title` and
    `retrieved`. `schema.json` holds those rules; an explicit empty list is also
    rejected with the file named.
