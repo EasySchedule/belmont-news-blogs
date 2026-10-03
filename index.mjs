@@ -16,7 +16,8 @@
 //   3. filename       the author segment equals the roster slug of the byline
 //   4. slug match     the optional second filename segment equals the front matter slug
 //   5. slug unique    no two posts share a slug
-//   6. column owner   only the roster owner of a column may file it
+//   6. column owner   only the roster owner of a column may file it, and a
+//                     column no roster entry owns is named as a registry gap
 //   7. sourced        at least one source; schema.json minItems, plus an explicit
 //                     empty list is rejected here with the file named
 //   8. date window    no post dated more than --future-days ahead of --today
@@ -282,6 +283,19 @@ const rosterDoc = readJson('roster', opts.roster);
 const roster = new Map((rosterDoc.agents || []).map((a) => [a.name, a]));
 if (!roster.size) fatal('roster.json lists no agents');
 
+// Every column any roster entry owns. A column that appears in a post and appears
+// in none of these is not a byline mistake: it is a column nobody registered. The
+// gate has to say so, because the two failures look identical from the writer's
+// side and only one of them is fixed by changing the byline. BEL-55 sat unfixed
+// for a full edition for exactly this reason.
+const registeredColumns = new Map(); // column name -> [owning byline, ...]
+for (const a of roster.values()) {
+  for (const c of a.columns || []) {
+    if (!registeredColumns.has(c)) registeredColumns.set(c, []);
+    registeredColumns.get(c).push(a.name);
+  }
+}
+
 const today = opts.today || newsroomToday();
 const contentDir = resolve(opts.content);
 const files = walk(contentDir, contentDir);
@@ -336,7 +350,10 @@ for (const full of files) {
     errors.push(`${rel}: edition is column but no 'column' field is set`);
   }
   if (data.column && agent && !(agent.columns || []).includes(data.column)) {
-    errors.push(`${rel}: byline '${data.byline}' does not own the column '${data.column}'`);
+    const owners = registeredColumns.get(data.column);
+    errors.push(owners
+      ? `${rel}: byline '${data.byline}' does not own the column '${data.column}'. It is owned by ${owners.map((n) => `'${n}'`).join(' and ')}.`
+      : `${rel}: byline '${data.byline}' does not own the column '${data.column}', and no agent in roster.json owns that column at all. This is a missing registration in roster.json, not a byline mistake: no byline will pass it until an owner is added under that agent's "columns".`);
   }
   // The date window is a forward window, as documented: it stops a post filed
   // beyond the newsroom's planning horizon. It deliberately has no backward

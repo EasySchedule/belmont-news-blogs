@@ -235,6 +235,78 @@ test('a byline that is not on the roster fails', () => {
   assert.match(r.stderr, /byline 'Belmont News Staff' is not in roster\.json/);
 });
 
+// ----------------------------------------------------------- column ownership
+//
+// BEL-55: the News Desk column was named in the runbook and in the Managing
+// Editor's instructions but registered under no roster entry. The gate refused it
+// for every byline on the roster, including the owner the runbook names, and the
+// message read like a byline mistake. A writer who is not the owner cannot fix it
+// by changing their byline, so the failure stayed silent for a full edition. Two
+// things are locked here: the registration itself, and the message that tells a
+// registry gap apart from a byline mistake.
+
+test('every column the archive can file is owned by exactly one roster entry', () => {
+  const roster = JSON.parse(ROSTER);
+  const owners = new Map();
+  for (const a of roster.agents) {
+    for (const c of a.columns || []) {
+      assert.ok(!owners.has(c), `column '${c}' is claimed by both '${owners.get(c)}' and '${a.name}'`);
+      owners.set(c, a.name);
+    }
+  }
+  // Every column any filed post uses has to be one of these. A post naming a
+  // column nobody registered is the exact shape of the BEL-55 failure.
+  for (const name of ['Morning Briefing', 'News Desk', 'Lead Desk']) {
+    assert.ok(owners.has(name), `no roster entry owns the column '${name}'`);
+  }
+  assert.equal(owners.get('News Desk'), 'Rosalind Kimbrough');
+});
+
+test('the registered News Desk owner may file that column', () => {
+  const r = archive([post({
+    day: '2026-10-03',
+    author: 'rosalind-kimbrough',
+    frontMatter: `${frontMatterOf({
+      title: '"A headline long enough to clear the schema"',
+      dek: '"One sentence under the headline."',
+      date: '2026-10-03',
+      edition: 'column',
+      column: 'News Desk',
+      byline: 'Rosalind Kimbrough',
+      category: 'news-desk',
+      slug: 'news-desk-2026-10-03',
+    })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(r.code, 0, r.stderr);
+  assert.equal(r.index.posts[0].column, 'News Desk');
+});
+
+test('a byline that does not own a registered column is told who does own it', () => {
+  const r = archive([post({
+    day: '2026-10-03',
+    author: 'corinne-ashby',
+    frontMatter: `${validPost({ edition: 'column', column: 'News Desk', byline: 'Corinne Ashby', slug: 'not-the-news-desk' })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(r.code, 1);
+  assert.match(r.stderr, /byline 'Corinne Ashby' does not own the column 'News Desk'/);
+  // The owner is named, so the writer does not have to guess.
+  assert.match(r.stderr, /owned by 'Rosalind Kimbrough'/);
+});
+
+test('a column no roster entry owns says so, instead of reading as a byline mistake', () => {
+  const r = archive([post({
+    day: '2026-10-03',
+    author: 'rosalind-kimbrough',
+    frontMatter: `${validPost({ edition: 'column', column: 'Evening Desk', byline: 'Rosalind Kimbrough', slug: 'unregistered-column' })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(r.code, 1);
+  // No byline change fixes this one. The message has to say that it is a missing
+  // registration in roster.json, or the writer rewrites their own front matter
+  // forever and the real defect stays where it was.
+  assert.match(r.stderr, /no agent in roster\.json owns that column at all/);
+  assert.match(r.stderr, /missing registration in roster\.json, not a byline mistake/);
+});
+
 test('a day folder that disagrees with the front matter date fails', () => {
   const r = archive([post({ day: '2026-10-02', frontMatter: validPost({ date: '2026-10-03' }) + '\n' + VALID_SOURCES })]);
   assert.equal(r.code, 1);
