@@ -29,7 +29,7 @@ sources:
     organization: "Belmont County Wall That Heals host committee"
     retrieved: 2026-10-02
     url: "https://wallthathealsohio2026.com/docs/the-wall-that-heals-sponsorship-info.pdf"
-    note: "Primary document for the sponsor tiers and the bands behind them: Presenting $10,000 and up, Freedom $5,000 to $9,999, Tribute $2,500 to $4,999, Honor $1,000 to $2,499, Community under $1,000. Rotary of St. Clairsville is a Freedom Sponsor. UPMC and Whiteside Chevrolet are separate Tribute Sponsors."
+    note: "Primary document for the sponsor tiers and the amount attached to each. It lists one flat amount per tier, not bands or ranges: Presenting $15,000; Freedom $7,500; Tribute $5,000; Honor $3,000; Community $1,500; Support $500; plus In-Kind Donations. Rotary of St. Clairsville is a Freedom Sponsor; UPMC and Whiteside Chevrolet are separate Tribute Sponsors, per the host site tiers. Re-read from the PDF 2026-10-03, cross-checked on two pages."
   - type: human
     title: "Jackee Pugh"
     organization: "Belmont County Tourism Council"
@@ -54,6 +54,9 @@ sources:
     retrieved: 2026-10-02
     url: "https://ledenews.com/bridgeport-schools-leading-the-way-prepping-for-the-wall-that-heals/"
     note: "Robert DeFrank, Lede News, 2026-02-10, quotes her on the record as 'co-chairwoman of the Belmont County The Wall That Heals Committee'. A second, separately owned newsroom for the role."
+corrections:
+  - date: 2026-10-03
+    correction: "Corrected the sponsorship source note. An earlier published version of this post stated tier bands of Presenting $10,000 and up, Freedom $5,000 to $9,999, Tribute $2,500 to $4,999, Honor $1,000 to $2,499 and Community under $1,000. The cited PDF does not contain those ranges or any of those figures. It lists one flat amount per tier: Presenting $15,000, Freedom $7,500, Tribute $5,000, Honor $3,000, Community $1,500, Support $500, plus In-Kind Donations. The note now matches the document. No claim in the article body changed and no sponsor was misnamed; the error was in the source note only."
 ---
 
 If you have not gone yet, you can still go.
