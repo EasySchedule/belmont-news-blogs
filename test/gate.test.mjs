@@ -360,3 +360,81 @@ test('a correction without text fails', () => {
   assert.equal(r.code, 1);
   assert.match(r.stderr, /missing required field 'correction'/);
 });
+// --------------------------------------------------- the expires field (BEL-101)
+//
+// `expires` is a listing field, not an editorial one: it says how long a post
+// stays on the site's rolling front page, and it changes nothing about whether
+// the post may be filed. These cases are about the value being well formed, so a
+// typo fails at the pull request that introduced it rather than at deploy time.
+//
+// Nothing here touches the sourcing rule or the date window. The date window
+// keeps its forward-only shape and still has no backward half.
+
+test('a post with no expires field passes, because the field is optional', () => {
+  // The default needs no field at all: the site lists a post for two newsroom
+  // days counting its own. Every post in the archive relies on this.
+  const r = archive([post({ day: '2026-10-02', frontMatter: `${validPost()}\n${VALID_SOURCES}` })]);
+  assert.equal(r.code, 0, r.stderr);
+  assert.equal(r.index.posts[0].expires, undefined);
+});
+
+test('a plain expires day passes and reaches the index', () => {
+  const r = archive([post({ day: '2026-10-02', frontMatter: `${validPost({ expires: '2026-10-30' })}\n${VALID_SOURCES}` })]);
+  assert.equal(r.code, 0, r.stderr);
+  assert.equal(r.index.posts[0].expires, '2026-10-30');
+});
+
+test('an expires on the post own day passes', () => {
+  const r = archive([post({ day: '2026-10-02', frontMatter: `${validPost({ expires: '2026-10-02' })}\n${VALID_SOURCES}` })]);
+  assert.equal(r.code, 0, r.stderr);
+});
+
+test('an expires carrying a time of day is refused', () => {
+  // The newsroom changes offset on 2026-11-01. A rule that read the date part and
+  // dropped the offset would be right for half the year and wrong for the other
+  // half, so there is one accepted shape and it carries no time.
+  const r = archive([post({ day: '2026-10-02', frontMatter: `${validPost({ expires: '2026-10-30T06:00:00-04:00' })}\n${VALID_SOURCES}` })]);
+  assert.equal(r.code, 1);
+  assert.match(r.stderr, /expires/);
+});
+
+test('an expires day that does not exist is refused', () => {
+  // These all have the right shape and are not dates. Compared as text they sort
+  // after every real day, so a shape-only check would hold the post listed
+  // forever and report nothing wrong.
+  for (const day of ['2026-13-45', '2026-02-30', '2026-00-10', '2026-10-00']) {
+    const r = archive([post({ day: '2026-10-02', frontMatter: `${validPost({ expires: day })}\n${VALID_SOURCES}` })]);
+    assert.equal(r.code, 1, `${day} must be refused`);
+    assert.match(r.stderr, /expires must be a real calendar day/);
+  }
+});
+
+test('an expires before the posts own date is refused as a typo', () => {
+  const r = archive([post({ day: '2026-10-02', frontMatter: `${validPost({ expires: '2026-10-01' })}\n${VALID_SOURCES}` })]);
+  assert.equal(r.code, 1);
+  assert.match(r.stderr, /before the post's own date 2026-10-02/);
+});
+
+test('expires does not weaken the date window or the sourcing rule', () => {
+  // The two properties the archive depends on, re-checked with the field present.
+  // An old post with an expires field must still pass: expiry is a listing rule
+  // and the date window keeps no backward half.
+  const old = archive([
+    post({ day: '2026-09-01', frontMatter: frontMatterOf({
+      title: '"A headline long enough to clear the schema"',
+      dek: '"One sentence under the headline."',
+      date: '2026-09-01',
+      edition: 'evening',
+      byline: 'Nathan Beausoleil',
+      category: 'weather',
+      slug: 'an-old-post',
+      expires: '2026-09-02',
+    }) + `\n${VALID_SOURCES}` }),
+  ], ['--today', '2026-10-03']);
+  assert.equal(old.code, 0, `an old post with expires must still pass the window: ${old.stderr}`);
+
+  // And an expires field does not make an unsourced post publishable.
+  const unsourced = archive([post({ day: '2026-10-02', frontMatter: validPost({ expires: '2026-10-30' }) })]);
+  assert.equal(unsourced.code, 1);
+  assert.match(unsourced.stderr, /sources/);
+});

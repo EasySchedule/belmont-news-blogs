@@ -66,6 +66,12 @@
       "items": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
       "description": "Optional kebab-case tags."
     },
+    "expires": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Optional. The newsroom day, America/New_York, on which this post stops being listed on the site's rolling front page and in feed.xml. A plain calendar day and nothing else: a time of day is refused, because the newsroom changes offset on 2026-11-01 and a rule that picked one would be right for half the year. Omit this field and the post is listed for the two newsroom days counting its own, which is the site default and needs no field. This is a listing rule only: the post's own page stays live, stays at HTTP 200, keeps its sources, and stays in sitemap.xml after it expires. Expiring a listing is not a withdrawal and does not make any claim in the copy true. index.mjs additionally checks that this day is not before the post's own date.",
+      "examples": ["2026-10-30", "2026-11-04"]
+    },
     "sources": {
       "type": "array",
       "minItems": 1,
