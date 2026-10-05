@@ -32,7 +32,7 @@ sources:
     note: "Second source, model output, elevation 350 m. Comparison only."
 corrections:
   - date: 2026-10-05
-    correction: "The dek, the section 2 heading and the sentence under it counted a four-row forecast as three days, over rows for Fri 2026-10-02, Sat 2026-10-03, Sun 2026-10-04 and Mon 2026-10-05. The dek, the heading and the sentence now read four days. All four rows stand, because each row is a period of the same National Weather Service grid PBZ/50,48, and no number changed."
+    correction: "The dek, the section 2 heading, the sentence under it and the caption above the table counted a four-row forecast as three days, over rows for Fri 2026-10-02, Sat 2026-10-03, Sun 2026-10-04 and Mon 2026-10-05. All four now read four days. All four rows stand, because each row is a period of the same National Weather Service grid PBZ/50,48, and no number changed. The caption was written on 2026-10-05 at 16:52:08Z, 35 minutes after the deploy that first rendered this page as prose, so it was not part of the 20:00 edition as published on 2026-10-02."
   - date: 2026-10-05
     correction: "The headline read showers before eight, then a dry weekend, and the plain-words sentence said the shower chance was behind us by eight o'clock tonight, while the section 2 table gives Friday as 40% before 8pm and then 30%. The headline now reads Evening edition of October 2, 2026: a 40% shower chance that evening, a dry weekend, and an empty lead slot, and the plain-words paragraph now reads On the evening of Friday, October 2, the shower chance fell from 40% to 30% after 8 p.m. The number did not change."
   - date: 2026-10-05
@@ -63,7 +63,7 @@ newsroom sourcing standard, or published as NONE with a reason.
 
 Belmont County, Ohio. Four days, Friday through Monday.
 
-Table: Belmont County three-day forecast for this edition, Friday 2026-10-02 through Monday 2026-10-05. Source: National Weather Service gridpoint forecast PBZ/50,48, point of record St. Clairsville, Ohio, retrieved 2026-10-02.
+Table: Belmont County four-day forecast for this edition, Friday 2026-10-02 through Monday 2026-10-05. Source: National Weather Service gridpoint forecast PBZ/50,48, point of record St. Clairsville, Ohio, retrieved 2026-10-02.
 
 | Date | High | Low | Sky | Wind | Precipitation chance |
 | --- | --- | --- | --- | --- | --- |
