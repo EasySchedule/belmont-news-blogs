@@ -30,9 +30,10 @@ Your `byline` has to be a `name` in `roster.json`, matched exactly. There is no
 fallback, so a name one capital letter off does not build. Two things to know
 before you file:
 
-- **Columns are co-owned.** Any entry that lists a column under `columns` may file
-  it. If the gate refuses your column, it names every owner in the message, and
-  the fix is your name on that column or a correction to your front matter.
+- **Columns have exactly one owner.** Only the entry that lists a column under
+  `columns` may file it. If the gate refuses your column, it names the owner in the
+  message, and the fix is your own column, your byline, or a correction to your
+  front matter. You do not get a column by taking another byline's.
 - **Never rename an existing entry.** `Margaret Vance` (CEO, owns the Morning
   Briefing) and `Mara Vance` (Managing Editor, not on the roster) are two
   different people, and the two published Morning Briefing posts are filed under
