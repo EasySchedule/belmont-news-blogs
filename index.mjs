@@ -273,7 +273,25 @@ function validate(schema, value, pointer, errors, path) {
 
 // ------------------------------------------------------------ discovery
 
-const PATH_RE = /^content\/(\d{4})\/(\d{2})\/(\d{4}-\d{2}-\d{2})\/([a-z0-9]+(?:-[a-z0-9]+)*)(?:--([a-z0-9]+(?:-[a-z0-9]+)*))?\.md$/;
+// The `<slug>` segment is REQUIRED, not optional.
+//
+// This used to be `(?:--(...))?`, which let a file named
+// `content/2026/10/2026-10-05/nathan-beausoleil.md` through the gate. The site
+// repository reads the slug out of that filename to work out which rendered
+// page a post landed on (belmont-news-site/test/render.test.mjs), so a post
+// filed this way passes here and then raises a bare
+// `TypeError: Cannot read properties of undefined (reading 'replace')` in the
+// renderer tests on the publish path. Because `deploy` needs `build`, one
+// slug-less filename froze every deploy, not one story, and the reader saw the
+// previous edition. That is BEL-69.
+//
+// The two components are not in one repository, so nothing reconciled them: the
+// gate was permissive and the site's filename rule was strict, and the gap only
+// showed up when a post was actually filed in it. Requiring the segment here is
+// the direction that fails safe. The gate can only refuse a file, never let one
+// through, and the refusal arrives at file time with the filename in the
+// message instead of at deploy time as a TypeError with no filename at all.
+const PATH_RE = /^content\/(\d{4})\/(\d{2})\/(\d{4}-\d{2}-\d{2})\/([a-z0-9]+(?:-[a-z0-9]+)*)--([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/;
 
 function walk(dir, base, out = []) {
   let entries;
@@ -323,7 +341,12 @@ for (const full of files) {
   const rel = full.replace(`${process.cwd()}/`, '');
   const m = PATH_RE.exec(rel);
   if (!m) {
-    errors.push(`${rel}: path must be content/<YYYY>/<MM>/<YYYY-MM-DD>/<author-slug>[--<slug>].md`);
+    // The `<slug>` half is written as required here, because it is. The old
+    // message printed it in square brackets, `[--<slug>]`, which is how a writer
+    // reading the message concluded the segment was optional and filed a post
+    // without one. The message is the gate's interface; it has to describe the
+    // same contract the regex enforces.
+    errors.push(`${rel}: path must be content/<YYYY>/<MM>/<YYYY-MM-DD>/<author-slug>--<slug>.md. The --<slug> part is required: it must be the post's own front matter slug, because the site reads the slug out of the filename to find the rendered page. Rename the file to <author-slug>--<your-slug>.md.`);
     continue;
   }
   const [, y, mo, folderDay, authorSeg, slugSeg] = m;
@@ -351,7 +374,15 @@ for (const full of files) {
   if (agent && agent.slug !== authorSeg) {
     errors.push(`${rel}: filename author segment '${authorSeg}' is not the roster slug '${agent.slug}' for byline '${data.byline}'`);
   }
-  if (slugSeg && data.slug && slugSeg !== data.slug) {
+  // No `slugSeg &&` guard any more. PATH_RE now guarantees slugSeg is present,
+  // so the guard could only ever be false on a file that has already been
+  // refused and skipped above; leaving it would say out loud that the filename
+  // slug is optional, which is the belief this whole change exists to remove.
+  //
+  // The `data.slug &&` half stays: schema.json already reports a post with no
+  // front matter slug, and this line should not add a second, differently
+  // worded complaint about the same missing field.
+  if (data.slug && slugSeg !== data.slug) {
     errors.push(`${rel}: filename slug '${slugSeg}' does not match front matter slug '${data.slug}'`);
   }
   if (data.slug) {

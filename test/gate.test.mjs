@@ -7,9 +7,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, dirname, resolve } from 'node:path';
+import { join, dirname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -19,13 +19,38 @@ const SCHEMA = join(REPO, 'schema.json');
 
 // --------------------------------------------------------------- fixtures
 
-function post({ day, author = 'nathan-beausoleil', slug = 'a-post', frontMatter, body = 'Body copy.\n' }) {
+// The one line of YAML a fixture needs out of its own front matter. Every
+// fixture here writes `slug:` as a bare token on one line, so an anchored match
+// is enough, and it deliberately does not call the gate's front matter parser: a
+// fixture that shares the code under test cannot catch that code being wrong.
+function frontMatterSlug(frontMatter) {
+  const m = /^slug:[ \t]*['"]?([^'"\s#]+)['"]?[ \t]*$/m.exec(frontMatter);
+  if (!m) throw new Error(`this fixture has no slug to name its file from:\n${frontMatter}`);
+  return m[1];
+}
+
+// The filename slug is taken from the fixture's own front matter, so a fixture
+// is correct by construction.
+//
+// The old default was the reverse, and it is the reason the BEL-207 hole lasted.
+// `slug = 'a-post'` was a sentinel meaning "write no slug segment at all", so
+// `slug === 'a-post' ? `${author}.md` : ...` filed `nathan-beausoleil.md` for
+// every call site that did not override it: 31 of the 40 in this file. Those
+// fixtures expected exit 0 and passed, which means this suite was not neutral
+// about the contract the gate enforced. It was asserting the permissive shape
+// was correct, in green, on every pull request. That is why renaming the one
+// post that tripped the renderer was enough to close the incident and left the
+// defect in place.
+//
+// `file` overrides the derived name. Only the tests that need a filename to
+// disagree with the front matter on purpose use it, and each says why.
+function post({ day, author = 'nathan-beausoleil', frontMatter, body = 'Body copy.\n', file }) {
   const y = day.slice(0, 4);
   const m = day.slice(5, 7);
   return {
     day,
     dir: join(y, m, day),
-    file: join(y, m, day, slug === 'a-post' ? `${author}.md` : `${author}--${slug}.md`),
+    file: file || join(y, m, day, `${author}--${frontMatterSlug(frontMatter)}.md`),
     frontMatter,
     body,
   };
@@ -222,9 +247,156 @@ test('a bad edition fails', () => {
 });
 
 test('a slug that is not kebab-case fails', () => {
-  const r = archive([post({ day: '2026-10-02', frontMatter: validPost({ slug: 'Weather_Roundup' }) + '\n' + VALID_SOURCES })]);
+  // An explicit filename, because the fixture derives the filename slug from the
+  // front matter. Left to derive it, `Weather_Roundup` would also produce the
+  // filename `nathan-beausoleil--Weather_Roundup.md`, PATH_RE would refuse the
+  // path, and this test would pass while asserting nothing about a bad slug: it
+  // would be a path test wearing a slug test's name. Naming the file
+  // `a-kebab-filename` keeps the disagreement where it belongs, which is
+  // between a legal filename and a front matter slug that is not kebab-case.
+  const r = archive([post({
+    day: '2026-10-02',
+    file: join('2026', '10', '2026-10-02', 'nathan-beausoleil--a-kebab-filename.md'),
+    frontMatter: validPost({ slug: 'Weather_Roundup' }) + '\n' + VALID_SOURCES,
+  })]);
   assert.equal(r.code, 1);
   assert.match(r.stderr, /does not match/);
+});
+
+// ------------------------------------------- the filename slug is not optional
+//
+// BEL-207. Found while unfreezing the BEL-69 deploy outage. The renderer tests
+// on the publish path died with
+//
+//   TypeError: Cannot read properties of undefined (reading 'replace')
+//
+// for a post filed as `content/.../danica-hoyt.md`, and `deploy` needs `build`,
+// so one filename froze every publish and the reader sat on the previous edition
+// while the store held a newer one.
+//
+// The two halves of that failure live in two repositories. This one accepts a
+// filename with no `--<slug>` segment; belmont-news-site's test/render.test.mjs
+// splits the filename on `--` and reads index 1, which is `undefined`, and then
+// calls `.replace` on it. Neither was wrong on its own and nothing reconciled
+// them, because the gate only ever sees belmont-news-blogs and the render tests
+// only ever see the synced snapshot.
+//
+// These tests hold the gate to the strict side of that disagreement, and hold
+// the two to each other where they can be held from here.
+
+test('a filename with no slug segment is refused, and the message names the file', () => {
+  // The post is otherwise perfect. A valid post under a filename the site cannot
+  // read is the exact shape of the incident, so nothing else about it may be the
+  // reason this fails.
+  const r = archive([post({
+    day: '2026-10-02',
+    file: join('2026', '10', '2026-10-02', 'nathan-beausoleil.md'),
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+  })]);
+  assert.equal(r.code, 1);
+  // The filename, not a bare "bad path": the writer has to know which file to
+  // rename, and the deploy log that reported this defect could not tell them.
+  assert.match(r.stderr, /content\/2026\/10\/2026-10-02\/nathan-beausoleil\.md/);
+  // And the shape it wanted, because the old message printed the segment in
+  // square brackets and a writer reading it filed the post without one.
+  assert.doesNotMatch(r.stderr, /\[--<slug>\]/);
+  assert.match(r.stderr, /<author-slug>--<slug>\.md/);
+  assert.match(r.stderr, /required/);
+});
+
+test('the refusal arrives at file time, not at render time', () => {
+  // The whole point of putting the rule in the gate rather than in the renderer.
+  // A post that the site cannot render must be refused by the thing that files
+  // posts, so the reporter finds out from a message that names their file.
+  const r = archive([post({
+    day: '2026-10-02',
+    file: join('2026', '10', '2026-10-02', 'nathan-beausoleil.md'),
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+  })]);
+  assert.doesNotMatch(r.stderr, /TypeError/);
+  assert.doesNotMatch(r.stderr, /Cannot read properties/);
+});
+
+test('the gate accepts exactly the filenames the site can read the slug out of', () => {
+  // The consumer's rule, transcribed. belmont-news-site/test/render.test.mjs
+  // rebuilds the rendered page path from the filename with this:
+  //
+  //   parts[parts.length - 1].split('--')[1].replace(/\.md$/, '')
+  //
+  // It is in another repository, so this file cannot import it, and a test that
+  // claims to check a copy of it is checking the copy. What is assertable from
+  // here is the property the two must agree on, in both directions: every
+  // filename the gate accepts must yield, under the site's rule, exactly the
+  // slug the gate matched. That rules out the whole class, not just the one
+  // name that started this.
+  const siteRule = (name) => {
+    let seg;
+    try {
+      seg = name.split('--')[1];
+    } catch {
+      return { threw: true, slug: null };
+    }
+    if (seg === undefined) return { threw: false, slug: null };
+    try {
+      return { threw: false, slug: seg.replace(/\.md$/, '') };
+    } catch {
+      return { threw: true, slug: null };
+    }
+  };
+
+  // Accepted shapes, and the shapes that only pass because the segment was
+  // optional until BEL-207.
+  const cases = [
+    { name: 'nathan-beausoleil--weather-roundup.md', accepts: true, fmSlug: 'weather-roundup' },
+    { name: 'nathan-beausoleil--weather.md', accepts: true, fmSlug: 'weather' },
+    { name: 'nathan-beausoleil.md', accepts: false, why: 'no slug segment: the BEL-69 file' },
+    { name: 'nathan-beausoleil--.md', accepts: false, why: 'empty slug segment' },
+    { name: 'nathan-beausoleil---weather.md', accepts: false, why: 'the site would read the slug as "-weather"' },
+    { name: 'nathan-beausoleil--weather--roundup.md', accepts: false, why: 'the site would read the slug as "weather"' },
+    { name: 'nathan-beausoleil--Weather.md', accepts: false, why: 'not kebab-case' },
+    { name: 'nathan-beausoleil-.md', accepts: false, why: 'trailing dash on the author segment' },
+  ];
+
+  for (const c of cases) {
+    const r = archive([post({
+      day: '2026-10-02',
+      file: join('2026', '10', '2026-10-02', c.name),
+      frontMatter: validPost({ slug: c.fmSlug || 'weather-roundup' }) + '\n' + VALID_SOURCES,
+    })]);
+    assert.equal(r.code === 0, c.accepts, `${c.name} (${c.why || 'a legal name'}): gate said ${r.code === 0 ? 'pass' : 'fail'}\n${r.stdout}${r.stderr}`);
+
+    if (!c.accepts) continue;
+
+    const read = siteRule(c.name);
+    assert.equal(read.threw, false, `${c.name} passes the gate but throws under the site's filename rule`);
+    const m = /--([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/.exec(c.name);
+    assert.equal(read.slug, m[1], `${c.name} passes the gate but the site reads the slug as '${read.slug}'`);
+  }
+});
+
+test('every post in the committed archive carries a slug segment the site can read', () => {
+  // The gate asserted against the store it actually ships, not only against
+  // fixtures. If a slug-less filename is ever merged into content/, this fails
+  // on that filename, here, on the pull request that merged it.
+  const dir = join(REPO, 'content');
+  const markdown = [];
+  (function walk(d) {
+    for (const e of readdirSync(d, { withFileTypes: true })) {
+      const p = join(d, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (e.name.endsWith('.md')) markdown.push(p);
+    }
+  })(dir);
+  assert.ok(markdown.length > 0, 'the committed archive has no posts in it');
+
+  for (const file of markdown) {
+    const name = file.split(sep).pop();
+    const seg = name.split('--')[1];
+    assert.ok(
+      typeof seg === 'string' && seg.replace(/\.md$/, '').length > 0,
+      `${file.replace(`${REPO}/`, '')}: the site's renderer reads the slug out of this filename, and there is none. Rename it <author-slug>--<slug>.md.`,
+    );
+  }
 });
 
 // ------------------------------------------------------- the rest of the gate
