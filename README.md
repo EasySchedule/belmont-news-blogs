@@ -40,12 +40,13 @@ a JSON Schema cannot express:
 3. **Filename** — the author segment equals the roster slug of the byline.
 4. **Slug match** — the optional second filename segment equals the front matter slug.
 5. **Slug unique** — no two posts share a slug.
-6. **Column owner** — a column is **co-owned**: any roster entry that lists it
-   under `columns` may file it, and the refusal message names every owner. The
-   Morning Briefing is owned by Margaret Vance and Priya Raghunathan, the News Desk
-   by Rosalind Kimbrough, and the Lead Desk by Danica Hoyt and Dev Okafor.
-   Ownership is a set and not a single name because a desk has more than one
-   reporter. It is still never *transferred*: taking a column off the byline the
+6. **Column owner** — a column is owned by **exactly one** roster entry: the one
+   that lists it under `columns`, and no other, and the refusal message names that
+   owner. The Morning Briefing is owned by Margaret Vance, the News Desk by
+   Rosalind Kimbrough, and the Lead Desk by Danica Hoyt. A reporter who needs a
+   column owns one of his own rather than sharing another byline's: Dev Okafor
+   files the County Desk, Priya Raghunathan the Community Desk. Ownership is never
+   *transferred* either: taking a column off the byline the
    published posts are filed under reds the gate on those posts, which is what
    BEL-116 was filed about.
    A column named in a post that **no** roster entry owns is refused for every
@@ -78,8 +79,8 @@ Managing Editor and not a thing to undo in a plumbing change.
 
 | slug | byline | columns |
 | --- | --- | --- |
-| `dev-okafor` | `Dev Okafor` | Lead Desk |
-| `priya-raghunathan` | `Priya Raghunathan` | Morning Briefing |
+| `dev-okafor` | `Dev Okafor` | County Desk |
+| `priya-raghunathan` | `Priya Raghunathan` | Community Desk |
 | `rosa-delgado` | `Rosa Delgado` | — |
 | `hana-ishikawa` | `Hana Ishikawa` | — |
 | `belmont-news-staff` | `Belmont News staff` | — |

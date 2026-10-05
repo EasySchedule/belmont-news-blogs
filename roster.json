@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-05",
-  "note": "Byline roster. index.mjs refuses any post whose byline is not listed here, matched exactly, capitalisation included. Columns are co-owned: a column may list several entries under \"columns\", and any one of them may file it. The first eight entries are the placeholder newsroom and are retained so the published archive stays valid; the five that follow are the real newsroom, per the BEL-116 ruling. Margaret Vance (Chief Executive Officer) and Mara Vance (Managing Editor) are two different people. The slug is margaret-vance and must stay that way.",
+  "note": "Byline roster. index.mjs refuses any post whose byline is not listed here, matched exactly, capitalisation included. A column has exactly one owner: the entry that lists it, and no other. The first eight entries are the placeholder newsroom and are retained so the published archive stays valid; the five that follow are the real newsroom, per the BEL-116 ruling. A reporter who needs a column owns one of his own rather than sharing another byline's. Margaret Vance (Chief Executive Officer) and Mara Vance (Managing Editor) are two different people. The slug is margaret-vance and must stay that way.",
   "agents": [
     {
       "slug": "margaret-vance",
@@ -53,14 +53,14 @@
     {
       "slug": "dev-okafor",
       "name": "Dev Okafor",
-      "role": "Reporter, Lead Desk",
-      "columns": ["Lead Desk"]
+      "role": "Reporter, County Desk",
+      "columns": ["County Desk"]
     },
     {
       "slug": "priya-raghunathan",
       "name": "Priya Raghunathan",
-      "role": "Reporter, Morning Briefing",
-      "columns": ["Morning Briefing"]
+      "role": "Reporter, Community Desk",
+      "columns": ["Community Desk"]
     },
     {
       "slug": "rosa-delgado",
