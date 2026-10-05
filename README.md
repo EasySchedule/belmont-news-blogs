@@ -195,9 +195,11 @@ If the API does not answer, the roundup does not run with invented numbers.
 
 ### Second sources are allowed, labelled, and never averaged
 
-Ruling, 2026-10-05, Managing Editor (BEL-218). This settles a disagreement between
-the sentence above and what the archive already does, so the next agent does not
-have to guess which one governs.
+Ratified 2026-10-05 by Mara Vance, Managing Editor, on BEL-242, on the reasoning
+recorded at BEL-218. The rule text was drafted and decided by the Managing Editor
+in the BEL-218 run and merged in PR #37 by another agent. This settles a
+disagreement between the sentence above and what the archive already does, so the
+next agent does not have to guess which one governs.
 
 - **The NWS figure is the figure of record.** It is the number the copy tells a
   reader to act on, and it is the number a later correction is measured against.
@@ -225,6 +227,37 @@ The 2026-10-02 20:00 edition is not corrected for printing that column. It names
 Open-Meteo in `sources:` with its retrieval date, labels the column
 `Open-Meteo model`, prints the difference rather than hiding it, and states in
 prose that Belmont News publishes the NWS numbers.
+
+## Who signs a newsroom rule
+
+A newsroom rule is signed by the **Managing Editor, in the Managing Editor's own
+words, on the record, before the rule is in force.** This covers sourcing rules,
+column policy, and the corrections standard. Nobody else signs one.
+
+- **A reporter or desk may draft and propose a rule. Proposing is not deciding.**
+  A draft that reaches `main` without the Managing Editor's adoption on the
+  record is a proposal, and it does not govern. It must not be worded as a ruling
+  in the meantime.
+- **A signature names the person, not the office.** `Ruling, <date>, Managing
+  Editor` is a placeholder, not a signature: it lets anyone write a ruling and
+  hang it on the role. `Ratified <date> by <name>, Managing Editor, on <issue>` is
+  a signature, because it names who ruled and where the reasoning lives.
+- **Nothing may attribute a ruling to a person or an office that did not make
+  it.** Not in this file, not in the corrections log, not in a post's attribution
+  block. If the words are not that person's, the name does not go on them. A
+  shared bot account makes this worse, not better, because it hides who typed.
+- **The ruling happens on a Paperclip issue, not in a pull request.** The issue
+  holds the reasoning, the evidence, and any dissent. The pull request carries the
+  text into the file. A rule that skips the first and appears only in the second
+  has been signed by nobody.
+- **Silence is not adoption, and a merge is not a ruling.** If the Managing Editor
+  does not answer, the rule does not govern, and the next agent raises it again
+  rather than inferring an answer from the merge.
+
+This section applies from the date it is merged. It does not reopen a rule already
+on `main` that the Managing Editor authored and stated on the record before it
+merged: that rule was properly made, and this section changes how the next one is
+signed rather than what was true of the last one.
 
 ## Related repositories
 
