@@ -42,13 +42,17 @@ a JSON Schema cannot express:
 5. **Slug unique** — no two posts share a slug.
 6. **Column owner** — a column is owned by **exactly one** roster entry: the one
    that lists it under `columns`, and no other, and the refusal message names that
-   owner. The Morning Briefing is owned by Margaret Vance, the News Desk by
-   Rosalind Kimbrough, and the Lead Desk by Danica Hoyt. A reporter who needs a
+   owner. The Morning Briefing is owned by Margaret Vance, the Lead Desk by
+   Danica Hoyt, and the News Desk by Rosa Delgado. A reporter who needs a
    column owns one of his own rather than sharing another byline's: Dev Okafor
    files the County Desk, Priya Raghunathan the Community Desk. Ownership is never
    *transferred* either: taking a column off the byline the
    published posts are filed under reds the gate on those posts, which is what
-   BEL-116 was filed about.
+   BEL-116 was filed about. The News Desk is the one transfer the desk has ruled:
+   it moved off Rosalind Kimbrough, a placeholder byline, because PR #18 retires
+   her for anything dated after 2026-10-03 and a column whose only owner is retired
+   can no longer be filed at all. Nothing in the archive moved with it — no post
+   has ever named the News Desk as its column.
    A column named in a post that **no** roster entry owns is refused for every
    byline, and the message says it is a missing registration in `roster.json`
    rather than a byline mistake, because no byline change can fix it.
@@ -84,9 +88,12 @@ Managing Editor and not a thing to undo in a plumbing change.
 | --- | --- | --- |
 | `dev-okafor` | `Dev Okafor` | County Desk |
 | `priya-raghunathan` | `Priya Raghunathan` | Community Desk |
-| `rosa-delgado` | `Rosa Delgado` | — |
+| `rosa-delgado` | `Rosa Delgado` | News Desk |
 | `hana-ishikawa` | `Hana Ishikawa` | — |
 | `belmont-news-staff` | `Belmont News staff` | — |
+
+`Rosa Delgado` holds the News Desk by the `BEL-192` ruling, not by `BEL-116`. She
+is the only reporter here whose column is not one the same ruling created.
 
 Not every agent in the company is on the roster, and adding one is a ruling
 rather than a convenience. An engineer or an editor on the roster becomes a valid
@@ -199,8 +206,9 @@ asked not to be named".
 
 ## Weather sourcing
 
-Every weather number comes from the National Weather Service public API with a
-real `User-Agent` naming Belmont News and a contact address.
+Every weather number **we publish as fact** comes from the National Weather
+Service public API with a real `User-Agent` naming Belmont News and a contact
+address.
 
 - Point of record: St. Clairsville, Ohio, `40.1006,-80.8501`
 - Grid of record: `PBZ/50,48`, forecast office Pittsburgh
@@ -208,6 +216,39 @@ real `User-Agent` naming Belmont News and a contact address.
 - Cite the office, the grid, both zones, and the exact `generatedAt` value
 
 If the API does not answer, the roundup does not run with invented numbers.
+
+### Second sources are allowed, labelled, and never averaged
+
+Ruling, 2026-10-05, Managing Editor (BEL-218). This settles a disagreement between
+the sentence above and what the archive already does, so the next agent does not
+have to guess which one governs.
+
+- **The NWS figure is the figure of record.** It is the number the copy tells a
+  reader to act on, and it is the number a later correction is measured against.
+- **A second source's numbers may be printed**, in a table or in a sentence, when
+  the post (a) names that source in `sources:` with its retrieval date, (b) labels
+  every one of its figures as that source's and not ours, and (c) says in prose
+  which figure governs.
+- **Never average them, never substitute one, and never let the second source
+  carry an instruction.** A reader is given one number to act on, and it is the
+  NWS number. "Comparison only" in a source note is the floor, not the whole
+  requirement; the body has to say which figure governs too.
+- **An unlabelled second-source number is a sourcing defect** and is corrected
+  under the standing rule like any other.
+
+Why the rule reads this way and not "every weather number, full stop": the archive
+prints second sources on purpose and the corrections log already praises it. The
+2026-10-02 evening edition prints an Open-Meteo column beside the NWS forecast,
+and an earlier correction entry records the roundup's second source and "the
+disagreement between the sources printed rather than resolved" as the thing that
+was right about it. Deleting that transparency to satisfy a literal reading of one
+sentence would trade a real editorial value for a wording fix, so the rule is
+amended to describe the practice instead.
+
+The 2026-10-02 20:00 edition is not corrected for printing that column. It names
+Open-Meteo in `sources:` with its retrieval date, labels the column
+`Open-Meteo model`, prints the difference rather than hiding it, and states in
+prose that Belmont News publishes the NWS numbers.
 
 ## Related repositories
 

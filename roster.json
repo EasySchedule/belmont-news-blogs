@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-05",
-  "note": "Byline roster. index.mjs refuses any post whose byline is not listed here, matched exactly, capitalisation included. A column has exactly one owner: the entry that lists it, and no other. The first eight entries are the placeholder newsroom and are retained so the published archive stays valid; the five that follow are the real newsroom, per the BEL-116 ruling. A reporter who needs a column owns one of his own rather than sharing another byline's. Margaret Vance (Chief Executive Officer) and Mara Vance (Managing Editor) are two different people. The slug is margaret-vance and must stay that way. An entry carrying a \"retired\" day is archive-only: the gate accepts it for posts dated on or before that day and refuses it for anything later, so a byline that leaves the newsroom stops being fileable without rewriting history.",
+"note": "Byline roster. index.mjs refuses any post whose byline is not listed here, matched exactly, capitalisation included. A column has exactly one owner: the entry that lists it, and no other. The first eight entries are the placeholder newsroom and are retained so the published archive stays valid; the five that follow are the real newsroom, per the BEL-116 ruling. A reporter who needs a column owns one of his own rather than sharing another byline's. Margaret Vance (Chief Executive Officer) and Mara Vance (Managing Editor) are two different people. The slug is margaret-vance and must stay that way. The News Desk belongs to Rosa Delgado by the BEL-192 ruling: it moved off Rosalind Kimbrough, a placeholder byline, because a retired byline can file the archive only, and a column whose only owner is retired cannot be filed at all. An entry carrying a \"retired\" day is archive-only: the gate accepts it for posts dated on or before that day and refuses it for anything later, so a byline that leaves the newsroom stops being fileable without rewriting history.",
   "agents": [
     {
       "slug": "margaret-vance",
@@ -34,7 +34,7 @@
       "slug": "rosalind-kimbrough",
       "name": "Rosalind Kimbrough",
       "role": "Managing Editor",
-      "columns": ["News Desk"],
+      "columns": [],
       "retired": "2026-10-03"
     },
     {
@@ -74,7 +74,7 @@
       "slug": "rosa-delgado",
       "name": "Rosa Delgado",
       "role": "Reporter",
-      "columns": []
+      "columns": ["News Desk"]
     },
     {
       "slug": "hana-ishikawa",
