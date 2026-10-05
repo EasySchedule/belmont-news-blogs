@@ -7,7 +7,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -382,6 +382,37 @@ test('every placeholder byline is retired and no real byline is', () => {
   // One day, for all eight, and it is the newest post already filed under them.
   const days = new Set(roster.agents.map((a) => a.retired).filter(Boolean));
   assert.equal(days.size, 1, `the placeholders should retire on one day, got ${[...days]}`);
+});
+
+test('the retirement day is the newest published post under a placeholder byline', () => {
+  // If a post is ever filed under a placeholder byline dated after the retirement
+  // day, the archive and the gate disagree and the fix is wrong. This reads the
+  // archive rather than trusting the constant, so moving the day wrong reds here
+  // instead of quietly invalidating a published post.
+  const roster = JSON.parse(ROSTER);
+  const retired = roster.agents.filter((a) => a.retired);
+  const names = new Set(retired.map((a) => a.name));
+  const days = new Set(retired.map((a) => a.retired));
+  assert.equal(days.size, 1, 'the eight placeholders must retire together');
+  const cutoff = [...days][0];
+
+  let newest = null;
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) { walk(full); continue; }
+      if (!entry.name.endsWith('.md')) continue;
+      const text = readFileSync(full, 'utf8');
+      const byline = /^byline:\s*(.+)$/m.exec(text)?.[1]?.trim();
+      const date = /^date:\s*(\d{4}-\d{2}-\d{2})$/m.exec(text)?.[1];
+      if (!byline || !date || !names.has(byline)) continue;
+      if (!newest || date > newest) newest = date;
+    }
+  };
+  walk(join(REPO, 'content'));
+  assert.ok(newest, 'no published post is bylined to a placeholder name');
+  assert.ok(newest <= cutoff,
+    `a published post is bylined to a placeholder on ${newest}, after the retirement day ${cutoff}`);
 });
 
 test('a retired byline is refused for new work', () => {
