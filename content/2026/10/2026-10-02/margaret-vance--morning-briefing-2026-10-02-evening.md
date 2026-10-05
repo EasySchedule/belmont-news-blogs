@@ -1,6 +1,6 @@
 ---
-title: "Evening edition: showers before eight, then a dry weekend, and an empty lead slot"
-dek: "The 20:00 edition leads with the three-day forecast. The lead story slot reads NONE, because no morning edition has run yet."
+title: "Evening edition of October 2, 2026: a 40% shower chance that evening, a dry weekend, and an empty lead slot"
+dek: "The 20:00 edition leads with the four-day forecast. The lead story slot reads NONE, because no morning edition had run at that hour."
 date: 2026-10-02
 edition: column
 column: Morning Briefing
@@ -30,6 +30,13 @@ sources:
     retrieved: 2026-10-02
     url: "https://api.open-meteo.com/v1/forecast"
     note: "Second source, model output, elevation 350 m. Comparison only."
+corrections:
+  - date: 2026-10-05
+    correction: "The dek, the section 2 heading and the sentence under it counted a four-row forecast as three days, over rows for Fri 2026-10-02, Sat 2026-10-03, Sun 2026-10-04 and Mon 2026-10-05. The dek, the heading and the sentence now read four days. All four rows stand, because each row is a period of the same National Weather Service grid PBZ/50,48, and no number changed."
+  - date: 2026-10-05
+    correction: "The headline read showers before eight, then a dry weekend, and the plain-words sentence said the shower chance was behind us by eight o'clock tonight, while the section 2 table gives Friday as 40% before 8pm and then 30%. The headline now reads Evening edition of October 2, 2026: a 40% shower chance that evening, a dry weekend, and an empty lead slot, and the plain-words paragraph now reads On the evening of Friday, October 2, the shower chance fell from 40% to 30% after 8 p.m. The number did not change."
+  - date: 2026-10-05
+    correction: "An update-class correction to the copy, not the numbers. It spoke in the present tense three days after the window closed. The headline, the closing clause of the dek, four sentences in section 1, the plain-words paragraph in section 2, the section 4 alerts sentence and the lead-in to section 5 item 1 are now dated to the retrieval this post records, 2026-10-02, and in the past tense. The two quoted National Weather Service period names, This Afternoon and Tonight, are left verbatim, and so are the zone identifiers OHZ059 and OHC013. No temperature, percentage, wind, endpoint, source note or attribution changed."
 ---
 # Morning Briefing — Belmont News Evening Edition
 
@@ -43,18 +50,20 @@ America/New_York.
 
 **NONE.**
 
-The Belmont News morning edition has not yet run. The first scheduled edition is
-06:00 EDT on Saturday 2026-10-03. There is no morning lead for this evening
+The Belmont News morning edition had not yet run. The first scheduled edition was
+06:00 EDT on Saturday 2026-10-03. There was no morning lead for this evening
 edition to follow up on, and this newsroom does not invent a slot it has not
 filled.
 
-The 06:00 lead is being called separately under BEL-26, on the sourcing
-recommendation in BEL-24. That call will be made by a named person against the
-newsroom sourcing standard, or it will be published as NONE with a reason.
+The 06:00 lead was to be called separately under BEL-26, on the sourcing
+recommendation in BEL-24. That call was to be made by a named person against the
+newsroom sourcing standard, or published as NONE with a reason.
 
-## 2. Three-day forecast — this edition's lead block
+## 2. Four-day forecast — this edition's lead block
 
-Belmont County, Ohio. Three days, Friday through Monday.
+Belmont County, Ohio. Four days, Friday through Monday.
+
+Table: Belmont County three-day forecast for this edition, Friday 2026-10-02 through Monday 2026-10-05. Source: National Weather Service gridpoint forecast PBZ/50,48, point of record St. Clairsville, Ohio, retrieved 2026-10-02.
 
 | Date | High | Low | Sky | Wind | Precipitation chance |
 | --- | --- | --- | --- | --- | --- |
@@ -63,15 +72,18 @@ Belmont County, Ohio. Three days, Friday through Monday.
 | Sun 2026-10-04 | 73 °F | 50 °F | Partly sunny, then partly cloudy | S 0–3 mph, then W 5 mph | 6% day, 3% night |
 | Mon 2026-10-05 | 67 °F | — | Sunny | NW 5–9 mph | 0% |
 
-**In plain words.** The shower chance is behind us by eight o'clock tonight.
-Saturday and Sunday are both dry and both unremarkable, which is the best kind
-of forecast to hand a county that has been wet. The only number worth acting on
-is tonight's 40%: if you have errands, run them before the sky turns.
+**In plain words.** On the evening of Friday, October 2, the shower chance fell
+from 40% to 30% after 8 p.m. Saturday and Sunday, October 3 and 4, were both dry
+and both unremarkable, which is the best kind of forecast to hand a county that
+has been wet. The only number worth acting on was the 40% on the evening of
+Friday, October 2: anyone with errands ran them before the sky turned.
 
 ## 3. Multi-source check
 
 Two named sources were pulled for this edition and compared. They do not agree
 exactly, and the newsroom is not averaging them.
+
+Table: Daily highs, and precipitation chances, as each of the two sources pulled for this edition returned them for St. Clairsville, Ohio. Sources: National Weather Service gridpoint forecast PBZ/50,48, and the Open-Meteo model run for point 40.1006,-80.8501, both retrieved 2026-10-02.
 
 | Day | NWS grid PBZ/50,48 | Open-Meteo model | Difference |
 | --- | --- | --- | --- |
@@ -91,15 +103,16 @@ prefers the model can see what it says.
 
 ## 4. Active alerts
 
-**None.** No watch, warning, or advisory is active for forecast zone `OHZ059` as
+**None.** No watch, warning, or advisory was active for forecast zone `OHZ059` as
 of 2026-10-02 22:30 UTC. Product checked: `NWS Active Alerts` for zone `OHZ059`.
 No separate county-zone check for `OHC013` was run for this edition; if that
 changes, the alerts are re-checked before the next publish.
 
 ## 5. What the newsroom is watching
 
-1. **Whether the 40% shower chance this evening verifies.** National Weather
-   Service grid `PBZ/50,48`, period "This Afternoon" and "Tonight". Cleared.
+1. **Whether the 40% shower chance on the evening of Friday, October 2 verified.**
+   National Weather Service grid `PBZ/50,48`, period "This Afternoon" and
+   "Tonight". Cleared.
 2. **Whether the Sunday high lands at 73 or nearer 70.** This is the widest
    disagreement between our two sources and it is the one number a reader would
    notice being wrong. National Weather Service grid `PBZ/50,48`; Open-Meteo
@@ -139,6 +152,6 @@ changes, the alerts are re-checked before the next publish.
   18:30 EDT.
 - Units: Fahrenheit, miles per hour, percent.
 
-*Corrections: none. If a number here is wrong, the correction is appended to
-this piece under the newsroom standard and logged the same day. Nothing is
-silently changed.*
+*Corrections: three, listed at the foot of this page and in the October log. If
+a number here is wrong, the correction is appended to this piece under the
+newsroom standard and logged the same day. Nothing is silently changed.*

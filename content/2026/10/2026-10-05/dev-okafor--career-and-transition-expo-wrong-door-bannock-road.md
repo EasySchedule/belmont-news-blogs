@@ -42,6 +42,12 @@ sources:
     retrieved: 2026-10-05
     url: "https://www.ecoesc.org/eco-center-celebrates-grand-opening-with-ribbon-cutting-open-house/"
     note: "Dated August 6, 2026, by Brenna Busby. The operator's own account of the reopening of the renovated building, which the ECOESC About page does not carry."
+  - type: document
+    title: "About Us – East Central Ohio ESC, the service center's own About Us page"
+    organization: "East Central Ohio Educational Service Center"
+    retrieved: 2026-10-05
+    url: "https://www.ecoesc.org/about/"
+    note: "Carries both figures. Its About Us section reads 'We serve 20 member districts', and the pair is stated again in Superintendent Randy Lucas's message, 'We are proud to serve 20 member districts across seven counties.' The Belmont County office, 67400 Betty Lee Wy, St. Clairsville, OH 43950, (740) 695-9773, is in the site footer, identical on the ECOESC home page and /districts/, and not this page's own text. Not on this page: any ECO Center or Bannock Road address."
 ---
 
 The Belmont-Harrison Career & Transition Expo runs from 9 a.m. to noon Wednesday, October 7, at the ECO Center in St. Clairsville. The venue is at 68332 Bannock Road, St. Clairsville, Ohio 43950. The website promoting the event gives a different street address, and it is the only one of the four pages that give the venue an address that does.
