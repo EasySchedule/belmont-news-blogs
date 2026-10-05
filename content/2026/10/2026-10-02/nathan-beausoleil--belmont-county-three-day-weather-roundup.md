@@ -1,5 +1,5 @@
 ---
-title: "The NWS forecast for Belmont County, October 2-5, 2026: a shower chance Friday evening, dry and sunny over the weekend, and a hard Monday night freeze"
+title: "The NWS forecast for Belmont County, October 2-5, 2026: a shower chance Friday evening, dry and sunny over the weekend, and a Monday night low of 41 °F"
 dek: "The National Weather Service Pittsburgh office forecast a 30 percent shower chance for the evening of Friday, October 2, before skies cleared Saturday, October 3."
 date: 2026-10-02
 edition: evening
@@ -38,6 +38,8 @@ sources:
 corrections:
   - date: 2026-10-05
     correction: "An update-class correction to the copy, not the numbers. It still spoke in the present tense three days after the window closed. Every time-anchored sentence is now dated to the retrieval this post records, 2026-10-02, and in the past tense: the headline, the dek, the lead-in, the Friday subhead, the guidance sentence, the Saturday, Sunday and Monday blocks, all four action-list items, the disagreement heading, the active-alert sentence and one attribution verb. Two paragraphs of drafting scaffolding at the top of the body are cut. The publication date is unchanged at 2026-10-02. No temperature, percentage, wind, endpoint or quoted NWS period name changed; the quoted Zone Forecast Product is left verbatim, including the wording the NWS itself used. The dek's 30 percent figure is left as printed, because this post's own body reports 33 / 30 / 40 / 50 percent across four retrievals and that spread is a separate editorial question. Wording specified by Tobias Nkemelu (QA) on BEL-172."
+  - date: 2026-10-05
+    correction: "An update-class correction: two claims the post's own numbers do not support. The headline and body applied a named cold threshold to a 41 °F Monday low. The National Weather Service glossary sets 32 °F for a freeze and 28 °F for the harder category, so 41 °F clears both by nine and thirteen degrees; this post's quoted Zone Forecast Product for that night reads “Clear. Lows in the lower 40s.” The headline now reads “a Monday night low of 41 °F”, and the Monday block and action item record the night stayed above the freezing mark. A seasonal phrase is withdrawn with the threshold it asserted. Two other sentences named a rainfall amount and an intensity a probability cannot supply; all three now report the probability and the sky condition the table prints. The forecast's own precipitation-type word is kept. No date, percentage or quoted NWS period name changed. The withdrawn wording is not reprinted here; it is quoted in the corrections log. Wording per Mara Vance, BEL-272."
 ---
 
 **At the time of retrieval — the evening of Friday, October 2 —** the National Weather
@@ -98,17 +100,16 @@ Sunday, October 4 was the warmest day of the roundup and the only one with any
 measurable precipitation risk. The forecast called for partly sunny skies and a high
 near 73 °F, with a light south wind at 0 to 3 mph. The precipitation chance peaked at
 6 percent during the day and dropped to 3 percent Sunday night, with a low around 50 °F
-and a west wind around 5 mph. Six percent is a trace at best, not a rain forecast for
-Belmont County.
+and a west wind around 5 mph. Six percent is a low probability of measurable precipitation against a partly
+sunny sky, not a rain forecast for Belmont County.
 
 ### Monday, October 5
 
 Monday, October 5 was dry, sunny, and the coldest night of the window. The forecast
 called for a high near 67 °F with a northwest wind at 5 to 9 mph. After sunset the sky
 cleared and the temperature fell to a low around 41 °F on a north wind at 2 to 8 mph.
-That 41 °F low was the number to watch. It was the first hard overnight freeze of the
-season's first cold push. The precipitation chance was zero percent for both Monday and
-Monday night.
+That 41 °F low was the number to watch. It stayed above freezing. The precipitation
+chance was zero percent for both Monday and Monday night.
 
 ---
 
@@ -162,9 +163,9 @@ will hear re-read to them. The 33 percent structured field is in the same JSON
 document a few lines away, and the discrepancy is carried forward to the morning desk
 rather than hidden — the three values are all quoted here so a reader can see the
 spread. The operational point is unchanged across all of them: that was a chance of
-showers before 8 p.m., not a soaking rain, and no source in this roundup put
-Belmont County above a 50 percent chance of rain for the evening. The higher figures
-from Open-Meteo and the ZFP are model-side, not official.
+showers before 8 p.m., and no source in this roundup put Belmont County above a
+50 percent chance of rain for the evening. The higher figures from Open-Meteo
+and the ZFP are model-side, not official.
 
 **Disagreement 2 — Sunday's high.** The NWS gridpoint forecast says 73 °F. The NWS
 Zone Forecast Product for OHZ059 says "Highs in the lower 70s," which is consistent
@@ -197,11 +198,11 @@ answered.
 - **Friday, October 2, evening (30 percent chance of showers before 8 p.m.):** the forecast
   called for a jacket. After 8 p.m. it was dry.
 - **Saturday, October 3 (0 percent):** the best outdoor day of the window.
-- **Sunday, October 4 (6 percent):** a trace at most.
-- **Monday, October 5, night (low around 41 °F) brought the first hard freeze of the
-  season.** Anything left outside was at risk that night. That was the coldest reading
-  in the three-day window by nine degrees, and it arrived under a clear sky, with no
-  wind to blunt the cold.
+- **Sunday, October 4 (6 percent):** the only day in the window with a chance of
+  measurable precipitation.
+- **Monday, October 5, night (low around 41 °F) stayed above freezing.** Anything left
+  outside was at risk that night. That was the coldest reading in the three-day window by
+  nine degrees, and it arrived under a clear sky, with no wind to blunt the cold.
 
 ---
 
