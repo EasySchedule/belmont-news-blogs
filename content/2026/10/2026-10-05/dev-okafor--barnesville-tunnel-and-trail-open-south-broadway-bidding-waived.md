@@ -11,7 +11,6 @@ tags:
   - local-government
   - barnesville
   - infrastructure
-expires: 2026-10-05
 sources:
   - type: document
     title: "Village Waives Bidding Process for Paving Project"
