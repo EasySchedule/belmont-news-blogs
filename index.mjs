@@ -354,6 +354,20 @@ const rosterDoc = readJson('roster', opts.roster);
 const roster = new Map((rosterDoc.agents || []).map((a) => [a.name, a]));
 if (!roster.size) fatal('roster.json lists no agents');
 
+// A `retired` day is compared as text against the post's date, so a malformed one
+// does not fail where you would notice it: it sorts wrong, and the retirement rule
+// silently stops firing. An unpadded `2026-10-3` reads as later than every real day
+// in October, so every post dated that month would pass under a byline that was
+// meant to be closed. That is the exact shape of failure this gate exists to catch,
+// reached through the roster, and it would reopen the hole the rule was added to
+// shut. Validate it at load, the same way `expires` is validated, so a typo in
+// roster.json reds the build instead of quietly disarming it.
+for (const agent of roster.values()) {
+  if (agent.retired !== undefined && !isRealDay(agent.retired)) {
+    fatal(`roster.json: '${agent.name}' has retired ${JSON.stringify(agent.retired)}, which is not a real calendar day as YYYY-MM-DD. The gate compares it as text, so a malformed day would silently stop refusing new work under that byline.`);
+  }
+}
+
 // Every column any roster entry owns. A column that appears in a post and appears
 // in none of these is not a byline mistake: it is a column nobody registered. The
 // gate has to say so, because the two failures look identical from the writer's

@@ -366,7 +366,15 @@ test('every placeholder byline is retired and no real byline is', () => {
   const real = roster.agents.slice(8).map((a) => a.slug);
   for (const a of roster.agents) {
     if (placeholders.includes(a.slug)) {
+      // Shape and existence, not shape alone: `2026-02-30` matches the pattern and
+      // is not a day, and the gate compares these values as text.
       assert.match(a.retired || '', /^\d{4}-\d{2}-\d{2}$/, `${a.slug} must carry a retirement day`);
+      const [y, m, d] = a.retired.split('-').map(Number);
+      const asDate = new Date(Date.UTC(y, m - 1, d));
+      assert.ok(
+        asDate.getUTCFullYear() === y && asDate.getUTCMonth() === m - 1 && asDate.getUTCDate() === d,
+        `${a.slug} retires on ${a.retired}, which is not a real calendar day`,
+      );
     } else {
       assert.equal(a.retired, undefined, `${a.slug} is a current byline and must not be marked retired`);
     }
@@ -407,6 +415,46 @@ test('a retired byline is still accepted for the archive', () => {
       })]);
       assert.equal(r.code, 0, `${a.name} must still file an archive post dated ${day}: ${r.stderr}`);
     }
+  }
+});
+
+test('a malformed retirement day is refused at load, not silently ignored', () => {
+  // The retirement rule compares `retired` as text against the post's date. An
+  // unpadded day like `2026-10-3` sorts after every real day in October, so a post
+  // dated the 20th would still pass under a byline meant to be closed: the rule
+  // stops firing and nothing says so. On this test's own archive that turns the
+  // refusal above into an acceptance, which is how a gate ends up looking healthy
+  // while doing nothing.
+  //
+  // So the day is validated when the roster loads, like `expires` is. This asserts
+  // the refusal, and that the message names the entry and the value, because a
+  // roster typo has to be fixable from the message alone.
+  const root = writeArchive([post({
+    day: '2026-10-06',
+    author: 'danica-hoyt',
+    slug: 'new-work-after-a-malformed-retirement-day',
+    frontMatter: `${validPost({ date: '2026-10-06', byline: 'Danica Hoyt', slug: 'new-work-after-a-malformed-retirement-day' })}\n${VALID_SOURCES}`,
+  })]);
+  try {
+    for (const bad of ['2026-10-3', '2026-13-01', '2026-02-30', 'Oct 3 2026', '']) {
+      const roster = JSON.parse(ROSTER);
+      roster.agents.find((a) => a.slug === 'danica-hoyt').retired = bad;
+      writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+      const r = runGate(root, []);
+      assert.equal(r.code, 2, `retired ${JSON.stringify(bad)} must fail the build: ${r.stdout}${r.stderr}`);
+      assert.match(r.stderr, /'Danica Hoyt' has retired/);
+      assert.match(r.stderr, /real calendar day as YYYY-MM-DD/);
+    }
+    // The gate has to accept a real day in the same field, or the check above would
+    // pass by refusing everything. The post is dated 2026-10-06, so a retirement on
+    // that same day is the boundary case: on or before it may still sign the post.
+    const roster = JSON.parse(ROSTER);
+    roster.agents.find((a) => a.slug === 'danica-hoyt').retired = '2026-10-06';
+    writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+    const good = runGate(root, []);
+    assert.equal(good.code, 0, `a real retirement day must still be accepted: ${good.stderr}`);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
   }
 });
 
