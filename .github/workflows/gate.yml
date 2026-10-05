@@ -10,6 +10,10 @@
 # source block still exits 0 on the whole archive, so the tests are what prove
 # the gate still bites. They caught two such holes: a `--today` pin that
 # invalidated yesterday's posts, and a sources parser that read no source.
+#
+# One step in the gate job is a report and not a check: the tense scan on BEL-309.
+# It is marked `continue-on-error` and a test asserts it exits 0, because a
+# non-blocking tool that can block a merge is worse than no tool.
 
 name: Sourcing gate
 
@@ -36,12 +40,46 @@ jobs:
         with:
           node-version: '22'
 
+      # One newsroom day, computed once, used by both steps below.
+      #
+      # It used to be computed inline inside the gate's own `run`, which meant a
+      # second consumer had to copy that expression, and two copies of a date
+      # expression is two chances to disagree about what day it is. The tense
+      # scan needs the same day the gate uses, otherwise a post is "out of
+      # window" to one step and "in window" to the other in the same build.
+      # Pinned forward one day past the newsroom day on purpose: the archive
+      # must still pass on the day after a post ships.
+      - name: Pin the newsroom day
+        run: |
+          day=$(node -e "const d=new Date(Date.now()+864e5).toLocaleDateString('en-CA',{timeZone:'America/New_York'});process.stdout.write(d)")
+          echo "NEWSROOM_DAY=$day" >> "$GITHUB_ENV"
+          echo "gate: newsroom day pinned to $day"
+
       # The gate itself. --check validates every post and writes nothing. A
       # non-zero exit means at least one post in the archive does not clear the
-      # standard. --today is pinned forward one day past the newest post on
-      # purpose: the archive must still pass on the day after a post ships.
+      # standard.
       - name: Build gate
-        run: node index.mjs --check --today $(node -e "const d=new Date(Date.now()+864e5).toLocaleDateString('en-CA',{timeZone:'America/New_York'});process.stdout.write(d)")
+        run: node index.mjs --check --today "$NEWSROOM_DAY"
+
+      # The tense scan. Reports candidate time-anchored phrases as pull-request
+      # annotations. It is NOT part of the standard and it is NOT a check on the
+      # list of required status checks.
+      #
+      # `continue-on-error` is the load-bearing line here. tense-scan.mjs exits 0
+      # always, including when its own parsing throws, and a test in
+      # test/gate.test.mjs asserts that. But this job is a required status check,
+      # so if node itself ever failed to start, or the script were deleted by a
+      # bad merge, a step without this line would red the build. It must be
+      # impossible for this step to stop a merge, and that should not depend only
+      # on a promise the script makes about itself.
+      #
+      # It prints its own header every run: the token list, the listing window it
+      # read and where it read it from, and the two things it deliberately does
+      # not do. A clean run is not a clean forecast check and not a deks check,
+      # and the log says so rather than letting someone infer it.
+      - name: Tense scan (reports, never blocks)
+        continue-on-error: true
+        run: node scripts/tense-scan.mjs --today "$NEWSROOM_DAY"
 
   tests:
     name: Gate tests
