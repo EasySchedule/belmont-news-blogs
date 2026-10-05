@@ -577,3 +577,106 @@ test('expires does not weaken the date window or the sourcing rule', () => {
   assert.equal(unsourced.code, 1);
   assert.match(unsourced.stderr, /sources/);
 });
+
+// ------------------------------------------- BEL-132: a JSON body is not prose
+//
+// A publish step took a document API response and wrote the whole envelope into
+// the markdown below the front matter, instead of the envelope's `body` field.
+// Every other gate passed, because the front matter was correct: the path was
+// right, the byline was in the roster, the sources were named. The site built,
+// the deploy went out, and the reader got a page whose body was one escaped
+// JSON object with the store's internal ids printed in it.
+//
+// The post had also expired, so it dropped off the front page and out of
+// feed.xml and no QA pass opened it, while sitemap.xml still pointed at it.
+
+const ENVELOPE_BODY = `${JSON.stringify({
+  id: '022ea0dc-0996-4b21-8b25-21c2fe34e21f',
+  companyId: 'e932f2d1-8b59-4754-a733-7e1f5428778c',
+  issueId: '1e4c01a0-61c5-40eb-b1ad-bd8cdad57b49',
+  key: 'morning-briefing-2026-10-02-evening',
+  title: 'Morning Briefing - Evening Edition 2026-10-02 20:00 EDT',
+  format: 'markdown',
+  body: '# Morning Briefing\n\n**By Margaret Vance.** The shower chance is behind us.\n',
+  latestRevisionId: '83ef1278-af12-4287-895d-637f1561d818',
+  createdByAgentId: '367c5a4f-a12f-41f8-9028-facc3b20e105',
+  annotations: [],
+})}\n`;
+
+test('the gate refuses a post whose body is a serialised API response', () => {
+  const r = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: ENVELOPE_BODY,
+  })]);
+  assert.equal(r.code, 1, 'an API envelope as a post body must fail the gate');
+  assert.match(r.stderr, /serialised API response/);
+});
+
+test('the envelope is refused on its shape, and names the fix in the message', () => {
+  // The error has to be actionable. Whoever files a post after seeing this has
+  // to be told what to write instead, not just that the gate is unhappy.
+  const r = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: ENVELOPE_BODY,
+  })]);
+  assert.match(r.stderr, /"body" field/);
+  assert.match(r.stderr, /fenced code block/);
+});
+
+test('the envelope is caught even when the front matter is perfectly valid', () => {
+  // This is the whole failure. Nothing else about the file was wrong, so a gate
+  // that only looked at the front matter would have published it.
+  const only = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: ENVELOPE_BODY,
+  })], ['--check']);
+  assert.equal(only.code, 1);
+  // And the one thing it reports is the body, not a pile of unrelated noise.
+  assert.equal((only.stderr.match(/serialised API response/g) || []).length, 1);
+});
+
+test('an ordinary prose body still passes', () => {
+  const r = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: 'The forecast reads **73 degrees** and the desk logged it.\n',
+  })]);
+  assert.equal(r.code, 0, `prose must pass: ${r.stderr}`);
+});
+
+test('prose that merely contains a brace or inline JSON still passes', () => {
+  // A gate that refused any body starting with a brace would refuse real copy.
+  for (const body of [
+    'The forecast reads {high 73} today, and the desk logged it.\n',
+    'The response was {"ok":true} and nothing else came back.\n',
+  ]) {
+    const r = archive([post({ day: '2026-10-02', frontMatter: validPost() + '\n' + VALID_SOURCES, body })]);
+    assert.equal(r.code, 0, `this prose must pass: ${body.trim()} -> ${r.stderr}`);
+  }
+});
+
+test('a post that quotes JSON in a fenced code block still passes', () => {
+  // A JSON sample is legitimate newsroom copy when it is marked as one. The
+  // check reads the body with fenced blocks removed, so quoting a payload is
+  // not confused with having shipped one.
+  const r = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: 'A reader sent us this payload:\n\n```json\n{"id":"abc","companyId":"x","body":"hi"}\n```\n\nIt parsed clean on the first try.\n',
+  })]);
+  assert.equal(r.code, 0, `a fenced JSON sample must pass: ${r.stderr}`);
+});
+
+test('an object with no body field is not treated as an envelope', () => {
+  // The envelope signature is a nested article string. A post that is
+  // legitimately a JSON object without one is not this defect.
+  const r = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: '{"station":"K20","high":73}\n',
+  })]);
+  assert.equal(r.code, 0, r.stderr);
+});
