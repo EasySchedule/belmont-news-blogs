@@ -16,8 +16,9 @@
 //   3. filename       the author segment equals the roster slug of the byline
 //   4. slug match     the optional second filename segment equals the front matter slug
 //   5. slug unique    no two posts share a slug
-//   6. column owner   only the roster owner of a column may file it, and a
-//                     column no roster entry owns is named as a registry gap
+//   6. column owner   a column is co-owned: any roster entry that lists it under
+//                     "columns" may file it, and a column no roster entry owns
+//                     is named as a registry gap
 //   7. sourced        at least one source; schema.json minItems, plus an explicit
 //                     empty list is rejected here with the file named
 //   8. date window    no post dated more than --future-days ahead of --today
@@ -298,11 +299,22 @@ const rosterDoc = readJson('roster', opts.roster);
 const roster = new Map((rosterDoc.agents || []).map((a) => [a.name, a]));
 if (!roster.size) fatal('roster.json lists no agents');
 
-// Every column any roster entry owns. A column that appears in a post and appears
-// in none of these is not a byline mistake: it is a column nobody registered. The
-// gate has to say so, because the two failures look identical from the writer's
-// side and only one of them is fixed by changing the byline. BEL-55 sat unfixed
-// for a full edition for exactly this reason.
+// Bylines are matched on the exact name string, capitalisation included, because a
+// byline asserts authorship: a name that is one capital letter off is a different
+// name, and treating it as the same one would file copy under a writer who did not
+// write it. The desk line is `Belmont News staff`, lower-case "staff".
+
+// Every column any roster entry owns, and every entry that owns it. A column that
+// appears in a post and appears in none of these is not a byline mistake: it is a
+// column nobody registered. The gate has to say so, because the two failures look
+// identical from the writer's side and only one of them is fixed by changing the
+// byline. BEL-55 sat unfixed for a full edition for exactly this reason.
+//
+// The value is a list, not a single owner, because columns are co-owned (BEL-116).
+// A desk has more than one reporter, so ownership is the set of bylines that may
+// file the column. Co-ownership is the reason the error below names every owner:
+// when a byline is refused, the writer needs to know who to ask, and "it is owned
+// by 'Dev Okafor'" is wrong the moment a second name is on the column.
 const registeredColumns = new Map(); // column name -> [owning byline, ...]
 for (const a of roster.values()) {
   for (const c of a.columns || []) {

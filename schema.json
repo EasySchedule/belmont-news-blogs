@@ -41,13 +41,13 @@
     "column": {
       "type": "string",
       "maxLength": 60,
-      "description": "Required by the index.mjs gate when edition is column. Must be a column owned by the byline in roster.json."
+      "description": "Required by the index.mjs gate when edition is column. Must be a column at least one roster entry in roster.json owns. Columns are co-owned, so several entries may list the same column and any one of them may file it."
     },
     "byline": {
       "type": "string",
       "minLength": 3,
       "maxLength": 80,
-      "description": "Full name exactly as registered in roster.json. No shared bylines, no 'staff'."
+      "description": "Full name exactly as registered in roster.json, capitalisation included. No shared bylines. The one desk line is 'Belmont News staff', for copy no single reporter files; it is not a substitute for a reporter's name."
     },
     "category": {
       "type": "string",
