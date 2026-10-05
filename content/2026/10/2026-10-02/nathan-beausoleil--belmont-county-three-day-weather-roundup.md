@@ -1,6 +1,6 @@
 ---
-title: "Belmont County gets one last shot at rain tonight, then a dry, sunny weekend and a hard Monday night freeze"
-dek: "The National Weather Service Pittsburgh office calls for a 30 percent shower chance tonight before skies clear Saturday."
+title: "The NWS forecast for Belmont County, October 2-5, 2026: a shower chance Friday evening, dry and sunny over the weekend, and a hard Monday night freeze"
+dek: "The National Weather Service Pittsburgh office forecast a 30 percent shower chance for the evening of Friday, October 2, before skies cleared Saturday, October 3."
 date: 2026-10-02
 edition: evening
 byline: Nathan Beausoleil
@@ -35,20 +35,15 @@ sources:
     retrieved: 2026-10-02
     url: "https://api.weather.gov/alerts/active?zone=OHZ059"
     note: "Product checked for watch, warning, or advisory. None active at retrieval."
+corrections:
+  - date: 2026-10-05
+    correction: "An update-class correction to the copy, not the numbers. It still spoke in the present tense three days after the window closed. Every time-anchored sentence is now dated to the retrieval this post records, 2026-10-02, and in the past tense: the headline, the dek, the lead-in, the Friday subhead, the guidance sentence, the Saturday, Sunday and Monday blocks, all four action-list items, the disagreement heading, the active-alert sentence and one attribution verb. Two paragraphs of drafting scaffolding at the top of the body are cut. The publication date is unchanged at 2026-10-02. No temperature, percentage, wind, endpoint or quoted NWS period name changed; the quoted Zone Forecast Product is left verbatim, including the wording the NWS itself used. The dek's 30 percent figure is left as printed, because this post's own body reports 33 / 30 / 40 / 50 percent across four retrievals and that spread is a separate editorial question. Wording specified by Tobias Nkemelu (QA) on BEL-172."
 ---
 
-*Headline and deck as they print. The reporter's text follows unchanged.*
-
-**Headline:** Belmont County gets one last shot at rain tonight, then a dry, sunny
-weekend and a hard Monday night freeze, with the National Weather Service's Pittsburgh
-office calling for a 30 percent shower chance tonight before skies clear Saturday.
-
----
-
-**Before the three days begin, right now:** it is Friday night, October 2, and this is
-the current forecast period — a chance of rain showers before 8 p.m., then mostly
-cloudy, a low around 48 °F, north wind 5 to 8 mph. This is the only precipitation in the
-entire window, so it is the one thing a reader needs to act on today.
+**At the time of retrieval — the evening of Friday, October 2 —** the National Weather
+Service gridpoint forecast carried a chance of rain showers before 8 p.m., then mostly
+cloudy, a low around 48 °F, and a north wind of 5 to 8 mph. That was the only
+precipitation in the three-day window of October 2-5.
 
 ## Three-day table
 
@@ -72,46 +67,46 @@ for it.
 
 ## Day-by-day roundup
 
-### Friday, October 2 (tonight, current period — the lead-in)
+### Friday, October 2 (evening period — the lead-in)
 
-The National Weather Service Pittsburgh office still carries a chance of rain showers
-before 8 p.m. across the county, and that is the only precipitation in the entire
-three-day window. After the shower chance runs out, the sky turns mostly cloudy and
-the temperature falls to a low around 48 °F. The wind is out of the north at 5 to
-8 mph. The API's structured precipitation field for this period reads 33 percent; the
-period's own narrative text states 30 percent. Both figures appear in the source
-response and they are reported here rather than silently reconciled — see the
-attribution note at the foot of this document.
+The National Weather Service Pittsburgh office carried a chance of rain showers before
+8 p.m. across the county, and that was the only precipitation in the entire three-day
+window. After the shower chance ran out, the sky turned mostly cloudy and the
+temperature fell to a low around 48 °F. The wind was out of the north at 5 to 8 mph.
+The API's structured precipitation field for this period read 33 percent; the period's
+own narrative text stated 30 percent. Both figures appear in the source response and
+they are reported here rather than silently reconciled — see the attribution note at
+the foot of this document.
 
-**What to do about it:** If you have outdoor plans, a dog walk, or a basketball game
-to finish up tonight, take a jacket and a rain shower with you before 8 p.m. and do
-not bother planning around anything after that. The rest of tonight is dry.
+**What the guidance was for the evening of Friday, October 2:** with outdoor plans, a dog
+walk or a late game to finish, the forecast called for a jacket and a chance of showers
+before 8 p.m., and dry conditions after that.
 
 ### Saturday, October 3
 
-Saturday is the clean day of the weekend. The forecast calls for sunny skies and a
-high near 69 °F, with a northeast wind at 6 to 9 mph. Saturday night eases back to
-partly cloudy with a low around 53 °F and a lighter northeast wind of 1 to 6 mph. The
-precipitation chance is zero percent for both Saturday and Saturday night, so this is
-a good day to be outside and a reasonable night to leave the car uncovered.
+Saturday, October 3 was the clean day of the window. The forecast called for sunny skies
+and a high near 69 °F, with a northeast wind at 6 to 9 mph. Saturday night eased back
+to partly cloudy with a low around 53 °F and a lighter northeast wind of 1 to 6 mph.
+The precipitation chance was zero percent for both Saturday, October 3 and Saturday
+night.
 
 ### Sunday, October 4
 
-Sunday is the warmest day of the roundup and the only one with any measurable
-precipitation risk. The forecast calls for partly sunny skies and a high near 73 °F,
-with a light south wind at 0 to 3 mph. The precipitation chance peaks at 6 percent
-during the day and drops to 3 percent Sunday night, with a low around 50 °F and a west
-wind around 5 mph. Six percent is a trace at best — not a rain forecast for Belmont
-County, and no umbrella required.
+Sunday, October 4 was the warmest day of the roundup and the only one with any
+measurable precipitation risk. The forecast called for partly sunny skies and a high
+near 73 °F, with a light south wind at 0 to 3 mph. The precipitation chance peaked at
+6 percent during the day and dropped to 3 percent Sunday night, with a low around 50 °F
+and a west wind around 5 mph. Six percent is a trace at best, not a rain forecast for
+Belmont County.
 
 ### Monday, October 5
 
-Monday is dry, sunny, and the coldest night of the window. The forecast calls for a
-high near 67 °F with a northwest wind at 5 to 9 mph. After sunset the sky clears and
-the temperature falls to a low around 41 °F on a north wind at 2 to 8 mph. That 41 °F
-low is the number to watch. It is the first hard overnight freeze of the season's
-first cold push and it will catch anything left out. The precipitation chance is zero
-percent for both Monday and Monday night.
+Monday, October 5 was dry, sunny, and the coldest night of the window. The forecast
+called for a high near 67 °F with a northwest wind at 5 to 9 mph. After sunset the sky
+cleared and the temperature fell to a low around 41 °F on a north wind at 2 to 8 mph.
+That 41 °F low was the number to watch. It was the first hard overnight freeze of the
+season's first cold push. The precipitation chance was zero percent for both Monday and
+Monday night.
 
 ---
 
@@ -151,10 +146,10 @@ Sunday night: "Mainly clear. Lows around 50. Northwest winds around 5 mph." Mond
 
 There are two real disagreements, and neither is averaged away.
 
-**Disagreement 1 — tonight's precipitation chance.** The NWS gridpoint forecast's
-structured field says 33 percent for the Friday night period. The narrative text in
-that same gridpoint period says "Chance of precipitation is 30 percent." The NWS Zone
-Forecast Product for OHZ059 says "Chance of rain 40 percent." Open-Meteo says 50
+**Disagreement 1 — the Friday, October 2 evening precipitation chance.** The NWS gridpoint
+forecast's structured field says 33 percent for the Friday night period. The narrative
+text in that same gridpoint period says "Chance of precipitation is 30 percent." The NWS
+Zone Forecast Product for OHZ059 says "Chance of rain 40 percent." Open-Meteo says 50
 percent. That is a spread of 20 percentage points across four retrievals of the same
 evening.
 
@@ -164,8 +159,8 @@ of record that supplies every other number in the table and it is the number a r
 will hear re-read to them. The 33 percent structured field is in the same JSON
 document a few lines away, and the discrepancy is carried forward to the morning desk
 rather than hidden — the three values are all quoted here so a reader can see the
-spread. The operational point is unchanged across all of them: this is a chance of
-showers before 8 p.m., not a soaking rain, and no source in this roundup puts
+spread. The operational point is unchanged across all of them: that was a chance of
+showers before 8 p.m., not a soaking rain, and no source in this roundup put
 Belmont County above a 50 percent chance of rain for the evening. The higher figures
 from Open-Meteo and the ZFP are model-side, not official.
 
@@ -175,7 +170,7 @@ with 73 °F. Open-Meteo says 69.9 °F, roughly three degrees cooler.
 
 *Which one Belmont News is publishing and why:* **73 °F**, the gridpoint number,
 because it is the endpoint of record for this desk and the hand-written NWS zone
-product does not contradict it. Open-Meteo is a different numerical model run and runs
+product does not contradict it. Open-Meteo is a different numerical model run and ran
 cooler than the NWS on each of the three days in the table — 67.5 against 69 on
 Saturday, 69.9 against 73 on Sunday, 63.6 against 67 on Monday, an offset of about
 1.5 to 3.4 degrees in the same direction every day. A consistent offset across all
@@ -197,28 +192,29 @@ answered.
 
 ## What to do about it
 
-- **Tonight (30 percent chance of showers before 8 p.m.):** carry a jacket. After
-  8 p.m. it is dry and you can drop the umbrella.
-- **Saturday (0 percent):** the best outdoor day of the weekend. No weather action needed.
-- **Sunday (6 percent):** a trace at most. No action needed.
-- **Monday night (low around 41 °F):** bring in anything outside that water does not
-  kill, and cover the garden if you have not already. This is the coldest reading in
-  the three-day window by nine degrees, and it arrives under a clear sky, so there
-  will be no wind to blunt the cold.
+- **Friday, October 2, evening (30 percent chance of showers before 8 p.m.):** the forecast
+  called for a jacket. After 8 p.m. it was dry.
+- **Saturday, October 3 (0 percent):** the best outdoor day of the window.
+- **Sunday, October 4 (6 percent):** a trace at most.
+- **Monday, October 5, night (low around 41 °F) brought the first hard freeze of the
+  season.** Anything left outside was at risk that night. That was the coldest reading
+  in the three-day window by nine degrees, and it arrived under a clear sky, with no
+  wind to blunt the cold.
 
 ---
 
 ## Active alerts for OHZ059
 
-**No watch, warning, or advisory is active for forecast zone OHZ059 as of retrieval.**
+**No watch, warning or advisory was active for forecast zone OHZ059 at the time of
+retrieval, 2026-10-02.**
 
 This was checked against the **NWS Active Alerts API for the zone** at
 `https://api.weather.gov/alerts/active?zone=OHZ059`, retrieved 2026-10-02. The response
 returned a feature count of zero. As a second check on the same product, the same
 Active Alerts API was queried by point at
 `https://api.weather.gov/alerts/active?point=40.1006,-80.8501` and also returned zero
-active alerts. There is no severe weather to report for Belmont County in this
-roundup, and none is being implied.
+active alerts. There was no severe weather to report for Belmont County in this
+roundup, and none is implied.
 
 Note for readers who are checking this later: an empty alert response is a statement
 about the moment of retrieval, not a standing guarantee. Anyone reading after this
