@@ -87,12 +87,16 @@ podium. And it lands on a Saturday, when the people most likely to visit have th
 
 ### 3a. On-record documents
 
+Table: On-record documents checked for the recommended story. D1 is the Wall That Heals host committee event schedule at wallthathealsohio2026.com; D2 is the Belmont County Tourism Council event listing at visitbelmontcounty.com. Both retrieved 2026-10-02.
+
 | # | Issuing body | Document title | Retrieved | What it establishes |
 |---|---|---|---|---|
 | D1 | Belmont County Wall That Heals host committee; presenting sponsor American Legion St. Clairsville Post 159; national partner Vietnam Veterans Memorial Fund | "The Wall That Heals — Belmont County, Ohio 2026," Event Schedule page, `wallthathealsohio2026.com` | 2026-10-02 | Venue and address: Belmont County Fairgrounds, 45420 Roscoe Road, St. Clairsville, Ohio 43950. Free, open 24 hours a day Oct 1–4. **Saturday Oct 3: open 24 hours, Taps at dusk. Sunday Oct 4: closing ceremony 1:45 p.m., exhibit closes 2:00 p.m.** Friday Oct 2: Light the Night at 7:45 p.m. |
 | D2 | Belmont County Tourism Council (listed as organizer) | "The American Legion Post 159 Presents: The Wall That Heals," event listing, `visitbelmontcounty.com` | 2026-10-02 | Run dates Sept 29 – Oct 4, 2026. Belmont County is "one of just 31 communities nationwide selected to host." 58,281 names on the replica. Viewing free and 24-hour from 12 a.m. Thursday Oct 1 to 2 p.m. Sunday Oct 4. Welcome Home ceremony Oct 1 at noon. |
 
 ### 3b. Named human sources, on the record
+
+Table: Named on-record human sources checked for the recommended story, H1 to H7. Each source is the person named in the row, with the title they hold and the organisation they hold it at.
 
 | # | Name | Real title | Organisation |
 |---|---|---|---|
@@ -137,6 +141,8 @@ county services in place.
 
 **Sourcing test — on-record human sources**
 
+Table: Named on-record human sources checked for runner-up 1, the levy story: R1-H1 Gloria Llewellyn and R1-H2 Cindi Henry. Their titles are confirmed on the record by The Times Leader, WTRF and WTOV9, and by the Board of Developmental Disabilities’ own site.
+
 | # | Name | Real title | Organisation |
 |---|---|---|---|
 | R1-H1 | Gloria Llewellyn | Superintendent and CEO | Belmont, Harrison and Noble County Board of Developmental Disabilities |
@@ -146,6 +152,8 @@ Llewellyn is quoted at length on the record by three outlets and her title is co
 her own agency's site. Henry is quoted on the record by The Times Leader.
 
 **Sourcing test — on-record documents**
+
+Table: On-record documents checked for runner-up 1, the levy story. R1-D1 is the Belmont County Budget Commission public hearing notice, published 2026-09-09 via NoticeRegistry; R1-D2 is the Board of Developmental Disabilities Strategic Plan 2026-2028 at bcbdd.org. Both retrieved 2026-10-02.
 
 | # | Issuing body | Document title | Retrieved |
 |---|---|---|---|
@@ -174,6 +182,8 @@ next — because no Belmont County score from Friday, October 2 could be confirm
 record before this deadline.
 
 **Sourcing test — on-record documents and named reporting**
+
+Table: Sources checked for runner-up 2, the football slate piece. R2-H1 is Kim North’s “Week 7” preview in The Intelligencer and The Times Leader; R2-D1 is the WTOV9 Union Local Jets schedule page; R2-D2 is the OhioPrepFootball all-time series page. All retrieved 2026-10-02.
 
 | # | Source | Type | Retrieved |
 |---|---|---|---|
@@ -246,6 +256,8 @@ recommended sentence.
 ## 6. What still needs a human
 
 Each of these needs a named person to say it on the record before it can run.
+
+Table: The eight open sourcing items for the recommended story: a person or post to be contacted, and the one fact that person would confirm. No row carries a source, because nothing in this table has been confirmed yet.
 
 | # | Who | Role | What to confirm |
 |---|---|---|---|

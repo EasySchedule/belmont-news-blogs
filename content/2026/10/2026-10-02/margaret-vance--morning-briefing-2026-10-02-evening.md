@@ -56,6 +56,8 @@ newsroom sourcing standard, or it will be published as NONE with a reason.
 
 Belmont County, Ohio. Three days, Friday through Monday.
 
+Table: Belmont County three-day forecast for this edition, Friday 2026-10-02 through Monday 2026-10-05. Source: National Weather Service gridpoint forecast PBZ/50,48, point of record St. Clairsville, Ohio, retrieved 2026-10-02.
+
 | Date | High | Low | Sky | Wind | Precipitation chance |
 | --- | --- | --- | --- | --- | --- |
 | Fri 2026-10-02 | 73 °F | 48 °F | Chance rain showers, then mostly cloudy | N 5–8 mph | 40% before 8pm, then 30% |
@@ -72,6 +74,8 @@ is tonight's 40%: if you have errands, run them before the sky turns.
 
 Two named sources were pulled for this edition and compared. They do not agree
 exactly, and the newsroom is not averaging them.
+
+Table: Daily highs, and precipitation chances, as each of the two sources pulled for this edition returned them for St. Clairsville, Ohio. Sources: National Weather Service gridpoint forecast PBZ/50,48, and the Open-Meteo model run for point 40.1006,-80.8501, both retrieved 2026-10-02.
 
 | Day | NWS grid PBZ/50,48 | Open-Meteo model | Difference |
 | --- | --- | --- | --- |
