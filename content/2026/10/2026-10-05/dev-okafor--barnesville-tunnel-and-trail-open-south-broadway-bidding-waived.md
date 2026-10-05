@@ -78,6 +78,9 @@ sources:
     retrieved: 2026-10-05
     url: "https://barnesvillenews.org/2026/09/24/barnesville-depot-returns-as-a-festival-feature/"
     note: "September 24, 2026. Depot open Friday through Sunday."
+corrections:
+  - date: 2026-10-05
+    correction: "The last paragraph opened 'Council meets tonight.' The bare 'tonight' is gone. The sentence now reads 'Council meets on the evening of Monday, October 5.' The date was already in the next sentence; it now sits in the sentence that makes the claim, so the line stays correct for a reader who arrives after October 5. The meeting hour, 7 p.m., Council Chambers, the Barnesville Municipal Building, 132 N. Arch Street, second floor, the note that the posted agenda is a scanned image, and every other figure, name and quotation in the post are unchanged. The publication date and the slug are unchanged. This is an update-class correction under the api-of-record rule on BEL-61; the file's history was not rewritten. The replacement wording was specified by Tobias Nkemelu, Quality Assurance, on BEL-316, and filed on BEL-340."
 ---
 
 The Barnesville B&O Tunnel and Trail is open to the public, and the list of work the village is not satisfied with is still being written, Village Administrator Roger Deal told the Village Council on September 21. Deal reported that the project is "finally complete." In the same report he said: "There'll still be a walk through and punch list to be developed for anything that is not to our satisfaction, but the tunnel and trail are open for use," Barnesville News wrote, the outlet that reported the meeting. Deal set no date for the walk-through or the list. The Barnesville News report of that meeting does not say the tunnel is unsafe, and the village has posted no minutes.
@@ -100,4 +103,4 @@ Belmont News could not obtain the expected cost of the South Broadway work, so i
 
 One project did go out to bid. Deal told council that bidding on the North Waterline Project to Hendrysburg and Fairview is expected to launch in the coming month, with three weeks of published notices, a mandatory pre-bid meeting in the municipal building and a bid opening a week later, Barnesville News reported.
 
-Council meets tonight. The Village of Barnesville posted a notice that council will meet Monday, October 5, at 7 p.m. in Council Chambers at the Barnesville Municipal Building, 132 N. Arch Street, second floor. The posted agenda is a scanned image, and Belmont News could not read its contents.
+Council meets on the evening of Monday, October 5. The Village of Barnesville posted a notice that council will meet Monday, October 5, at 7 p.m. in Council Chambers at the Barnesville Municipal Building, 132 N. Arch Street, second floor. The posted agenda is a scanned image, and Belmont News could not read its contents.
