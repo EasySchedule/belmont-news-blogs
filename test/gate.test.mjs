@@ -292,43 +292,48 @@ test('a capitalised Staff is not the desk line', () => {
 // things are locked here: the registration itself, and the message that tells a
 // registry gap apart from a byline mistake.
 //
-// BEL-116 then made ownership a set rather than a single name, because a desk has
-// more than one reporter. What is locked now is co-ownership: every column still
-// has an owner, every column the archive can file is still registered, and the
-// placeholder owner is retained alongside the real reporter rather than replaced.
+// The Managing Editor ruled on BEL-116 twice. The first ruling made ownership a set,
+// so a desk could have more than one reporter. The second reversed that half: a
+// column is owned by exactly one reporter, and a reporter who needs a column gets one
+// of his own. `Lead Desk` is Danica Hoyt's and stays hers, `Morning Briefing` is
+// Margaret Vance's, `News Desk` is Rosalind Kimbrough's. Dev Okafor owns
+// `County Desk` and Priya Raghunathan owns `Community Desk`, so no column is shared
+// and no published column changes hands. The assertion below is therefore the
+// original BEL-55 one, byte for byte what it was on `a0a5031b`: one roster entry per
+// column. Misattribution is the failure this gate exists to catch, so the guard
+// against a column silently changing hands is not relaxed to clear a byline.
 
-test('every column the archive can file is owned by at least one roster entry', () => {
+test('every column the archive can file is owned by exactly one roster entry', () => {
   const roster = JSON.parse(ROSTER);
   const owners = new Map();
   for (const a of roster.agents) {
     for (const c of a.columns || []) {
-      if (!owners.has(c)) owners.set(c, []);
-      owners.get(c).push(a.name);
+      assert.ok(!owners.has(c), `column '${c}' is claimed by both '${owners.get(c)}' and '${a.name}'`);
+      owners.set(c, a.name);
     }
   }
   // Every column any filed post uses has to be one of these. A post naming a
-  // column nobody registered is the exact shape of the BEL-55 failure. Co-ownership
-  // changes how many names may sit on a column; it does not make an unowned
-  // column legal.
+  // column nobody registered is the exact shape of the BEL-55 failure.
   for (const name of ['Morning Briefing', 'News Desk', 'Lead Desk']) {
     assert.ok(owners.has(name), `no roster entry owns the column '${name}'`);
   }
-  assert.deepEqual(owners.get('News Desk'), ['Rosalind Kimbrough']);
+  assert.equal(owners.get('News Desk'), 'Rosalind Kimbrough');
 });
 
-test('a co-owned column keeps the placeholder owner and adds the real reporter', () => {
+test('the real reporters own a column each, and no published column moved', () => {
   const roster = JSON.parse(ROSTER);
   const by = (slug) => roster.agents.find((a) => a.slug === slug);
 
-  // The remedy is co-ownership, not transfer. Moving a column off the placeholder
-  // owner reds the gate on the published posts filed under that owner, which is the
+  // The placeholder owners keep the columns the live archive is filed under. Moving
+  // one of these reds the gate on posts that are already published, which is the
   // failure BEL-116 was filed against.
   assert.deepEqual(by('margaret-vance').columns, ['Morning Briefing']);
   assert.deepEqual(by('danica-hoyt').columns, ['Lead Desk']);
   assert.deepEqual(by('rosalind-kimbrough').columns, ['News Desk']);
 
-  assert.ok(by('dev-okafor').columns.includes('Lead Desk'), 'Dev Okafor must co-own the Lead Desk');
-  assert.ok(by('priya-raghunathan').columns.includes('Morning Briefing'), 'Priya Raghunathan must co-own the Morning Briefing');
+  // The reporters who need a column have one of their own, so nothing is shared.
+  assert.deepEqual(by('dev-okafor').columns, ['County Desk']);
+  assert.deepEqual(by('priya-raghunathan').columns, ['Community Desk']);
 });
 
 test('the roster is the eight placeholders, the four reporters and one desk line', () => {
@@ -423,22 +428,69 @@ test('the real newsroom is not affected by the retirement rule', () => {
   }
 });
 
-test('a co-owned column still files after the placeholders are retired', () => {
-  // The two halves have to hold together: a real reporter keeps the column access
-  // BEL-116 bought, and the placeholder owner keeps it for the archive.
-  const r = archive([post({
+test('column access still works after the placeholders are retired', () => {
+  // Two rulings meet here and neither may soften the other. BEL-116's second
+  // ruling gave every column exactly one owner; this change retires the
+  // placeholder bylines. Each half has to hold on its own terms:
+  //
+  //   - a real reporter keeps the column he owns;
+  //   - a retired byline still files its own column for the archive, on or
+  //     before its last day;
+  //   - and a live reporter still cannot file a column he does not own.
+  //
+  // That last one is the case worth keeping. Two acceptances on their own would
+  // still pass if the retirement rule had quietly widened who may file a column,
+  // so the refusal is the half that pins the ruling down.
+  const owned = archive([post({
     day: '2026-10-06',
     author: 'dev-okafor',
-    slug: 'lead-desk-from-the-real-desk',
+    slug: 'county-desk-from-its-own-reporter',
     frontMatter: `${validPost({
       date: '2026-10-06',
       edition: 'column',
-      column: 'Lead Desk',
+      column: 'County Desk',
       byline: 'Dev Okafor',
-      slug: 'lead-desk-from-the-real-desk',
+      slug: 'county-desk-from-its-own-reporter',
     })}\n${VALID_SOURCES}`,
   })]);
-  assert.equal(r.code, 0, r.stderr);
+  assert.equal(owned.code, 0, `Dev Okafor owns County Desk and must be able to file it: ${owned.stderr}`);
+  assert.equal(owned.index.posts[0].column, 'County Desk');
+
+  const archiveDay = archive([post({
+    day: '2026-10-03',
+    author: 'danica-hoyt',
+    slug: 'lead-desk-under-a-retired-byline',
+    frontMatter: `${validPost({
+      date: '2026-10-03',
+      edition: 'column',
+      column: 'Lead Desk',
+      byline: 'Danica Hoyt',
+      slug: 'lead-desk-under-a-retired-byline',
+    })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(archiveDay.code, 0, `Danica Hoyt retired on 2026-10-03 and must still file Lead Desk on that day: ${archiveDay.stderr}`);
+  assert.equal(archiveDay.index.posts[0].column, 'Lead Desk');
+
+  const notHis = archive([post({
+    day: '2026-10-06',
+    author: 'rosa-delgado',
+    slug: 'county-desk-from-a-reporter-who-does-not-own-it',
+    frontMatter: `${validPost({
+      date: '2026-10-06',
+      edition: 'column',
+      column: 'County Desk',
+      byline: 'Rosa Delgado',
+      slug: 'county-desk-from-a-reporter-who-does-not-own-it',
+    })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(notHis.code, 1, 'a live reporter must still be refused a column nobody gave him');
+  assert.match(notHis.stderr, /byline 'Rosa Delgado' does not own the column 'County Desk'/);
+  // Named, so the refusal says who does own it and the writer does not have to guess.
+  assert.match(notHis.stderr, /owned by 'Dev Okafor'/);
+  // The refusal has to be about ownership, not about retirement: Rosa Delgado is a
+  // current byline, and if the retirement rule were what stopped her the message
+  // would name a day instead of an owner.
+  assert.doesNotMatch(notHis.stderr, /retired/);
 });
 
 test('Margaret Vance and Mara Vance are two people, and only one of them files', () => {
@@ -501,12 +553,28 @@ test('a byline that does not own a registered column is told who does own it', (
   assert.match(r.stderr, /owned by 'Rosalind Kimbrough'/);
 });
 
-test('a co-owner may file the column it shares, which is the point of co-ownership', () => {
-  // Dev Okafor is refused for the Lead Desk on a roster that lists only Danica
-  // Hoyt, and the Lead Desk has exactly one reporter in the real newsroom. This
-  // is the case BEL-116 was filed about: without the column half, extending the
-  // roster still refuses real stories.
+test('a reporter may file the column he owns, and only that one', () => {
+  // Dev Okafor owns `County Desk`, so he can file it. The case BEL-116 was filed
+  // about was a real reporter being refused every column the newsroom could file:
+  // extending the roster by byline alone still refused real stories, because the
+  // only registered columns belonged to the placeholder bylines.
   const r = archive([post({
+    day: '2026-10-03',
+    author: 'dev-okafor',
+    frontMatter: `${validPost({
+      date: '2026-10-03',
+      edition: 'column',
+      column: 'County Desk',
+      byline: 'Dev Okafor',
+      slug: 'the-county-desk-may-file-its-own-column',
+    })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(r.code, 0, r.stderr);
+  assert.equal(r.index.posts[0].column, 'County Desk');
+
+  // Owning one column does not carry the next one. If a reporter could file any
+  // column once he owned any column, the ownership map would be decorative.
+  const other = archive([post({
     day: '2026-10-03',
     author: 'dev-okafor',
     frontMatter: `${validPost({
@@ -514,25 +582,12 @@ test('a co-owner may file the column it shares, which is the point of co-ownersh
       edition: 'column',
       column: 'Lead Desk',
       byline: 'Dev Okafor',
-      slug: 'the-lead-desk-may-file-its-own-column',
+      slug: 'and-not-the-one-he-does-not-own',
     })}\n${VALID_SOURCES}`,
   })]);
-  assert.equal(r.code, 0, r.stderr);
-  assert.equal(r.index.posts[0].column, 'Lead Desk');
-});
-
-test('a co-owned column names every owner, not just the first', () => {
-  // The refusal message is how a writer finds out who to ask. On a co-owned column
-  // "it is owned by 'Danica Hoyt'" would be half the answer and would read as
-  // though Dev Okafor could not file the Lead Desk at all.
-  const r = archive([post({
-    day: '2026-10-03',
-    author: 'corinne-ashby',
-    frontMatter: `${validPost({ edition: 'column', column: 'Lead Desk', byline: 'Corinne Ashby', slug: 'not-the-lead-desk-either' })}\n${VALID_SOURCES}`,
-  })]);
-  assert.equal(r.code, 1);
-  assert.match(r.stderr, /does not own the column 'Lead Desk'/);
-  assert.match(r.stderr, /owned by 'Danica Hoyt' and 'Dev Okafor'/);
+  assert.equal(other.code, 1);
+  assert.match(other.stderr, /byline 'Dev Okafor' does not own the column 'Lead Desk'/);
+  assert.match(other.stderr, /owned by 'Danica Hoyt'/);
 });
 
 test('a column no roster entry owns says so, instead of reading as a byline mistake', () => {
