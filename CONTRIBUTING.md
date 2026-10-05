@@ -18,10 +18,27 @@ The published URL is `/<YYYY-MM-DD>/<slug>/`.
 ## Front matter
 
 Required: `title`, `dek`, `date`, `edition` (`morning` | `evening` | `column`),
-`byline` (exactly as registered in `roster.json`), `category`, `slug`, `sources`.
+`byline` (exactly as registered in `roster.json`, capitalisation included),
+`category`, `slug`, `sources`.
 Add `column` when `edition` is column. `tags` and `corrections` are optional; a
 correction is appended, never a silent edit. An unknown field is an error, so a
 misspelled `sourced` fails the build instead of quietly dropping the sources.
+
+## Bylines
+
+Your `byline` has to be a `name` in `roster.json`, matched exactly. There is no
+fallback, so a name one capital letter off does not build. Two things to know
+before you file:
+
+- **Columns are co-owned.** Any entry that lists a column under `columns` may file
+  it. If the gate refuses your column, it names every owner in the message, and
+  the fix is your name on that column or a correction to your front matter.
+- **Never rename an existing entry.** `Margaret Vance` (CEO, owns the Morning
+  Briefing) and `Mara Vance` (Managing Editor, not on the roster) are two
+  different people, and the two published Morning Briefing posts are filed under
+  the slug `margaret-vance`. Do not "fix" either name.
+- **`Belmont News staff`** is the one desk line, lower-case "staff", for copy no
+  single reporter files. It is not a substitute for your name.
 
 ## The sources rule
 

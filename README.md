@@ -40,9 +40,14 @@ a JSON Schema cannot express:
 3. **Filename** — the author segment equals the roster slug of the byline.
 4. **Slug match** — the optional second filename segment equals the front matter slug.
 5. **Slug unique** — no two posts share a slug.
-6. **Column owner** — only the roster owner of a column may file it. The Morning
-   Briefing belongs to Margaret Vance, the News Desk to Rosalind Kimbrough, and
-   the Lead Desk to Danica Hoyt. Nobody else may file those columns.
+6. **Column owner** — a column is **co-owned**: any roster entry that lists it
+   under `columns` may file it, and the refusal message names every owner. The
+   Morning Briefing is owned by Margaret Vance and Priya Raghunathan, the News Desk
+   by Rosalind Kimbrough, and the Lead Desk by Danica Hoyt and Dev Okafor.
+   Ownership is a set and not a single name because a desk has more than one
+   reporter. It is still never *transferred*: taking a column off the byline the
+   published posts are filed under reds the gate on those posts, which is what
+   BEL-116 was filed about.
    A column named in a post that **no** roster entry owns is refused for every
    byline, and the message says it is a missing registration in `roster.json`
    rather than a byline mistake, because no byline change can fix it.
@@ -53,6 +58,52 @@ a JSON Schema cannot express:
 
 An unknown front matter field is an error, so a misspelled `sourced` fails the
 build instead of quietly dropping the sources list.
+
+## The roster
+
+`roster.json` is the list of bylines the gate accepts. A byline is matched on the
+exact name string, capitalisation included, and a name that is not on the roster
+does not build. There is no fallback and no "closest match".
+
+It holds thirteen entries in two groups.
+
+**The eight placeholders**, retained on purpose. Every post in the published
+archive is bylined to one of these names, so removing an entry does not clean up
+the roster, it invalidates filed work: the build goes red on the five posts
+already published and the site stops updating for everyone. `BEL-116` extended
+this list rather than replacing it, which is an editorial decision to leave to the
+Managing Editor and not a thing to undo in a plumbing change.
+
+**The four reporters and one desk line**, added by the same ruling:
+
+| slug | byline | columns |
+| --- | --- | --- |
+| `dev-okafor` | `Dev Okafor` | Lead Desk |
+| `priya-raghunathan` | `Priya Raghunathan` | Morning Briefing |
+| `rosa-delgado` | `Rosa Delgado` | — |
+| `hana-ishikawa` | `Hana Ishikawa` | — |
+| `belmont-news-staff` | `Belmont News staff` | — |
+
+Not every agent in the company is on the roster, and adding one is a ruling
+rather than a convenience. An engineer or an editor on the roster becomes a valid
+byline for a story they did not write, which makes the gate catch less, not more.
+A byline asserts authorship; that is the whole point of the check, and it is the
+failure that already happened once on this domain.
+
+`Belmont News staff` — lower-case "staff" — is the one desk line, for copy that
+no single reporter files. It is not a substitute for a reporter's name.
+
+### Margaret Vance and Mara Vance are two people
+
+`Margaret Vance`, Chief Executive Officer, is on the roster, owns the Morning
+Briefing, and has two published posts filed under the slug `margaret-vance`.
+`Mara Vance` is the Managing Editor, is not on the roster, and takes corrections
+credit lines rather than bylines.
+
+A find-and-replace across the archive from `Mara` to `Margaret`, or the reverse,
+will rename a slug and red the build on the two Morning Briefing posts. Change
+neither name. The test `Margaret Vance and Mara Vance are two people, and only one
+of them files` holds the slug in place.
 
 ### The date window has no backward half
 
@@ -77,7 +128,7 @@ dek: "One sentence under the headline"
 date: 2026-10-03
 edition: morning          # morning | evening | column
 column: "Morning Briefing" # only when edition is column
-byline: "Full name exactly as registered in roster.json"
+byline: "Full name exactly as registered in roster.json, capitalisation included"
 category: "kebab-case desk slug"
 slug: "url-slug, unique across the archive"
 tags:
