@@ -231,6 +231,59 @@ function scalar(raw) {
   return raw;
 }
 
+// ------------------------------------- serialised API response in a post body
+//
+// A post body is prose. BEL-132 published one that was not: a publish step took
+// a document API response and wrote the whole envelope into the markdown below
+// the front matter, instead of the envelope's `body` field. The front matter
+// was correct, so the schema, the path, the byline, the roster and the sources
+// all passed, the build succeeded and the deploy went out. The reader received
+// a page whose entire body was one HTML-escaped JSON object.
+//
+// This is deliberately a shape test and not a key-name test. Naming
+// `companyId` or `latestRevisionId` would only catch that one document store's
+// envelope; the next store names its fields differently and the same mistake
+// publishes again. What does not vary is that the body parses as a JSON object
+// carrying a nested string body, which is what a response envelope is.
+//
+// The check is on the trimmed body alone and ignores a fenced code block, so a
+// post that legitimately quotes a JSON document still passes. A code fence is
+// the honest way to publish a JSON sample and the gate should not argue with it.
+//
+// Returns an error string, or null when the body is prose.
+function apiEnvelopeError(body, rel) {
+  const prose = stripFencedCode(body).trim();
+  if (!prose.startsWith('{') || !prose.endsWith('}')) return null;
+
+  let parsed;
+  try {
+    parsed = JSON.parse(prose);
+  } catch {
+    // Not valid JSON. Prose that opens with a brace is common enough, and a
+    // parse failure here is not evidence of an envelope.
+    return null;
+  }
+  if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+
+  // An envelope carries the article inside a string field. Require that shape
+  // rather than accepting any object, so a post that is legitimately a JSON
+  // document about the weather is not refused for being an object.
+  const inner = typeof parsed.body === 'string' ? parsed.body : null;
+  if (inner === null || !inner.trim()) return null;
+
+  return `${rel}: the post body is a serialised API response object, not prose. `
+    + `The whole response was written here instead of its "body" field, so the `
+    + `article is trapped inside a JSON string and the store's internal ids are `
+    + `published in reader-facing HTML. Write the body's own text as the post `
+    + `body. If this post genuinely has to show a JSON sample, put it in a `
+    + `fenced code block.`;
+}
+
+// Remove fenced code blocks so a quoted JSON sample is not read as the body.
+function stripFencedCode(body) {
+  return String(body).replace(/^```[\s\S]*?^```/gm, '');
+}
+
 // --------------------------------------------- JSON Schema subset validator
 
 function validate(schema, value, pointer, errors, path) {
@@ -406,6 +459,27 @@ for (const full of files) {
   if (Array.isArray(data.sources) && data.sources.length === 0) {
     errors.push(`${rel}: has an empty sources list. An unsourced post does not build.`);
   }
+
+  // A post body that is a serialised API response object, rather than prose.
+  //
+  // BEL-132. A publish step fetched a document and pasted the whole response
+  // envelope into the markdown instead of the response's `body` field. The
+  // front matter was correct, so every other gate passed and the site built and
+  // deployed cleanly. The reader got a page whose body was one escaped JSON
+  // object: no headings, the article visible only as a JSON string, and the
+  // store's internal companyId, issueId, id, createdByAgentId and
+  // latestRevisionId printed in reader-facing HTML.
+  //
+  // It survived because the post had expired, so it dropped off the front page
+  // and out of feed.xml and no QA pass ever opened it, while sitemap.xml and
+  // build-info.json still pointed at it.
+  //
+  // This checks the shape rather than one document's key names. A body is prose
+  // or it is not, and a JSON object is not prose. The front matter cannot be
+  // used to tell the two apart: the envelope was pasted below it, so the front
+  // matter was perfect and the page still rendered a string of JSON.
+  const blob = apiEnvelopeError(body, rel);
+  if (blob) errors.push(blob);
 
   posts.push({ file: rel, frontMatter: data, body: body.trim() });
 }

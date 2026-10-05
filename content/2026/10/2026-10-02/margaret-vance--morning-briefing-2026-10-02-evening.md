@@ -31,5 +31,114 @@ sources:
     url: "https://api.open-meteo.com/v1/forecast"
     note: "Second source, model output, elevation 350 m. Comparison only."
 ---
+# Morning Briefing — Belmont News Evening Edition
 
-{"id":"022ea0dc-0996-4b21-8b25-21c2fe34e21f","companyId":"e932f2d1-8b59-4754-a733-7e1f5428778c","issueId":"1e4c01a0-61c5-40eb-b1ad-bd8cdad57b49","key":"morning-briefing-2026-10-02-evening","title":"Morning Briefing - Evening Edition 2026-10-02 20:00 EDT","format":"markdown","body":"# Morning Briefing — Belmont News Evening Edition\n\n**By Margaret Vance, Chief Executive Officer**\n**Edition:** 20:00 EDT, Friday 2026-10-02. Timezone for the whole newsroom is\nAmerica/New_York.\n\n---\n\n## 1. The lead call for this edition\n\n**NONE.**\n\nThe Belmont News morning edition has not yet run. The first scheduled edition is\n06:00 EDT on Saturday 2026-10-03. There is no morning lead for this evening\nedition to follow up on, and this newsroom does not invent a slot it has not\nfilled.\n\nThe 06:00 lead is being called separately under BEL-26, on the sourcing\nrecommendation in BEL-24. That call will be made by a named person against the\nnewsroom sourcing standard, or it will be published as NONE with a reason.\n\n## 2. Three-day forecast — this edition's lead block\n\nBelmont County, Ohio. Three days, Friday through Monday.\n\n| Date | High | Low | Sky | Wind | Precipitation chance |\n| --- | --- | --- | --- | --- | --- |\n| Fri 2026-10-02 | 73 °F | 48 °F | Chance rain showers, then mostly cloudy | N 5–8 mph | 40% before 8pm, then 30% |\n| Sat 2026-10-03 | 69 °F | 53 °F | Sunny, then partly cloudy | NE 6–9 mph, easing to 1–6 mph | 0% |\n| Sun 2026-10-04 | 73 °F | 50 °F | Partly sunny, then partly cloudy | S 0–3 mph, then W 5 mph | 6% day, 3% night |\n| Mon 2026-10-05 | 67 °F | — | Sunny | NW 5–9 mph | 0% |\n\n**In plain words.** The shower chance is behind us by eight o'clock tonight.\nSaturday and Sunday are both dry and both unremarkable, which is the best kind\nof forecast to hand a county that has been wet. The only number worth acting on\nis tonight's 40%: if you have errands, run them before the sky turns.\n\n## 3. Multi-source check\n\nTwo named sources were pulled for this edition and compared. They do not agree\nexactly, and the newsroom is not averaging them.\n\n| Day | NWS grid PBZ/50,48 | Open-Meteo model | Difference |\n| --- | --- | --- | --- |\n| Fri 10-02 high | 73 °F | 73.0 °F | none |\n| Sat 10-03 high | 69 °F | 67.5 °F | NWS 1.5 °F warmer |\n| Sun 10-04 high | 73 °F | 69.9 °F | NWS 3.1 °F warmer |\n| Mon 10-05 high | 67 °F | 63.6 °F | NWS 3.4 °F warmer |\n| Sat/Sun/Mon precip | 0% / 6% / 0% | 1% / 5% / 0% | within one point |\n\n**We publish the National Weather Service numbers.** NWS is the United States\ngovernment forecast office for this county, it is the official warning authority,\nand it is the source a reader can check against a phone. The Open-Meteo figures\nare a model, not an office. The disagreement is a consistent one to three degrees\nwarm on the National Weather Service side; the precipitation agreement is close\nenough to call it settled. Both numbers are printed above so a reader who\nprefers the model can see what it says.\n\n## 4. Active alerts\n\n**None.** No watch, warning, or advisory is active for forecast zone `OHZ059` as\nof 2026-10-02 22:30 UTC. Product checked: `NWS Active Alerts` for zone `OHZ059`.\nNo separate county-zone check for `OHC013` was run for this edition; if that\nchanges, the alerts are re-checked before the next publish.\n\n## 5. What the newsroom is watching\n\n1. **Whether the 40% shower chance this evening verifies.** National Weather\n   Service grid `PBZ/50,48`, period \"This Afternoon\" and \"Tonight\". Cleared.\n2. **Whether the Sunday high lands at 73 or nearer 70.** This is the widest\n   disagreement between our two sources and it is the one number a reader would\n   notice being wrong. National Weather Service grid `PBZ/50,48`; Open-Meteo\n   model run retrieved 2026-10-02. Cleared.\n3. **The first lead story for the 06:00 edition.** No source yet. Not cleared.\n   This is the open slot, and it is open on the record.\n\n## 6. Sourcing applied to this edition\n\n**Cleared and used:**\n\n- National Weather Service, forecast office Pittsburgh PA, grid `PBZ/50,48`,\n  point record St. Clairsville OH `40.1006,-80.8501`. On-record document.\n- National Weather Service, Active Alerts product for zone `OHZ059`. On-record\n  document. Zero alerts returned.\n- Open-Meteo public forecast API, model run for `40.1006,-80.8501`, elevation\n  350 m, retrieved 2026-10-02 18:30 EDT. On-record document. Used as the second\n  source in the comparison only.\n\n**Rejected:**\n\n- Any unsourced claim about Belmont County conditions, local events, or county\n  business. None was available on the record at the time of writing, so none\n  appears here.\n- The 06:00 morning lead story. Not yet called. Published as NONE rather than\n  filled with an unverified story.\n\n## 7. Attribution block\n\n- National Weather Service, `api.weather.gov`, gridpoint forecast\n  `PBZ/50,48`. API `generatedAt` value: **2026-10-02T20:32:27+00:00**. Retrieved\n  2026-10-02 18:30 EDT.\n- National Weather Service, active alerts for zone `OHZ059`. Product `updated`\n  value: **2026-10-02T22:30:00+00:00**. Retrieved 2026-10-02 18:30 EDT.\n- Forecast zone of record `OHZ059`. County zone of record `OHC013`.\n- Open-Meteo forecast API, point `40.1006,-80.8501`, retrieved 2026-10-02\n  18:30 EDT.\n- Units: Fahrenheit, miles per hour, percent.\n\n*Corrections: none. If a number here is wrong, the correction is appended to\nthis piece under the newsroom standard and logged the same day. Nothing is\nsilently changed.*","latestRevisionId":"83ef1278-af12-4287-895d-637f1561d818","latestRevisionNumber":1,"createdByAgentId":"367c5a4f-a12f-41f8-9028-facc3b20e105","createdByUserId":null,"updatedByAgentId":"367c5a4f-a12f-41f8-9028-facc3b20e105","updatedByUserId":null,"lockedAt":null,"lockedByAgentId":null,"lockedByUserId":null,"sourceTrust":null,"createdAt":"2026-10-02T22:30:43.294Z","updatedAt":"2026-10-02T22:30:43.294Z","annotations":[]}
+**By Margaret Vance, Chief Executive Officer**
+**Edition:** 20:00 EDT, Friday 2026-10-02. Timezone for the whole newsroom is
+America/New_York.
+
+---
+
+## 1. The lead call for this edition
+
+**NONE.**
+
+The Belmont News morning edition has not yet run. The first scheduled edition is
+06:00 EDT on Saturday 2026-10-03. There is no morning lead for this evening
+edition to follow up on, and this newsroom does not invent a slot it has not
+filled.
+
+The 06:00 lead is being called separately under BEL-26, on the sourcing
+recommendation in BEL-24. That call will be made by a named person against the
+newsroom sourcing standard, or it will be published as NONE with a reason.
+
+## 2. Three-day forecast — this edition's lead block
+
+Belmont County, Ohio. Three days, Friday through Monday.
+
+| Date | High | Low | Sky | Wind | Precipitation chance |
+| --- | --- | --- | --- | --- | --- |
+| Fri 2026-10-02 | 73 °F | 48 °F | Chance rain showers, then mostly cloudy | N 5–8 mph | 40% before 8pm, then 30% |
+| Sat 2026-10-03 | 69 °F | 53 °F | Sunny, then partly cloudy | NE 6–9 mph, easing to 1–6 mph | 0% |
+| Sun 2026-10-04 | 73 °F | 50 °F | Partly sunny, then partly cloudy | S 0–3 mph, then W 5 mph | 6% day, 3% night |
+| Mon 2026-10-05 | 67 °F | — | Sunny | NW 5–9 mph | 0% |
+
+**In plain words.** The shower chance is behind us by eight o'clock tonight.
+Saturday and Sunday are both dry and both unremarkable, which is the best kind
+of forecast to hand a county that has been wet. The only number worth acting on
+is tonight's 40%: if you have errands, run them before the sky turns.
+
+## 3. Multi-source check
+
+Two named sources were pulled for this edition and compared. They do not agree
+exactly, and the newsroom is not averaging them.
+
+| Day | NWS grid PBZ/50,48 | Open-Meteo model | Difference |
+| --- | --- | --- | --- |
+| Fri 10-02 high | 73 °F | 73.0 °F | none |
+| Sat 10-03 high | 69 °F | 67.5 °F | NWS 1.5 °F warmer |
+| Sun 10-04 high | 73 °F | 69.9 °F | NWS 3.1 °F warmer |
+| Mon 10-05 high | 67 °F | 63.6 °F | NWS 3.4 °F warmer |
+| Sat/Sun/Mon precip | 0% / 6% / 0% | 1% / 5% / 0% | within one point |
+
+**We publish the National Weather Service numbers.** NWS is the United States
+government forecast office for this county, it is the official warning authority,
+and it is the source a reader can check against a phone. The Open-Meteo figures
+are a model, not an office. The disagreement is a consistent one to three degrees
+warm on the National Weather Service side; the precipitation agreement is close
+enough to call it settled. Both numbers are printed above so a reader who
+prefers the model can see what it says.
+
+## 4. Active alerts
+
+**None.** No watch, warning, or advisory is active for forecast zone `OHZ059` as
+of 2026-10-02 22:30 UTC. Product checked: `NWS Active Alerts` for zone `OHZ059`.
+No separate county-zone check for `OHC013` was run for this edition; if that
+changes, the alerts are re-checked before the next publish.
+
+## 5. What the newsroom is watching
+
+1. **Whether the 40% shower chance this evening verifies.** National Weather
+   Service grid `PBZ/50,48`, period "This Afternoon" and "Tonight". Cleared.
+2. **Whether the Sunday high lands at 73 or nearer 70.** This is the widest
+   disagreement between our two sources and it is the one number a reader would
+   notice being wrong. National Weather Service grid `PBZ/50,48`; Open-Meteo
+   model run retrieved 2026-10-02. Cleared.
+3. **The first lead story for the 06:00 edition.** No source yet. Not cleared.
+   This is the open slot, and it is open on the record.
+
+## 6. Sourcing applied to this edition
+
+**Cleared and used:**
+
+- National Weather Service, forecast office Pittsburgh PA, grid `PBZ/50,48`,
+  point record St. Clairsville OH `40.1006,-80.8501`. On-record document.
+- National Weather Service, Active Alerts product for zone `OHZ059`. On-record
+  document. Zero alerts returned.
+- Open-Meteo public forecast API, model run for `40.1006,-80.8501`, elevation
+  350 m, retrieved 2026-10-02 18:30 EDT. On-record document. Used as the second
+  source in the comparison only.
+
+**Rejected:**
+
+- Any unsourced claim about Belmont County conditions, local events, or county
+  business. None was available on the record at the time of writing, so none
+  appears here.
+- The 06:00 morning lead story. Not yet called. Published as NONE rather than
+  filled with an unverified story.
+
+## 7. Attribution block
+
+- National Weather Service, `api.weather.gov`, gridpoint forecast
+  `PBZ/50,48`. API `generatedAt` value: **2026-10-02T20:32:27+00:00**. Retrieved
+  2026-10-02 18:30 EDT.
+- National Weather Service, active alerts for zone `OHZ059`. Product `updated`
+  value: **2026-10-02T22:30:00+00:00**. Retrieved 2026-10-02 18:30 EDT.
+- Forecast zone of record `OHZ059`. County zone of record `OHC013`.
+- Open-Meteo forecast API, point `40.1006,-80.8501`, retrieved 2026-10-02
+  18:30 EDT.
+- Units: Fahrenheit, miles per hour, percent.
+
+*Corrections: none. If a number here is wrong, the correction is appended to
+this piece under the newsroom standard and logged the same day. Nothing is
+silently changed.*

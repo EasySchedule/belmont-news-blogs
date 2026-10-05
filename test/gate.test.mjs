@@ -289,12 +289,20 @@ test('a capitalised Staff is not the desk line', () => {
 // so a desk could have more than one reporter. The second reversed that half: a
 // column is owned by exactly one reporter, and a reporter who needs a column gets one
 // of his own. `Lead Desk` is Danica Hoyt's and stays hers, `Morning Briefing` is
-// Margaret Vance's, `News Desk` is Rosalind Kimbrough's. Dev Okafor owns
-// `County Desk` and Priya Raghunathan owns `Community Desk`, so no column is shared
-// and no published column changes hands. The assertion below is therefore the
+// Margaret Vance's. Dev Okafor owns `County Desk` and Priya Raghunathan owns
+// `Community Desk`, so no column is shared. The assertion below is therefore the
 // original BEL-55 one, byte for byte what it was on `a0a5031b`: one roster entry per
 // column. Misattribution is the failure this gate exists to catch, so the guard
 // against a column silently changing hands is not relaxed to clear a byline.
+//
+// BEL-192 moved one column. `News Desk` was registered under `Rosalind Kimbrough`,
+// a placeholder byline, and PR #18 retires that byline at 2026-10-03. A retired
+// byline may file the archive and nothing after it, so once #18 lands no byline at
+// all can file `News Desk`. The desk ruled the column transfers to a live byline,
+// `Rosa Delgado`. Nothing in the archive moves with it: no post has ever named
+// `News Desk` as its column, so there is no published post filed under the old owner
+// to go red. The transfer is a change of name in the registry, not a rewrite of
+// published bylines.
 
 test('every column the archive can file is owned by exactly one roster entry', () => {
   const roster = JSON.parse(ROSTER);
@@ -307,10 +315,10 @@ test('every column the archive can file is owned by exactly one roster entry', (
   }
   // Every column any filed post uses has to be one of these. A post naming a
   // column nobody registered is the exact shape of the BEL-55 failure.
-  for (const name of ['Morning Briefing', 'News Desk', 'Lead Desk']) {
+  for (const name of ['Morning Briefing', 'News Desk', 'Lead Desk', 'County Desk', 'Community Desk']) {
     assert.ok(owners.has(name), `no roster entry owns the column '${name}'`);
   }
-  assert.equal(owners.get('News Desk'), 'Rosalind Kimbrough');
+  assert.equal(owners.get('News Desk'), 'Rosa Delgado');
 });
 
 test('the real reporters own a column each, and no published column moved', () => {
@@ -322,11 +330,17 @@ test('the real reporters own a column each, and no published column moved', () =
   // failure BEL-116 was filed against.
   assert.deepEqual(by('margaret-vance').columns, ['Morning Briefing']);
   assert.deepEqual(by('danica-hoyt').columns, ['Lead Desk']);
-  assert.deepEqual(by('rosalind-kimbrough').columns, ['News Desk']);
+
+  // `News Desk` used to sit here and does not any more. Rosalind Kimbrough owns no
+  // column now: PR #18 retires her byline, so a column filed under her would be
+  // unfileable the moment that PR lands. Pinned because the move is the ruling and
+  // the suite is where the ruling stops drifting.
+  assert.deepEqual(by('rosalind-kimbrough').columns, []);
 
   // The reporters who need a column have one of their own, so nothing is shared.
   assert.deepEqual(by('dev-okafor').columns, ['County Desk']);
   assert.deepEqual(by('priya-raghunathan').columns, ['Community Desk']);
+  assert.deepEqual(by('rosa-delgado').columns, ['News Desk']);
 });
 
 test('the roster is the eight placeholders, the four reporters and one desk line', () => {
@@ -374,21 +388,44 @@ test('every real reporter may file a non-column edition', () => {
 
 test('the registered News Desk owner may file that column', () => {
   const r = archive([post({
-    day: '2026-10-03',
-    author: 'rosalind-kimbrough',
+    day: '2026-10-05',
+    author: 'rosa-delgado',
     frontMatter: `${frontMatterOf({
       title: '"A headline long enough to clear the schema"',
       dek: '"One sentence under the headline."',
-      date: '2026-10-03',
+      date: '2026-10-05',
       edition: 'column',
       column: 'News Desk',
-      byline: 'Rosalind Kimbrough',
+      byline: 'Rosa Delgado',
       category: 'news-desk',
-      slug: 'news-desk-2026-10-03',
+      slug: 'news-desk-2026-10-05',
     })}\n${VALID_SOURCES}`,
   })]);
   assert.equal(r.code, 0, r.stderr);
   assert.equal(r.index.posts[0].column, 'News Desk');
+});
+
+test('News Desk has a live owner, so the placeholder retirement cannot close it', () => {
+  // The BEL-192 defect, stated as an assertion. PR #18 retires eight placeholder
+  // bylines at 2026-10-03 and refuses them for anything dated after that day. While
+  // the only registered owner of `News Desk` was one of those bylines, the column had
+  // no fileable owner at all and the refusal named an owner who could no longer sign
+  // anything. A live owner is what closes it, so the roster entry is checked for the
+  // property the ruling is actually about: not retired, and a distinct person from
+  // the eight placeholders.
+  const roster = JSON.parse(ROSTER);
+  const newsDesk = roster.agents.find((a) => (a.columns || []).includes('News Desk'));
+  assert.ok(newsDesk, 'no roster entry owns the column \'News Desk\'');
+
+  const placeholders = [
+    'margaret-vance', 'grant-kowalczyk', 'nathan-beausoleil', 'elliot-bramwell',
+    'rosalind-kimbrough', 'thandiwe-okonjo', 'corinne-ashby', 'danica-hoyt',
+  ];
+  assert.ok(!placeholders.includes(newsDesk.slug),
+    `News Desk is owned by the placeholder byline '${newsDesk.name}', who PR #18 retires`);
+  // Only the retirement rule PR #18 adds can close a column, and it keys off this.
+  assert.equal(newsDesk.retired, undefined,
+    `the owner of News Desk is retired at ${newsDesk.retired}, so no byline can file it`);
 });
 
 test('a byline that does not own a registered column is told who does own it', () => {
@@ -400,7 +437,7 @@ test('a byline that does not own a registered column is told who does own it', (
   assert.equal(r.code, 1);
   assert.match(r.stderr, /byline 'Corinne Ashby' does not own the column 'News Desk'/);
   // The owner is named, so the writer does not have to guess.
-  assert.match(r.stderr, /owned by 'Rosalind Kimbrough'/);
+  assert.match(r.stderr, /owned by 'Rosa Delgado'/);
 });
 
 test('a reporter may file the column he owns, and only that one', () => {
@@ -584,4 +621,107 @@ test('expires does not weaken the date window or the sourcing rule', () => {
   const unsourced = archive([post({ day: '2026-10-02', frontMatter: validPost({ expires: '2026-10-30' }) })]);
   assert.equal(unsourced.code, 1);
   assert.match(unsourced.stderr, /sources/);
+});
+
+// ------------------------------------------- BEL-132: a JSON body is not prose
+//
+// A publish step took a document API response and wrote the whole envelope into
+// the markdown below the front matter, instead of the envelope's `body` field.
+// Every other gate passed, because the front matter was correct: the path was
+// right, the byline was in the roster, the sources were named. The site built,
+// the deploy went out, and the reader got a page whose body was one escaped
+// JSON object with the store's internal ids printed in it.
+//
+// The post had also expired, so it dropped off the front page and out of
+// feed.xml and no QA pass opened it, while sitemap.xml still pointed at it.
+
+const ENVELOPE_BODY = `${JSON.stringify({
+  id: '022ea0dc-0996-4b21-8b25-21c2fe34e21f',
+  companyId: 'e932f2d1-8b59-4754-a733-7e1f5428778c',
+  issueId: '1e4c01a0-61c5-40eb-b1ad-bd8cdad57b49',
+  key: 'morning-briefing-2026-10-02-evening',
+  title: 'Morning Briefing - Evening Edition 2026-10-02 20:00 EDT',
+  format: 'markdown',
+  body: '# Morning Briefing\n\n**By Margaret Vance.** The shower chance is behind us.\n',
+  latestRevisionId: '83ef1278-af12-4287-895d-637f1561d818',
+  createdByAgentId: '367c5a4f-a12f-41f8-9028-facc3b20e105',
+  annotations: [],
+})}\n`;
+
+test('the gate refuses a post whose body is a serialised API response', () => {
+  const r = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: ENVELOPE_BODY,
+  })]);
+  assert.equal(r.code, 1, 'an API envelope as a post body must fail the gate');
+  assert.match(r.stderr, /serialised API response/);
+});
+
+test('the envelope is refused on its shape, and names the fix in the message', () => {
+  // The error has to be actionable. Whoever files a post after seeing this has
+  // to be told what to write instead, not just that the gate is unhappy.
+  const r = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: ENVELOPE_BODY,
+  })]);
+  assert.match(r.stderr, /"body" field/);
+  assert.match(r.stderr, /fenced code block/);
+});
+
+test('the envelope is caught even when the front matter is perfectly valid', () => {
+  // This is the whole failure. Nothing else about the file was wrong, so a gate
+  // that only looked at the front matter would have published it.
+  const only = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: ENVELOPE_BODY,
+  })], ['--check']);
+  assert.equal(only.code, 1);
+  // And the one thing it reports is the body, not a pile of unrelated noise.
+  assert.equal((only.stderr.match(/serialised API response/g) || []).length, 1);
+});
+
+test('an ordinary prose body still passes', () => {
+  const r = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: 'The forecast reads **73 degrees** and the desk logged it.\n',
+  })]);
+  assert.equal(r.code, 0, `prose must pass: ${r.stderr}`);
+});
+
+test('prose that merely contains a brace or inline JSON still passes', () => {
+  // A gate that refused any body starting with a brace would refuse real copy.
+  for (const body of [
+    'The forecast reads {high 73} today, and the desk logged it.\n',
+    'The response was {"ok":true} and nothing else came back.\n',
+  ]) {
+    const r = archive([post({ day: '2026-10-02', frontMatter: validPost() + '\n' + VALID_SOURCES, body })]);
+    assert.equal(r.code, 0, `this prose must pass: ${body.trim()} -> ${r.stderr}`);
+  }
+});
+
+test('a post that quotes JSON in a fenced code block still passes', () => {
+  // A JSON sample is legitimate newsroom copy when it is marked as one. The
+  // check reads the body with fenced blocks removed, so quoting a payload is
+  // not confused with having shipped one.
+  const r = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: 'A reader sent us this payload:\n\n```json\n{"id":"abc","companyId":"x","body":"hi"}\n```\n\nIt parsed clean on the first try.\n',
+  })]);
+  assert.equal(r.code, 0, `a fenced JSON sample must pass: ${r.stderr}`);
+});
+
+test('an object with no body field is not treated as an envelope', () => {
+  // The envelope signature is a nested article string. A post that is
+  // legitimately a JSON object without one is not this defect.
+  const r = archive([post({
+    day: '2026-10-02',
+    frontMatter: validPost() + '\n' + VALID_SOURCES,
+    body: '{"station":"K20","high":73}\n',
+  })]);
+  assert.equal(r.code, 0, r.stderr);
 });
