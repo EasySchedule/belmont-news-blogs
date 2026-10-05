@@ -1,6 +1,6 @@
 ---
-title: "Lead recommendation: The Wall That Heals closes Sunday at the Belmont County Fairgrounds"
-dek: "Our sourcing test on the county's largest live story: hours, address, and the closing ceremony time. On record and ready to write."
+title: "Lead recommendation: The Wall That Heals closed at 2 p.m. Sunday, October 4 at the Belmont County Fairgrounds"
+dek: "Our sourcing test on the Wall That Heals: the hours, the address and the closing ceremony time as they stood for Saturday, October 3 and Sunday, October 4. On record, and the story it recommended ran on October 3."
 date: 2026-10-03
 edition: column
 column: Lead Desk
@@ -45,6 +45,9 @@ sources:
     organization: "Ogden Newspapers"
     retrieved: 2026-10-02
     note: "One newsroom, not four independent confirmations. Treated as a single source, and the crowd figures are held back accordingly."
+corrections:
+  - date: 2026-10-05
+    correction: "An update-class correction to the copy, not the reporting. The exhibit closed at 2 p.m. on Sunday, October 4, and this post still spoke of the visit as though it were ahead: the headline said it closes Sunday, the dek called it the county's largest live story and ready to write, and the recommendation told a reader who had not gone that they could still go that evening. Every time-anchored sentence in the headline, the dek, sections 1, 2 and 5 is now dated to the day it describes and written in the past tense, or cut. The recommendation itself is kept as a record of what the desk proposed on 2026-10-02. The publication date is unchanged at 2026-10-03 and the slug is unchanged. No figure, address, time, sponsor, source or name changed. Wording specified by Tobias Nkemelu (QA) on BEL-197."
 ---
 
 Prepared by: Danica Hoyt, Reporter, Sports and Community.
@@ -55,31 +58,34 @@ Status: **one recommendation made. It clears the sourcing test.**
 
 ## 1. One recommendation
 
-**The Wall That Heals finishes its Belmont County visit this weekend, and the strongest
-local story for Saturday's 06:00 edition is a last-call service piece: the wall stands
-free and open 24 hours today and tomorrow at the Belmont County Fairgrounds, 45420
-Roscoe Road in St. Clairsville, Taps plays at dusk tonight, and the closing ceremony is
-at 1:45 p.m. Sunday.**
+**The Wall That Heals finished its Belmont County visit on Sunday, October 4, and the
+strongest local story for the 06:00 edition of Saturday, October 3 was a last-call
+service piece: the wall stood free and open 24 hours on Saturday, October 3 and Sunday,
+October 4 at the Belmont County Fairgrounds, 45420 Roscoe Road in St. Clairsville, Taps
+played at dusk on Saturday, October 3, and the closing ceremony was at 1:45 p.m. Sunday,
+October 4.**
 
 One note on framing, because it decides whether this story works. The wall arriving, and
 Thursday's opening ceremony, are already covered. Three other papers have run those. The
-story that is still open on Saturday morning is the **last chance** — hours, address, what
-happens tonight, and when it ends. Belmont News should not re-report the arrival. It should
-tell a reader who has not gone yet that they can still go tonight.
+one story the desk had not yet filed on the morning of Saturday, October 3 was the
+**last chance** — hours, address, what happened that evening, and when it ended. Belmont
+News should not re-report the arrival. The desk's instruction was to tell a reader who had
+not yet visited that they could still go that evening.
 
 ---
 
 ## 2. Why this one
 
-It is the largest live story in the county this weekend, and it is the only one a reader
-can still act on before lunch. Every Belmont County reader either drove past the wall on
-its escort into St. Clairsville or saw it in the news, and a plain, practical morning
-note is more useful to them than another recap of a ceremony they did not attend. The
-window is closing: two days left, then it is gone until the next host site. It is also
-genuinely a Belmont County story and not a story that happened to pass through — the
-county fairgrounds, American Legion St. Clairsville Post 159 as presenting sponsor, the
-Belmont County Tourism Council as organizer, and the Belmont County commissioner on the
-podium. And it lands on a Saturday, when the people most likely to visit have the day off.
+It was the largest live story in the county for the weekend of October 3-4, and it was the
+only one a reader could still act on before lunch on Saturday, October 3. Every Belmont
+County reader either drove past the wall on its escort into St. Clairsville or saw it in
+the news, and a plain, practical morning note is more useful to them than another recap of
+a ceremony they did not attend. The window was closing: two days left, Saturday, October 3
+and Sunday, October 4, then it was gone until the next host site. It is also genuinely a
+Belmont County story and not a story that happened to pass through — the county
+fairgrounds, American Legion St. Clairsville Post 159 as presenting sponsor, the Belmont
+County Tourism Council as organizer, and the Belmont County commissioner on the podium.
+And it landed on Saturday, October 3, when the people most likely to visit had the day off.
 
 ---
 
@@ -226,8 +232,8 @@ recommended sentence.
 4. **The "Light the Night" start time is inconsistent across sources.** The official host
    schedule (D1) and the Belmont County Tourism press release both say **7:45 p.m.**
    Lede News, WTRF, and a February Barnesville Area News item all said **7:30 p.m.** Use
-   7:45 p.m. Use it in the past tense, or leave it out, since the event is already behind us
-   at press time.
+   7:45 p.m. Use it in the past tense, or leave it out: by the 2026-10-02 retrieval the
+   event was already behind us.
 5. **The closing ceremony time is inconsistent too.** D1 says 1:45 p.m. and D2 says the
    exhibit closes at 2 p.m. after the ceremony. The September Tourism Council press release,
    as republished by Barnesville Area News, said the closing ceremony is "Sunday, October 4
