@@ -1,5 +1,5 @@
 ---
-title: "Evening edition of October 2, 2026: a 40% shower chance that evening, a dry weekend, and an empty lead slot"
+title: "Evening edition of October 2, 2026: a shower chance that fell from 40% to 30% after 8 p.m., a dry weekend, and an empty lead slot"
 dek: "The 20:00 edition leads with the four-day forecast. The lead story slot reads NONE, because no morning edition had run at that hour."
 date: 2026-10-02
 edition: column
@@ -37,6 +37,12 @@ corrections:
     correction: "The headline read showers before eight, then a dry weekend, and the plain-words sentence said the shower chance was behind us by eight o'clock tonight, while the section 2 table gives Friday as 40% before 8pm and then 30%. The headline now reads Evening edition of October 2, 2026: a 40% shower chance that evening, a dry weekend, and an empty lead slot, and the plain-words paragraph now reads On the evening of Friday, October 2, the shower chance fell from 40% to 30% after 8 p.m. The number did not change."
   - date: 2026-10-05
     correction: "An update-class correction to the copy, not the numbers. It spoke in the present tense three days after the window closed. The headline, the closing clause of the dek, four sentences in section 1, the plain-words paragraph in section 2, the section 4 alerts sentence and the lead-in to section 5 item 1 are now dated to the retrieval this post records, 2026-10-02, and in the past tense. The two quoted National Weather Service period names, This Afternoon and Tonight, are left verbatim, and so are the zone identifiers OHZ059 and OHC013. No temperature, percentage, wind, endpoint, source note or attribution changed."
+  - date: 2026-10-05
+    correction: "The caption above the section 2 table reads Belmont County three-day forecast for this edition, Friday 2026-10-02 through Monday 2026-10-05, over four rows for Fri 2026-10-02, Sat 2026-10-03, Sun 2026-10-04 and Mon 2026-10-05, and its own date range is four days / The caption reads four-day. It was written on 2026-10-05 at 16:52:08Z, after the 16:17:34Z deploy that first rendered this page as prose, so it was not part of the 20:00 edition as published on 2026-10-02. All four rows stand and no number changed."
+  - date: 2026-10-05
+    correction: "The headline reads Evening edition of October 2, 2026: a 40% shower chance that evening, a dry weekend, and an empty lead slot, and it names one figure for an evening the section 2 table splits into two periods, 40% before 8 p.m. and 30% after / The headline reads Evening edition of October 2, 2026: a shower chance that fell from 40% to 30% after 8 p.m., a dry weekend, and an empty lead slot. The number did not change. The headline now names both periods it describes, as the plain-words paragraph directly under it already did."
+  - date: 2026-10-05
+    correction: "The third correction entry on this post says four sentences in section 1, and five sentences in section 1 changed: the morning-edition sentence, the first-scheduled-edition sentence, the no-morning-lead sentence, the BEL-26 lead-call sentence and the named-person call sentence, each now in the past tense / Four is corrected to five. The entry understated its own byte set by one sentence. No sentence in section 1 was left uncorrected, and no number changed."
 ---
 # Morning Briefing — Belmont News Evening Edition
 
@@ -63,7 +69,7 @@ newsroom sourcing standard, or published as NONE with a reason.
 
 Belmont County, Ohio. Four days, Friday through Monday.
 
-Table: Belmont County three-day forecast for this edition, Friday 2026-10-02 through Monday 2026-10-05. Source: National Weather Service gridpoint forecast PBZ/50,48, point of record St. Clairsville, Ohio, retrieved 2026-10-02.
+Table: Belmont County four-day forecast for this edition, Friday 2026-10-02 through Monday 2026-10-05. Source: National Weather Service gridpoint forecast PBZ/50,48, point of record St. Clairsville, Ohio, retrieved 2026-10-02.
 
 | Date | High | Low | Sky | Wind | Precipitation chance |
 | --- | --- | --- | --- | --- | --- |
@@ -152,6 +158,6 @@ changes, the alerts are re-checked before the next publish.
   18:30 EDT.
 - Units: Fahrenheit, miles per hour, percent.
 
-*Corrections: three, listed at the foot of this page and in the October log. If
+*Corrections: six, listed at the foot of this page and in the October log. If
 a number here is wrong, the correction is appended to this piece under the
 newsroom standard and logged the same day. Nothing is silently changed.*
