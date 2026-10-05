@@ -48,6 +48,8 @@ sources:
 corrections:
   - date: 2026-10-05
     correction: "An update-class correction to the copy, not the reporting. The exhibit closed at 2 p.m. on Sunday, October 4, and this post still spoke of the visit as though it were ahead: the headline said it closes Sunday, the dek called it the county's largest live story and ready to write, and the recommendation told a reader who had not gone that they could still go that evening. Every time-anchored sentence in the headline, the dek, sections 1, 2 and 5 is now dated to the day it describes and written in the past tense, or cut. The recommendation itself is kept as a record of what the desk proposed on 2026-10-02. The publication date is unchanged at 2026-10-03 and the slug is unchanged. No figure, address, time, sponsor, source or name changed. Wording specified by Tobias Nkemelu (QA) on BEL-197."
+  - date: 2026-10-05
+    correction: "A sourcing correction to the reporting, not the copy. Section 5, item 1 states that any Belmont County high school football result from Friday, October 2, 2026 could not be confirmed on the record, and section 4 marks the results angle REJECTED on that ground / WTOV NBC 9 printed the results at 10:04 p.m. EDT on 2026-10-02 and The Times Leader printed them on 2026-10-03, two separately owned outlets agreeing. The five Belmont County finals are St. Clairsville 34, Bellaire 28; Martins Ferry 49, Buckeye Local 7; Barnesville 34, Fort Frye 7; Cameron 60, Bridgeport 6; Union Local 55, Cambridge 7. The section 5 finding was accurate as of this post's retrieval date, 2026-10-02, when the games had not been played. Section 4's REJECTED is superseded and its retrieval-time finding is retained as a record; that ruling lifts the sourcing bar on the results angle only and is not an instruction to publish the football story. Section 4's all-time series line is corrected as well: OhioPrepFootball's series page, cited there as R2-D2, prints St. Clairsville leading 16-5 across 21 meetings, which contradicts the 35-25-1 all-time advantage, the annual-since-1972 framing and the eleven-in-a-row streak this post previously carried. This post does not resolve that disagreement and does not print the series as verified. The post's own rule, that every name, figure and quotation points at a source in section 3 or 4, is unchanged and was not relaxed. Desk ruling by Mara Vance (Managing Editor) on BEL-290; byte set filed by Dev Okafor."
 ---
 
 Prepared by: Danica Hoyt, Reporter, Sports and Community.
@@ -197,17 +199,9 @@ Table: Sources checked for runner-up 2, the football slate piece. R2-H1 is Kim N
 | R2-D1 | WTOV9, "2026 Union Local Jets" schedule page | On-record schedule document | 2026-10-02 |
 | R2-D2 | OhioPrepFootball, "Bellaire Big Reds vs St. Clairsville Red Devils — all-time series" | On-record series document | 2026-10-02 |
 
-**What is verified:** St. Clairsville (1–5) hosted Bellaire (4–2) on Homecoming at Red Devil
-Stadium on Oct 2; the schools have met annually since 1972, with Bellaire holding a 35–25–1
-all-time advantage and St. Clairsville winning the last 11 meetings and 10 of the last 16.
-Martins Ferry (6–0) was at Buckeye Local (0–6). Barnesville, 6–0, was at Fort Frye, 6–0.
-Bridgeport (2–4) was at Cameron (3–1). Union Local (5–1) hosted Cambridge (0–6) at Jets
-Stadium.
+**What is verified, as of this post's research retrieval date of 2026-10-02 and before any of these games was played:** St. Clairsville (1–5) hosted Bellaire (4–2) on Homecoming at Red Devil Stadium on Oct 2; the schools' all-time series is not settled and is not printed here. OhioPrepFootball's series page, cited above as R2-D2, prints St. Clairsville leading 16–5 across 21 meetings, from 2004 to 2026. That figure contradicts the 35–25–1 all-time advantage, the annual-since-1972 framing and the eleven-in-a-row streak this post previously carried, and this post does not resolve the disagreement. Confirm it with both athletic departments before any series or streak line runs. Martins Ferry (6–0) was at Buckeye Local (0–6). Barnesville, 6–0, was at Fort Frye, 6–0. Bridgeport (2–4) was at Cameron (3–1). Union Local (5–1) hosted Cambridge (0–6) at Jets Stadium. The results of all five games are in section 5, as corrected on 2026-10-05.
 
-**Status of the results angle: REJECTED.** Any version of this story that reports a Friday
-night score fails the sourcing test. Section 5 explains exactly why, and section 6 says who
-to call. Recommend this runner-up only as a slate piece, and only if the newsroom accepts a
-story that cannot say who won.
+**Status of the results angle: the original REJECTED is superseded, and the retrieval-time finding behind it stands as a record.** *(Corrected 2026-10-05; see the Corrections block.)* The REJECTED was correct on 2026-10-02 and was applied correctly: at retrieval, no Belmont County result from Friday, October 2 could be confirmed on the record. Its stated ground is now false. WTOV NBC 9 and The Times Leader, two separately owned outlets, both print the finals, so the results angle no longer fails the sourcing test and a version of this story that reports a Friday night score can now clear it. **This ruling lifts the sourcing bar only. It is not an instruction to publish the football story.** Section 5 items 2, 3, 4 and 5 remain open — item 2 in particular: a WTRF page dated 2025-10-03 still reports Martins Ferry 45, Buckeye Local 0 for the wrong year, against the 2026 result of 49, 7, and a reader who lands on it will be wrong.
 
 ---
 
@@ -216,12 +210,7 @@ story that cannot say who won.
 Everything in this section I actively checked and could not confirm. None of it is in the
 recommended sentence.
 
-1. **Any Belmont County high school football result from Friday, October 2, 2026.** This is
-   the important one. ScoreStream displays a line reading "St Clairsville Red Devils defeat
-   Bellaire Big Reds 28 to 16" against a game page dated 2026-10-02, but the entry carries
-   no byline, no timestamp, and no way to tell which season it describes. OhioPrepFootball
-   and USA Prep Football both still render the game as unplayed. Sports On SI shows the
-   matchup with no score. I would not publish that number, and I did not use it.
+1. **The October 2 results.** *(Superseded finding, retained as a record. Corrected 2026-10-05; see the Corrections block.)* As of this post's research retrieval date, 2026-10-02, no Belmont County high school football result from Friday, October 2, 2026 could be confirmed on the record, and the reason was sound: kickoff was 7:30 p.m. that evening and at retrieval the game had not been played. WTOV NBC 9 published the results in "Oct. 1-3, 2026 High School Football Scoreboard" at 10:04 p.m. EDT on 2026-10-02, and The Times Leader printed them in its high school roundup of 2026-10-03. Both are named, separately owned outlets and they agree. **The five Belmont County finals are: St. Clairsville 34, Bellaire 28; Martins Ferry 49, Buckeye Local 7; Barnesville 34, Fort Frye 7; Cameron 60, Bridgeport 6; Union Local 55, Cambridge 7.** A conflicting figure, "St Clairsville Red Devils defeat Bellaire Big Reds 28 to 16", appears on ScoreStream against no byline, no timestamp and no season marker. This newsroom does not print it, for the reasons already given here, and because The Times Leader's account of the Bellaire game gives the last of Bellaire's touchdowns as "with the last tying the game at 28". A Bellaire total of 16 cannot reach 28, so that account and the 28 to 16 line cannot both be right.
 2. **A near-miss worth recording.** A WTRF story titled "Martins Ferry shuts out Buckeye
    Local at home" reads as exactly the confirmation I needed. It is dated 2025-10-03 and
    reports a 45–0 final from the **previous year**. Anyone speed-reading this beat will hit
@@ -269,8 +258,8 @@ Table: The eight open sourcing items for the recommended story: a person or post
 |---|---|---|---|
 | 1 | **Jackee Pugh** | Executive Director, Belmont County Tourism Council; co-chair, Wall That Heals Committee | Turnout at Friday night's Light the Night, and the clock time for Saturday's Taps |
 | 2 | **Roberta Raymond** | Co-chair, Belmont County Wall That Heals Committee | The "26 Belmont County service members" figure, and Mobile Education Center hours |
-| 3 | **Mark Bonar** | Head football coach, Bellaire Big Reds | The October 2 final score at St. Clairsville |
-| 4 | **St. Clairsville head football coach — name not established; I did not have it** | Head football coach, St. Clairsville Red Devils | The October 2 final score at home. Reach the person through the St. Clairsville-Richland City School District athletic department at `stcathletics.com`. Do not guess the name. |
+| 3 | **Mark Bonar** | Head football coach, Bellaire Big Reds | Homecoming attendance at St. Clairsville on October 2 |
+| 4 | **St. Clairsville head football coach — name not established; I did not have it** | Head football coach, St. Clairsville Red Devils | The all-time series and the current winning streak. Reach the person through the St. Clairsville-Richland City School District athletic department at `stcathletics.com`. Do not guess the name. |
 | 5 | **Gloria Llewellyn** | Superintendent and CEO, Belmont, Harrison and Noble County Board of Developmental Disabilities | The $16 million carryover figure, and whether the October 6 Budget Commission agenda is posted |
 | 6 | **Cindi Henry** | Belmont County Auditor | The September 28 vote tally and how many levy years the commission extended |
 | 7 | **Anne Haverty Lawson** | Principal, Bridgeport Middle School | How many Belmont County student groups are scheduled through the wall's remaining days |
@@ -283,8 +272,10 @@ Table: The eight open sourcing items for the recommended story: a person or post
 - [x] Document `lead-story-recommendation` saved on BEL-24.
 - [x] One-sentence recommendation given, not NONE.
 - [x] The recommended story clears the sourcing test, with each source's type named.
-- [x] Both runners-up carry the same sourcing test; the results angle of Runner-up 2 is
-      explicitly marked REJECTED rather than dressed up.
+- [x] Both runners-up carry the same sourcing test; the results angle of Runner-up 2 carried an
+      explicit REJECTED on 2026-10-02 rather than being dressed up, and that REJECTED was
+      superseded on 2026-10-05 once two on-record outlets printed the results. The
+      retrieval-time finding is retained above.
 - [x] "What you could not verify" is present, with twelve items.
 - [x] "What still needs a human" is present and names eight people or posts, including one
       where I could not establish a name and said so.
