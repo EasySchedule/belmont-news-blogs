@@ -1,12 +1,12 @@
 {
   "generated": "2026-10-05",
-"note": "Byline roster. index.mjs refuses any post whose byline is not listed here, matched exactly, capitalisation included. A column has exactly one owner: the entry that lists it, and no other. The first eight entries are the placeholder newsroom and are retained so the published archive stays valid; the five that follow are the real newsroom, per the BEL-116 ruling. A reporter who needs a column owns one of his own rather than sharing another byline's. Margaret Vance (Chief Executive Officer) and Mara Vance (Managing Editor) are two different people. The slug is margaret-vance and must stay that way. The News Desk belongs to Rosa Delgado by the BEL-192 ruling: it moved off Rosalind Kimbrough, a placeholder byline, because a retired byline can file the archive only, and a column whose only owner is retired cannot be filed at all. An entry carrying a \"retired\" day is archive-only: the gate accepts it for posts dated on or before that day and refuses it for anything later, so a byline that leaves the newsroom stops being fileable without rewriting history.",
+"note": "Byline roster. index.mjs refuses any post whose byline is not listed here, matched exactly, capitalisation included. A column has exactly one owner at a time: the entry that lists it with no end day. The first eight entries are the placeholder newsroom and are retained so the published archive stays valid; the five that follow are the real newsroom, per the BEL-116 ruling. A reporter who needs a column owns one of his own rather than sharing another byline's. Margaret Vance (Chief Executive Officer) and Mara Vance (Managing Editor) are two different people. The slug is margaret-vance and must stay that way. The News Desk belongs to Rosa Delgado by the BEL-192 ruling: it moved off Rosalind Kimbrough, a placeholder byline, because a retired byline can file the archive only, and a column whose only owner is retired cannot be filed at all. Morning Briefing and Lead Desk moved again by the BEL-245 ruling: off Margaret Vance and Danica Hoyt, the two placeholder bylines that retire the same day, and onto Hana Ishikawa and Rosa Delgado. An entry carrying a \"retired\" day is archive-only: the gate accepts it for posts dated on or before that day and refuses it for anything later, so a byline that leaves the newsroom stops being fileable without rewriting history. A column entry carrying an \"until\" day is the same device on the column rather than the byline: that byline held the column up to and including that day, and the entry with no end day holds it after. Both handovers are dated 2026-10-03, the newest day any published post is filed under either column, so the three published posts keep building under the byline that filed them and nothing under content/ moved. Before the ruling a column had exactly one owner for every post ever filed under it, so transferring one red the gate on the posts already published under the old owner. Asking whether the byline held the column on the post's date is what makes a handover possible without falsifying the archive.",
   "agents": [
     {
       "slug": "margaret-vance",
       "name": "Margaret Vance",
       "role": "Chief Executive Officer",
-      "columns": ["Morning Briefing"],
+      "columns": [{ "name": "Morning Briefing", "until": "2026-10-03" }],
       "retired": "2026-10-03"
     },
     {
@@ -55,7 +55,7 @@
       "slug": "danica-hoyt",
       "name": "Danica Hoyt",
       "role": "Reporter, Sports and Community",
-      "columns": ["Lead Desk"],
+      "columns": [{ "name": "Lead Desk", "until": "2026-10-03" }],
       "retired": "2026-10-03"
     },
     {
@@ -74,13 +74,13 @@
       "slug": "rosa-delgado",
       "name": "Rosa Delgado",
       "role": "Reporter",
-      "columns": ["News Desk"]
+      "columns": ["News Desk", "Lead Desk"]
     },
     {
       "slug": "hana-ishikawa",
       "name": "Hana Ishikawa",
       "role": "Reporter",
-      "columns": []
+      "columns": ["Morning Briefing"]
     },
     {
       "slug": "belmont-news-staff",

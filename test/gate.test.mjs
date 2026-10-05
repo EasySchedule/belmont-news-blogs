@@ -295,59 +295,90 @@ test('a capitalised Staff is not the desk line', () => {
 // The Managing Editor ruled on BEL-116 twice. The first ruling made ownership a set,
 // so a desk could have more than one reporter. The second reversed that half: a
 // column is owned by exactly one reporter, and a reporter who needs a column gets one
-// of his own. `Lead Desk` is Danica Hoyt's and stays hers, `Morning Briefing` is
-// Margaret Vance's. Dev Okafor owns `County Desk` and Priya Raghunathan owns
-// `Community Desk`, so no column is shared. The assertion below is therefore the
-// original BEL-55 one, byte for byte what it was on `a0a5031b`: one roster entry per
-// column. Misattribution is the failure this gate exists to catch, so the guard
-// against a column silently changing hands is not relaxed to clear a byline.
+// of his own. Dev Okafor owns `County Desk` and Priya Raghunathan owns
+// `Community Desk`, so no column is shared.
 //
 // BEL-192 moved one column. `News Desk` was registered under `Rosalind Kimbrough`,
 // a placeholder byline, and PR #18 retires that byline at 2026-10-03. A retired
 // byline may file the archive and nothing after it, so once #18 lands no byline at
 // all can file `News Desk`. The desk ruled the column transfers to a live byline,
-// `Rosa Delgado`. Nothing in the archive moves with it: no post has ever named
+// `Rosa Delgado`. Nothing in the archive moved with it: no post has ever named
 // `News Desk` as its column, so there is no published post filed under the old owner
 // to go red. The transfer is a change of name in the registry, not a rewrite of
 // published bylines.
+//
+// BEL-245 ruled on the two columns that ruling could not reach. `Morning Briefing`
+// and `Lead Desk` do have published posts under the placeholder bylines that own
+// them — three posts, all dated on or before 2026-10-03 — so moving either column
+// used to mean either reds the gate on filed work or falsifies the archive by
+// editing front matter. The ruling made column ownership date-aware, the same shape
+// the byline retirement rule gave a byline: an entry may carry an end day on a
+// column, and the gate asks whether the byline held the column on the post's date.
+// So `Morning Briefing` moved to `Hana Ishikawa` and `Lead Desk` to `Rosa Delgado`,
+// both old entries keep the column with `until: 2026-10-03`, and all three
+// published posts still build under the byline that filed them.
+//
+// That makes the assertion below a statement in time rather than a relaxation of
+// the BEL-116 ruling: a column may appear on two entries, but only one of them may
+// hold it now. Misattribution is the failure this gate exists to catch, so what
+// the guard is actually about — a column silently changing hands, or two reporters
+// holding it at once — is unchanged and still fails the build.
 
-test('every column the archive can file is owned by exactly one roster entry', () => {
+test('every column the archive can file has exactly one current owner', () => {
   const roster = JSON.parse(ROSTER);
-  const owners = new Map();
+  const current = new Map(); // column -> byline holding it now
+  const held = new Map(); // column -> every byline that ever holds it
   for (const a of roster.agents) {
     for (const c of a.columns || []) {
-      assert.ok(!owners.has(c), `column '${c}' is claimed by both '${owners.get(c)}' and '${a.name}'`);
-      owners.set(c, a.name);
+      const { name, until } = typeof c === 'string' ? { name: c, until: null } : c;
+      if (!held.has(name)) held.set(name, []);
+      held.get(name).push(`${a.name}${until ? ` until ${until}` : ''}`);
+      // An entry with an end day is the handover, not the ownership: it closed on
+      // that day and holds the column for nothing after it. Counting it as an owner
+      // is what used to make a column impossible to move.
+      if (until) continue;
+      assert.ok(!current.has(name), `column '${name}' is held now by both '${current.get(name)}' and '${a.name}'`);
+      current.set(name, a.name);
     }
   }
   // Every column any filed post uses has to be one of these. A post naming a
   // column nobody registered is the exact shape of the BEL-55 failure.
   for (const name of ['Morning Briefing', 'News Desk', 'Lead Desk', 'County Desk', 'Community Desk']) {
-    assert.ok(owners.has(name), `no roster entry owns the column '${name}'`);
+    assert.ok(current.has(name), `no roster entry holds the column '${name}' now: ${held.get(name)}`);
   }
-  assert.equal(owners.get('News Desk'), 'Rosa Delgado');
+  assert.equal(current.get('News Desk'), 'Rosa Delgado');
+  assert.equal(current.get('Morning Briefing'), 'Hana Ishikawa');
+  assert.equal(current.get('Lead Desk'), 'Rosa Delgado');
 });
 
-test('the real reporters own a column each, and no published column moved', () => {
+test('the reporters own the columns the rulings give them, and no column lost its owner', () => {
   const roster = JSON.parse(ROSTER);
   const by = (slug) => roster.agents.find((a) => a.slug === slug);
 
-  // The placeholder owners keep the columns the live archive is filed under. Moving
-  // one of these reds the gate on posts that are already published, which is the
+  // The two placeholder owners keep the columns the live archive is filed under,
+  // each closed on the day it handed the column over. Moving one of these without
+  // an end day reds the gate on posts that are already published, which is the
   // failure BEL-116 was filed against.
-  assert.deepEqual(by('margaret-vance').columns, ['Morning Briefing']);
-  assert.deepEqual(by('danica-hoyt').columns, ['Lead Desk']);
+  assert.deepEqual(by('margaret-vance').columns, [{ name: 'Morning Briefing', until: '2026-10-03' }]);
+  assert.deepEqual(by('danica-hoyt').columns, [{ name: 'Lead Desk', until: '2026-10-03' }]);
 
-  // `News Desk` used to sit here and does not any more. Rosalind Kimbrough owns no
-  // column now: PR #18 retires her byline, so a column filed under her would be
-  // unfileable the moment that PR lands. Pinned because the move is the ruling and
-  // the suite is where the ruling stops drifting.
+  // `News Desk` used to sit under `rosalind-kimbrough` and does not any more.
+  // Rosalind Kimbrough owns no column now: PR #18 retires her byline, so a column
+  // filed under her would be unfileable the moment that PR lands. Pinned because the
+  // move is the ruling and the suite is where the ruling stops drifting.
   assert.deepEqual(by('rosalind-kimbrough').columns, []);
 
   // The reporters who need a column have one of their own, so nothing is shared.
   assert.deepEqual(by('dev-okafor').columns, ['County Desk']);
   assert.deepEqual(by('priya-raghunathan').columns, ['Community Desk']);
-  assert.deepEqual(by('rosa-delgado').columns, ['News Desk']);
+
+  // Rosa Delgado holds two columns. That is arithmetic, not drift: there are five
+  // columns and four current reporters, so reviving both columns the placeholders
+  // used to own forces somebody to hold two. The BEL-116 ruling is about who owns a
+  // column, not about how many one reporter may hold, and the alternative — leaving
+  // Lead Desk with a retired owner — is the dead column BEL-245 was filed about.
+  assert.deepEqual(by('rosa-delgado').columns, ['News Desk', 'Lead Desk']);
+  assert.deepEqual(by('hana-ishikawa').columns, ['Morning Briefing']);
 });
 
 test('the roster is the eight placeholders, the four reporters and one desk line', () => {
@@ -720,6 +751,249 @@ test('an unknown front matter field on a scalar key fails', () => {
   const r = archive([post({ day: '2026-10-02', frontMatter: validPost() + '\nauthor: Nathan\n' + VALID_SOURCES })]);
   assert.equal(r.code, 1);
   assert.match(r.stderr, /unknown field 'author'/);
+});
+
+// ---------------------------------------------------- handed-over columns
+//
+// BEL-245. Two columns went dead for new work the moment the placeholder bylines
+// retired: `Morning Briefing` off Margaret Vance and `Lead Desk` off Danica Hoyt,
+// both of them closing on the same day, 2026-10-03. Unlike `News Desk`, neither can
+// be moved by renaming the registry entry, because three published posts are filed
+// under them and the old owner was the byline on those files. Editing the front
+// matter to change hands would falsify the archive.
+//
+// So a column entry may carry an end day, exactly as a byline carries `retired`,
+// and the ownership gate asks whether the byline held the column on the post's
+// date rather than whether it holds it now. That is the whole fix: an old post
+// keeps validating under the byline that filed it, and a new post needs the byline
+// that holds the column today.
+//
+// The shape has one property worth naming so a later reader does not read it as a
+// bug. A bare column name means "no end day", so it holds the column on every day,
+// including the days before the handover. In the window between the old owner's end
+// day and now both entries hold the column; from the day after the end day only the
+// new owner does, and that is the day a post has to name an owner or nobody can file
+// it. The ruling authorised an end day and not a start day, so this is the shape as
+// ruled. The invariant the ruling kept — exactly one owner today — is asserted
+// above, in the roster tests, and it is what the gate's refusal message relies on.
+
+function columnPost({ day, author, byline, column, slug }) {
+  return post({
+    day,
+    author,
+    slug,
+    frontMatter: `${validPost({ date: day, edition: 'column', column, byline, slug })}\n${VALID_SOURCES}`,
+  });
+}
+
+test('the three published posts under the two handed-over columns still build', () => {
+  // The regression this whole shape exists to avoid. It reads the real archive and
+  // the real roster, so it fails if a handover is ever made the blunt way: by moving
+  // the column off the byline the filed posts are under.
+  const root = writeArchive([]);
+  try {
+    for (const y of readdirSync(join(REPO, 'content'), { withFileTypes: true })) {
+      if (!y.isDirectory()) continue;
+      for (const mo of readdirSync(join(REPO, 'content', y.name), { withFileTypes: true })) {
+        if (!mo.isDirectory()) continue;
+        for (const d of readdirSync(join(REPO, 'content', y.name, mo.name), { withFileTypes: true })) {
+          if (!d.isDirectory()) continue;
+          for (const f of readdirSync(join(REPO, 'content', y.name, mo.name, d.name), { withFileTypes: true })) {
+            if (!f.isFile() || !f.name.endsWith('.md')) continue;
+            const text = readFileSync(join(REPO, 'content', y.name, mo.name, d.name, f.name), 'utf8');
+            if (!/^column: (Morning Briefing|Lead Desk)$/m.test(text)) continue;
+            const dest = join(root, 'content', y.name, mo.name, d.name, f.name);
+            mkdirSync(dirname(dest), { recursive: true });
+            writeFileSync(dest, text);
+          }
+        }
+      }
+    }
+    const r = runGate(root, ['--check', '--today', '2026-10-06']);
+    assert.equal(r.code, 0, `a published post under a handed-over column must keep building: ${r.stdout}${r.stderr}`);
+    assert.match(r.stdout, /3 post\(s\) pass the gate/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('the bylines the BEL-245 ruling named can file their new columns', () => {
+  const cases = [
+    ['2026-10-06', 'hana-ishikawa', 'Hana Ishikawa', 'Morning Briefing', 'morning-briefing-under-its-new-owner'],
+    ['2026-10-06', 'rosa-delgado', 'Rosa Delgado', 'Lead Desk', 'lead-desk-under-its-new-owner'],
+  ];
+  for (const [day, author, byline, column, slug] of cases) {
+    const r = archive([columnPost({ day, author, byline, column, slug })]);
+    assert.equal(r.code, 0, `${byline} must be able to file the ${column}: ${r.stderr}`);
+    assert.equal(r.index.posts[0].column, column);
+  }
+});
+
+test('the bylines that handed a column over are refused it, and told who holds it now', () => {
+  const cases = [
+    ['margaret-vance', 'Margaret Vance', 'Morning Briefing', 'hana-ishikawa', 'Hana Ishikawa'],
+    ['danica-hoyt', 'Danica Hoyt', 'Lead Desk', 'rosa-delgado', 'Rosa Delgado'],
+  ];
+  for (const [author, byline, column, , owner] of cases) {
+    const day = '2026-10-06';
+    const slug = `${column.toLowerCase().replace(/\W+/g, '-')}-after-the-handover`;
+    const r = archive([columnPost({ day, author, byline, column, slug })]);
+    assert.equal(r.code, 1, `${byline} must not file the ${column} on ${day}: ${r.stdout}`);
+    assert.match(r.stderr, new RegExp(`does not own the column '${column}' on ${day}`));
+    // The message names today's owner, because that is who the writer has to ask.
+    // Naming the byline that used to hold it as well would read as though both can
+    // file it, and the one named first cannot answer.
+    assert.match(r.stderr, new RegExp(`owned by '${owner}'`));
+    assert.doesNotMatch(r.stderr, new RegExp(`owned by '${owner}' and`));
+  }
+});
+
+test('a byline that never held a column is refused it, and named today\'s owner', () => {
+  for (const [author, byline, column, owner] of [
+    ['priya-raghunathan', 'Priya Raghunathan', 'Lead Desk', 'Rosa Delgado'],
+    ['dev-okafor', 'Dev Okafor', 'Morning Briefing', 'Hana Ishikawa'],
+  ]) {
+    const day = '2026-10-06';
+    const slug = `not-the-${column.toLowerCase().replace(/\W+/g, '-')}`;
+    const r = archive([columnPost({ day, author, byline, column, slug })]);
+    assert.equal(r.code, 1, `${byline} must be refused the ${column}: ${r.stdout}`);
+    assert.match(r.stderr, new RegExp(`owned by '${owner}'`));
+  }
+});
+
+test('the byline that handed a column over still files its own post on the handover day', () => {
+  // The published posts are dated on or before the end day, so they keep building.
+  // Both of these are also the retired-byline boundary, and both rules have to hold
+  // on it at once: the post is refused if either one closes a day early.
+  for (const [author, byline, column, slug] of [
+    ['margaret-vance', 'Margaret Vance', 'Morning Briefing', 'morning-briefing-on-the-handover-day'],
+    ['danica-hoyt', 'Danica Hoyt', 'Lead Desk', 'lead-desk-on-the-handover-day'],
+  ]) {
+    const day = '2026-10-03';
+    const r = archive([columnPost({ day, author, byline, column, slug })]);
+    assert.equal(r.code, 0, `${byline} must still file its own ${column} on ${day}: ${r.stderr}`);
+    assert.equal(r.index.posts[0].column, column);
+  }
+});
+
+test('a column hands over between two current bylines on the end day', () => {
+  // The live-roster case the ruling's own handovers cannot exercise: both owners of
+  // `Morning Briefing` are retired on the same day the column closes, so on the real
+  // roster the retirement rule refuses the old owner a day before the column rule
+  // would. Here nobody is retired, so only the column end day is in play, and it has
+  // to close on exactly the right day — the end day itself still builds, the day
+  // after it does not.
+  const root = writeArchive([]);
+  try {
+    const roster = JSON.parse(ROSTER);
+    const hana = roster.agents.find((a) => a.slug === 'hana-ishikawa');
+    hana.columns = [{ name: 'Morning Briefing', until: '2026-10-03' }];
+    writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+    for (const [day, author, byline, expect] of [
+      ['2026-10-03', 'hana-ishikawa', 'Hana Ishikawa', 0],
+      ['2026-10-04', 'hana-ishikawa', 'Hana Ishikawa', 1],
+      ['2026-10-04', 'margaret-vance', 'Margaret Vance', 1],
+    ]) {
+      const slug = `handover-${day}-${author}`;
+      mkdirSync(join(root, 'content', day.slice(0, 4), day.slice(5, 7), day), { recursive: true });
+      writeFileSync(
+        join(root, 'content', day.slice(0, 4), day.slice(5, 7), day, `${author}--${slug}.md`),
+        `---\n${validPost({ date: day, edition: 'column', column: 'Morning Briefing', byline, slug })}\n${VALID_SOURCES}\n---\n\nBody copy.\n`,
+      );
+      const r = runGate(root, ['--check', '--today', '2026-10-06']);
+      assert.equal(r.code, expect, `${byline} filing ${slug}: ${r.stdout}${r.stderr}`);
+    }
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a closed handover refuses a live byline again, and says the column has no owner', () => {
+  // The negative control. Take the new owner off the column and the column is closed
+  // again, which is the state BEL-245 was filed about: nobody can file it. The gate
+  // has to refuse a live byline here rather than let a handover-shaped registry
+  // quietly pass, and it has to say the column has no current owner instead of
+  // naming a byline that cannot answer.
+  const root = writeArchive([columnPost({
+    day: '2026-10-06',
+    author: 'hana-ishikawa',
+    byline: 'Hana Ishikawa',
+    column: 'Morning Briefing',
+    slug: 'morning-briefing-with-the-handover-closed',
+  })]);
+  try {
+    const roster = JSON.parse(ROSTER);
+    roster.agents.find((a) => a.slug === 'hana-ishikawa').columns = [];
+    writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+    const r = runGate(root, []);
+    assert.equal(r.code, 1, `a live byline must be refused a column nobody holds: ${r.stdout}`);
+    assert.match(r.stderr, /byline 'Hana Ishikawa' does not own the column 'Morning Briefing' on 2026-10-06/);
+    assert.match(r.stderr, /no byline holds it on that date/);
+    assert.match(r.stderr, /owned now by no byline in roster\.json at all/);
+    // And the message must not send the writer to the byline that used to hold it.
+    assert.doesNotMatch(r.stderr, /owned now by 'Margaret Vance'/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a malformed column end day is refused at load, not silently ignored', () => {
+  // The end day is compared as text against the post's date, exactly like
+  // `retired`, so a malformed one does not fail where anyone would notice. An
+  // unpadded `2026-10-3` reads as later than every real day in October, the old owner
+  // keeps the column for the rest of the month, and the handover the desk ruled stays
+  // open with the build green. The typo has to be refused at load, naming the entry
+  // and the value, or it is a handover that silently never happened.
+  const root = writeArchive([columnPost({
+    day: '2026-10-06',
+    author: 'hana-ishikawa',
+    byline: 'Hana Ishikawa',
+    column: 'Morning Briefing',
+    slug: 'morning-briefing-under-a-real-end-day',
+  })]);
+  try {
+    for (const bad of ['2026-10-3', '2026-13-01', '2026-02-30', 'Oct 3 2026', '', null, 20261003]) {
+      const roster = JSON.parse(ROSTER);
+      roster.agents.find((a) => a.slug === 'margaret-vance').columns = [{ name: 'Morning Briefing', until: bad }];
+      writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+      const r = runGate(root, []);
+      assert.equal(r.code, 2, `a column end day of ${JSON.stringify(bad)} must fail the build: ${r.stdout}${r.stderr}`);
+      assert.match(r.stderr, /'Margaret Vance' holds the column 'Morning Briefing' until/);
+      assert.match(r.stderr, /real calendar day as YYYY-MM-DD/);
+    }
+    // A real day in the same field must still be accepted, or the check above would
+    // pass by refusing everything. The post is dated 2026-10-06 and filed by the
+    // new owner, so it builds only if the end day was read and left open.
+    const roster = JSON.parse(ROSTER);
+    roster.agents.find((a) => a.slug === 'margaret-vance').columns = [{ name: 'Morning Briefing', until: '2026-10-03' }];
+    writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+    const good = runGate(root, ['--check', '--today', '2026-10-06']);
+    assert.equal(good.code, 0, `a real column end day must still be accepted: ${good.stdout}${good.stderr}`);
+    assert.match(good.stdout, /1 post\(s\) pass the gate/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a column entry with no usable name is refused at load', () => {
+  // The same reasoning, one field over. A misspelled or missing `name` does not
+  // reopen a handover: it registers a column nobody owns under the entry that was
+  // holding the real one, so the handover closes and the column goes dead at the
+  // same time, silently, with the old owner still filing a column the gate no longer
+  // recognises.
+  for (const bad of [{}, { until: '2026-10-03' }, { name: '', until: '2026-10-03' }, { name: '   ' }]) {
+    const root = writeArchive([]);
+    try {
+      const roster = JSON.parse(ROSTER);
+      roster.agents.find((a) => a.slug === 'margaret-vance').columns = [bad];
+      writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+      const r = runGate(root, []);
+      assert.equal(r.code, 2, `a column entry ${JSON.stringify(bad)} must fail the build: ${r.stdout}${r.stderr}`);
+      assert.match(r.stderr, /neither a column name nor an object with a name/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
 });
 
 // ------------------------------------------------------- the list parser
