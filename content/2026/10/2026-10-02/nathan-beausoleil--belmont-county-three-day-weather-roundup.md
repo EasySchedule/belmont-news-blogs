@@ -57,6 +57,8 @@ from the National Weather Service gridpoint forecast, in Fahrenheit and miles pe
 Each row is one calendar day; the low, overnight sky, night wind and night
 precipitation chance follow the daytime values in the same cell.
 
+Table: Belmont County three-day forecast, Saturday October 3 through Monday October 5, 2026. Source: National Weather Service gridpoint forecast PBZ/50,48, point of record St. Clairsville, Ohio, retrieved 2026-10-02.
+
 | Date | High | Low | Sky condition | Wind (speed / direction) | Precipitation chance |
 | --- | --- | --- | --- | --- | --- |
 | Sat Oct 3, 2026 | 69 °F | 53 °F | Sunny; partly cloudy overnight | 6 to 9 mph NE (day), 1 to 6 mph NE (night) | 0% day, 0% night |
