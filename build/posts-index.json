@@ -1,9 +1,486 @@
 {
-  "generated": "2026-10-02T23:23:39.828Z",
-  "newsroomToday": "2026-10-02",
+  "generated": "2026-10-05T16:20:47.271Z",
+  "newsroomToday": "2026-10-05",
   "source": "belmont-news/blogs",
-  "count": 4,
+  "count": 11,
   "posts": [
+    {
+      "file": "content/2026/10/2026-10-05/dev-okafor--barnesville-tunnel-and-trail-open-south-broadway-bidding-waived.md",
+      "title": "Barnesville opens the B&O Tunnel and Trail with its punch list unfinished, and votes to skip bidding on South Broadway paving",
+      "dek": "The village told council the tunnel and trail are 'open for use' while it builds a list of items it is 'not to our satisfaction.' In the same meeting council unanimously suspended the bidding rules to repave South Broadway Street.",
+      "date": "2026-10-05",
+      "edition": "morning",
+      "byline": "Dev Okafor",
+      "category": "public-safety",
+      "slug": "barnesville-tunnel-and-trail-open-south-broadway-bidding-waived",
+      "tags": [
+        "public-safety",
+        "local-government",
+        "barnesville",
+        "infrastructure"
+      ],
+      "sources": [
+        {
+          "type": "document",
+          "title": "Village Waives Bidding Process for Paving Project",
+          "organization": "Barnesville News",
+          "retrieved": "2026-10-05",
+          "url": "https://barnesvillenews.org/2026/10/04/village-waives-bidding-process-for-paving-project/",
+          "note": "Published October 4, 2026 at 8:45 p.m. by Bruce Yarnall. Carries every Barnesville News figure and quote in the body: Deal's \\\"finally complete\\\" report and his walk-through, punch-list and \\\"open for use\\\" statement; Tippie's festival-safety quote; Yarnall's \\\"Little Roaming Railroad\\\" statement; Resolution 4057; the $77,000 bidding sentence; Shelly and Sands; Ackerman's six-week, three-readings reason; the North Waterline timeline; the attendance list; and the notice of the October 5 meeting."
+        },
+        {
+          "type": "document",
+          "title": "Codified Ordinances and Legislation",
+          "organization": "Village of Barnesville",
+          "retrieved": "2026-10-05",
+          "url": "https://barnesvilleohio.com/ordinances/",
+          "note": "Resolution 4057 full title and September 21, 2026 approval date; Resolution 4055, confirming the appointment of Police Chief Matthew Tippie, approved July 27, 2026."
+        },
+        {
+          "type": "document",
+          "title": "Police Department",
+          "organization": "Village of Barnesville",
+          "retrieved": "2026-10-05",
+          "url": "https://barnesvilleohio.com/departments/police/",
+          "note": "Lists Matthew Tippie as Chief."
+        },
+        {
+          "type": "document",
+          "title": "Section 735.051, Emergency conditions obviate formal bidding and advertising for contracts",
+          "organization": "Ohio Revised Code",
+          "retrieved": "2026-10-05",
+          "url": "https://codes.ohio.gov/ohio-revised-code/section-735.051",
+          "note": "The section Resolution 4057 relies on, read in full at publish time."
+        },
+        {
+          "type": "document",
+          "title": "Section 9.17, Competitive bidding threshold amount",
+          "organization": "Ohio Revised Code",
+          "retrieved": "2026-10-05",
+          "url": "https://codes.ohio.gov/ohio-revised-code/section-9.17",
+          "note": "Sets the amount at $75,000 through calendar year 2024 and indexes it 3 percent a year."
+        },
+        {
+          "type": "document",
+          "title": "Section 731.14, Contracts by legislative authority of a village - exception",
+          "organization": "Ohio Revised Code",
+          "retrieved": "2026-10-05",
+          "url": "https://codes.ohio.gov/ohio-revised-code/section-731.14",
+          "note": "Carries its own carve-out for villages that have appointed a village administrator under Section 735.271, which is why it does not govern Barnesville. Read at publish time."
+        },
+        {
+          "type": "document",
+          "title": "Section 731.141, Village administrator to make contracts and purchases",
+          "organization": "Ohio Revised Code",
+          "retrieved": "2026-10-05",
+          "url": "https://codes.ohio.gov/ohio-revised-code/section-731.141",
+          "note": "The operative section for a village that has established the position of village administrator. Read at publish time."
+        },
+        {
+          "type": "document",
+          "title": "Competitive Bidding Threshold - 2026",
+          "organization": "Ohio Department of Commerce",
+          "retrieved": "2026-10-05",
+          "url": "https://com.ohio.gov/divisions-and-programs/industrial-compliance/competitive-bidding-threshold/competitive-bidding-threshold",
+          "note": "The department states the Director set the threshold for January 1 to December 31, 2026 at $79,568. This URL returned HTTP 404 when re-checked at 11:20 a.m. EDT on October 5, 2026, while codes.ohio.gov was serving normally. The figure was verified against the served ORC text and the department's own announcement before publication; the link may be dead for readers and the department's host is the reason, not a correction to the citation."
+        },
+        {
+          "type": "document",
+          "title": "October 5, 2026 Council Meeting Agenda",
+          "organization": "Village of Barnesville",
+          "retrieved": "2026-10-05",
+          "url": "https://barnesvilleohio.com/october-5-2026-council-meeting-agenda/",
+          "note": "Notice posted October 1, 2026. Meeting time, Council Chambers, and the 132 N. Arch Street address. The agenda itself is a scanned image and its contents could not be read."
+        },
+        {
+          "type": "document",
+          "title": "B & O Depot Area Returning as Festival Feature",
+          "organization": "Barnesville News",
+          "retrieved": "2026-10-05",
+          "url": "https://barnesvillenews.org/2026/08/05/b-o-depot-area-returning-as-festival-feature/",
+          "note": "August 5, 2026. Pumpkin Festival Friday through Sunday, September 25-27, and Yarnall's disclosure that he is a member of the Barnesville Depot Committee."
+        },
+        {
+          "type": "document",
+          "title": "Barnesville Depot Returns as a Festival Feature",
+          "organization": "Barnesville News",
+          "retrieved": "2026-10-05",
+          "url": "https://barnesvillenews.org/2026/09/24/barnesville-depot-returns-as-a-festival-feature/",
+          "note": "September 24, 2026. Depot open Friday through Sunday."
+        }
+      ]
+    },
+    {
+      "file": "content/2026/10/2026-10-05/dev-okafor--belmont-county-animal-shelter-bids-due-october-14.md",
+      "title": "Belmont County animal shelter bids due October 14",
+      "dek": "The county is taking sealed bids on a new animal shelter for Hammond Road, and Commissioner Jerry Echemann puts the project at around $6 million. Bids have to be in hand by 11:15 a.m. on October 14. The county will not take them electronically.",
+      "date": "2026-10-05",
+      "edition": "morning",
+      "byline": "Dev Okafor",
+      "category": "belmont-county",
+      "slug": "belmont-county-animal-shelter-bids-due-october-14",
+      "tags": [
+        "belmont-county",
+        "county-government",
+        "bids",
+        "animal-shelter"
+      ],
+      "sources": [
+        {
+          "type": "document",
+          "title": "Belmont County Commissioners, Proposals: Advertisement for Sealed Bids, new animal shelter",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/proposals",
+          "note": "The bid advertisement itself. Carries the 11:15 a.m. October 14 deadline, the 68401 Hammond Rd. address, the single-story slab-on-grade Omniblock structure of approximately 14,100 SF, physical bids only, bid security of not less than 10 percent, the September 30 question deadline, the September 23 pre-bid meeting, and the advertised dates of September 14 and 21. It announces the pre-bid meeting in the future tense; no source records it occurring."
+        },
+        {
+          "type": "document",
+          "title": "Minutes of the regular session of the Belmont County Board of Commissioners, September 9, 2026",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/wp-content/uploads/bsk-pdf-manager/2026/09/SEPTEMBER-9-2026.pdf",
+          "note": "Read approved and signed September 16, 2026. Carries the board's September 9 vote to advertise for the bids, the vote tally, the $6 million estimate attributed to Commissioner Jerry Echemann, and a verbatim copy of the same advertisement."
+        },
+        {
+          "type": "document",
+          "title": "Minutes of the regular session of the Belmont County Board of Commissioners, September 16, 2026",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/wp-content/uploads/bsk-pdf-manager/2026/09/SEPTEMBER-16-2026.pdf",
+          "note": "Used only to confirm the commissioner's surname, spelled Gianangeli."
+        }
+      ]
+    },
+    {
+      "file": "content/2026/10/2026-10-05/dev-okafor--belmont-county-commissioners-posted-minutes-stop-sept-16.md",
+      "title": "Belmont County commissioners' posted minutes stop at Sept. 16",
+      "dek": "The county's own 2026 minutes index lists 40 sets of minutes and ends on September 16. Nothing is posted for the September 23 or September 30 regular sessions. The board says it meets every Wednesday, and its next scheduled session is Wednesday, October 7.",
+      "date": "2026-10-05",
+      "edition": "morning",
+      "byline": "Dev Okafor",
+      "category": "belmont-county",
+      "slug": "belmont-county-commissioners-posted-minutes-stop-sept-16",
+      "tags": [
+        "belmont-county",
+        "county-government",
+        "minutes",
+        "public-records"
+      ],
+      "sources": [
+        {
+          "type": "document",
+          "title": "2026 Board of County Commissioner Minutes index",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/2026-minutes",
+          "note": "The list of every posted 2026 minutes, in 40 entries, January 7 through September 16, 2026. Carries the absence of September 23 and September 30, and the county's posting rule that minutes are published once finalized and signed by the board and the clerk."
+        },
+        {
+          "type": "document",
+          "title": "Minutes of the September 16, 2026 regular session",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/wp-content/uploads/bsk-pdf-manager/2026/09/SEPTEMBER-16-2026.pdf",
+          "note": "Six pages. Attendance by Echemann, Gianangeli, Dutton and Clerk Zuzak; bills in the total amount of $934,824.95; the recording-and-CD stamp on page 1 only; adjournment at 1:38 p.m.; read, approved and signed this 23rd day of September, 2026; the Thomas Platt resignation; no reference to a pre-bid meeting."
+        },
+        {
+          "type": "document",
+          "title": "Minutes of the September 9, 2026 regular session",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/wp-content/uploads/bsk-pdf-manager/2026/09/SEPTEMBER-9-2026.pdf",
+          "note": "Attendance by Echemann, Gianangeli, Dutton and Assistant Clerk Jessica Koller; bills in the total amount of $743,760.76; the full Advertisement for Sealed Bids including the September 23 pre-bid meeting at 1:15 p.m., the October 14 bid deadline and the September 30 question deadline."
+        },
+        {
+          "type": "document",
+          "title": "Minutes of the regular session of May 14, 2026",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/wp-content/uploads/bsk-pdf-manager/2026/05/MAY-14-2026.pdf",
+          "note": "Sixteen pages, signed the 20th day of May, 2026, adjourned at 12:02 p.m. Page 1 reads: Present, Vince Gianangeli and J. P. Dutton, Commissioners, Jessica Koller, Assistant Clerk and Bonnie Zuzak, Clerk of the Board. Absent, Commissioner Jerry Echemann. Every roll call in that document reads Mr. Echemann Absent."
+        },
+        {
+          "type": "document",
+          "title": "Belmont County Commissioners home page",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/",
+          "note": "The 2026 meeting schedule stating meetings are held on Wednesday of each week from 10:00am until adjournment at 101 West Main Street, St. Clairsville; telephone 740-699-2155; the three commissioners and their offices."
+        },
+        {
+          "type": "document",
+          "title": "Meeting Minutes (2023)",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/meeting-minutes",
+          "note": "Read to confirm the stale page. Heading 2023 Board of County Commissioner Minutes, 52 entries, newest December 20, 2023. It links to the 2026 index and is not cited as a current record."
+        }
+      ]
+    },
+    {
+      "file": "content/2026/10/2026-10-05/priya-raghunathan--belmont-county-week-ahead-sr-148-commissioners-career-expo.md",
+      "title": "Belmont County, Ohio, week ahead: SR 148 work zone estimated to run to Nov. 30, commissioners and career expo both Wednesday",
+      "dek": "One-lane work continues on State Route 148, and a slide repair with temporary signals runs on State Route 147, the Board of Commissioners meets at 10 a.m. Wednesday, and Saturday stacks an AKC dog show, a softball tournament and two Ohio Valley Mall events.",
+      "date": "2026-10-05",
+      "edition": "morning",
+      "byline": "Priya Raghunathan",
+      "category": "community-life",
+      "slug": "belmont-county-week-ahead-sr-148-commissioners-career-expo",
+      "tags": [
+        "community-life",
+        "week-ahead",
+        "belmont-county",
+        "road-work",
+        "ohio-valley-mall",
+        "dog-show"
+      ],
+      "sources": [
+        {
+          "type": "document",
+          "title": "Belmont County Commissioner meetings for the year 2026 will be held on Wednesday of each week from 10:00am",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/"
+        },
+        {
+          "type": "document",
+          "title": "2026 Board of County Commissioner Minutes, September 16, 2026 (PDF)",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/wp-content/uploads/bsk-pdf-manager/2026/09/SEPTEMBER-16-2026.pdf",
+          "note": "tourism update; Underground Railroad Museum opening; Jeru Park Drive plat; Pennwood sewer project"
+        },
+        {
+          "type": "document",
+          "title": "2026 Minutes index (Sept 16 is most recent; Sept 23 and Sept 30 absent)",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/2026-minutes"
+        },
+        {
+          "type": "document",
+          "title": "Traffic Impacts in Belmont County",
+          "organization": "Ohio Department of Transportation, District 11",
+          "retrieved": "2026-10-05",
+          "url": "https://www.transportation.ohio.gov/travel/driving/traffic-advisories/traffic-belmont",
+          "note": "Did not render. ODOT's own Belmont County traffic advisory page loaded with no advisory entries and then began returning HTTP 404, so no advisory claim in this post rests on it. The road-work facts come from the Sept. 26 District 11 update republished by Lede News."
+        },
+        {
+          "type": "document",
+          "title": "ODOT project page, I-70 / SR 149 (Exit 208) Interchange Improvement, PID 120547",
+          "organization": "Ohio Department of Transportation",
+          "retrieved": "2026-10-05",
+          "url": "https://www.transportation.ohio.gov/travel/projects/120547",
+          "note": "ODOT project page for PID 120547. Carries District 11, Belmont County, begin construction fall 2025, end construction summer 2029, and an estimated construction cost of $25,340,000. This URL returned HTTP 404 when checked on 2026-10-05: the whole transportation.ohio.gov domain is serving an identical 5,160-byte 404 at its root and on every path, so the page could not be re-read at filing time. The figures above were verified against it by QA on BEL-7 at 08:55Z."
+        },
+        {
+          "type": "document",
+          "title": "ODOT Project Updates – Belmont County, Sept. 26, 2026",
+          "organization": "Lede News, republishing ODOT District 11",
+          "retrieved": "2026-10-05",
+          "url": "https://ledenews.com/odot-project-updates-belmont-county-5/",
+          "note": "ODOT District 11's weekly construction update, republished. Carries the SR 148 Captina Creek bridge repair reduced to one lane with temporary signals, estimated completion Nov. 30, 2026; the SR 147 slide repair west of Key from Wegee Road to Tiber Road with temporary signals maintaining traffic, estimated completion Oct. 31, 2026; and the SR 149, US 40 and SR 7 items dated to finish before this week. ODOT's own site was down, so this republication is the on-record carrier."
+        },
+        {
+          "type": "document",
+          "title": "Local briefs, Oct. 3, 2026",
+          "organization": "The Times Leader",
+          "retrieved": "2026-10-05",
+          "url": "https://www.timesleaderonline.com/news/community/2026/10/local-briefs-90/",
+          "note": "Bellaire committee meetings Oct. 6; Belmont-Harrison VSD BOE Oct. 19; annual Belmont County Township Trustee meeting Oct. 8"
+        },
+        {
+          "type": "document",
+          "title": "Teens to Explore What's Next at Career & Transition Expo, Oct. 2, 2026",
+          "organization": "Barnesville Area News Company",
+          "retrieved": "2026-10-05",
+          "url": "https://barnesvillenews.org/2026/10/02/teens-to-explore-whats-next-at-career-transition-expo/",
+          "note": "Oct. 7, 9 a.m.–noon, ECO Center, 68332 Bannock Road"
+        },
+        {
+          "type": "document",
+          "title": "History finds a new home at Morristown's Black Horse Inn, Sept. 17, 2026",
+          "organization": "The Times Leader",
+          "retrieved": "2026-10-05",
+          "url": "https://www.timesleaderonline.com/news/local-news/2026/09/history-finds-a-new-home-at-morristowns-black-horse-inn/",
+          "note": "Nov. 13 opening, 2 p.m. ribbon-cutting, 203 E. Cross St., $3.9M Appalachian Community Grant"
+        },
+        {
+          "type": "document",
+          "title": "Upcoming Events listing",
+          "organization": "Belmont County Tourism Council",
+          "retrieved": "2026-10-05",
+          "url": "https://www.visitbelmontcounty.com/upcoming-events/",
+          "note": "Pumpkin Smash Softball Tournament Oct. 10–11; AKC Dog Show Oct. 10–11, 8 a.m.–5 p.m., Belmont County Fairgrounds; Vino di Piccin live music Oct. 10, 6–9 p.m."
+        },
+        {
+          "type": "document",
+          "title": "AKC Dog Show detail page",
+          "organization": "Belmont County Tourism Council",
+          "retrieved": "2026-10-05",
+          "url": "https://www.visitbelmontcounty.com/event/akc-dog-show/",
+          "note": "\"On October 10 & 11, the AKC is hosting a dog show at the Belmont County Fairgrounds with obedience and rally trials.\" Organizer St. Clairsville Kennel Club; 45420 Roscoe Road."
+        },
+        {
+          "type": "document",
+          "title": "Pumpkin Smash Softball Tournament detail page",
+          "organization": "Belmont County Tourism Council",
+          "retrieved": "2026-10-05",
+          "url": "https://www.visitbelmontcounty.com/event/pumpkin-smash-softball-tournament/",
+          "note": "\"October 10 - October 11.\" Organizer: St. Clairsville Parks and Recreation"
+        },
+        {
+          "type": "document",
+          "title": "Ohio Valley Mall events calendar",
+          "organization": "Ohio Valley Mall",
+          "retrieved": "2026-10-05",
+          "url": "https://www.ohiovalleymall.net/events/",
+          "note": "Monster Maul Text of Treat SMS Oct. 5–26; Blue the Pumpkin Storybook Contest Oct. 5–26; Cutest Pet Contest with Belmont County Animal Shelter Oct. 10; Magic and Malarkey Oct. 10"
+        },
+        {
+          "type": "document",
+          "title": "TIGERweb State/County layer",
+          "organization": "U.S. Census Bureau",
+          "retrieved": "2026-10-05",
+          "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=STATE%3D%2739%27%20AND%20COUNTY%3D%27013%27&outFields=NAME,STATE,COUNTY,GEOID&returnGeometry=false&f=json",
+          "note": "TIGERweb record: NAME \"Belmont County\", STATE \"39\", COUNTY \"013\", GEOID \"39013\". Confirms Belmont County, Ohio, since four US counties share the name."
+        },
+        {
+          "type": "document",
+          "title": "Deployed bundle /assets/index-D6HrUjAX.js (400,513 bytes)",
+          "organization": "Belmont News",
+          "retrieved": "2026-10-05",
+          "url": "https://belmont-news.bolt.host/assets/index-D6HrUjAX.js",
+          "note": "Live bundle carries the strings \"Belmont, Ohio 43718\" and \"Serving Belmont, Ohio 43718 since 2025\". Our own deployed site, used to confirm the county and state this story covers."
+        }
+      ]
+    },
+    {
+      "file": "content/2026/10/2026-10-05/dev-okafor--career-and-transition-expo-wrong-door-bannock-road.md",
+      "title": "Career & Transition Expo is Wednesday at 68332 Bannock Road. The site promoting it gives a different address.",
+      "dek": "The Belmont-Harrison Career & Transition Expo runs 9 a.m. to noon Wednesday, October 7, at the ECO Center in St. Clairsville. Three published pages put the venue at 68332 Bannock Road. A fourth, the site promoting the event, gives a different street.",
+      "date": "2026-10-05",
+      "edition": "morning",
+      "byline": "Dev Okafor",
+      "category": "schools",
+      "slug": "career-and-transition-expo-wrong-door-bannock-road",
+      "tags": [
+        "schools",
+        "belmont-county",
+        "accessibility",
+        "career-transition"
+      ],
+      "sources": [
+        {
+          "type": "document",
+          "title": "The ECO Center, About page",
+          "organization": "ECO Center",
+          "retrieved": "2026-10-05",
+          "url": "https://theecocenter.org/about",
+          "note": "The venue's own site. Carries 68332 Bannock Road in the body and with the ZIP in every page footer, plus the 500-person main floor, 2,400-seat bleachers, a conference room seating 40 and about 70 parking spaces. Checked and not on this page: the phrase fully accessible venue."
+        },
+        {
+          "type": "document",
+          "title": "East Central Ohio Educational Service Center governing board notice, June 2026",
+          "organization": "East Central Ohio Educational Service Center",
+          "retrieved": "2026-10-05",
+          "url": "https://www.ecoesc.org/regular-governing-board-meeting-june-2026",
+          "note": "Notice posted May 20, 2026 by Nanette McFadden for the regular monthly meeting of Monday, June 22, 2026. Gives the ECO Center address as 68332 Bannock Road, St. Clairsville, Ohio 43950."
+        },
+        {
+          "type": "document",
+          "title": "Belmont-Harrison Roadmap to Transition, home page",
+          "organization": "Belmont-Harrison Roadmap to Transition",
+          "retrieved": "2026-10-05",
+          "url": "https://www.belmontharrisonroadmap.org/",
+          "note": "The page promoting the event and the page carrying the address at issue. Lists the venue as ECO Center, 45425 National Rd., St. Clairsville, 0H 43950, with the state printed as 0H, a zero followed by the letter H. Also carries the expo date and hours, contact Sean Ragsdale, and the partner list this story uses."
+        },
+        {
+          "type": "document",
+          "title": "Teens to Explore What's Next at Career Transition Expo, reprinting the Board's advance release",
+          "organization": "Barnesville Area News Company",
+          "retrieved": "2026-10-05",
+          "url": "https://barnesvillenews.org/2026/10/02/teens-to-explore-whats-next-at-career-transition-expo/",
+          "note": "Published October 2, 2026 at 11:29 a.m., labeled Press Release, closing with the Belmont County Board of Developmental Disabilities as attributions. Carries more than 500 students expected from Belmont, Harrison and Noble counties, more than 50 agencies, and the line that the ECO Center, located at 68332 Bannock Road, St. Clairsville, is a fully accessible venue. The 500 figure is the organizers' projection, not a count of registrations."
+        },
+        {
+          "type": "document",
+          "title": "ECO Center Celebrates Grand Opening With Ribbon Cutting, Open House",
+          "organization": "East Central Ohio Educational Service Center",
+          "retrieved": "2026-10-05",
+          "url": "https://www.ecoesc.org/eco-center-celebrates-grand-opening-with-ribbon-cutting-open-house/",
+          "note": "Dated August 6, 2026, by Brenna Busby. The operator's own account of the reopening of the renovated building, which the ECOESC About page does not carry."
+        }
+      ]
+    },
+    {
+      "file": "content/2026/10/2026-10-05/priya-raghunathan--wall-that-heals-26-belmont-county-names.md",
+      "title": "26 Belmont County names on the Wall That Heals. The wall left Sunday. The names did not.",
+      "dek": "For four days a three-quarter-scale replica of the Vietnam Veterans Memorial stood at the Belmont County Fairgrounds, open around the clock and free. It is gone now.",
+      "date": "2026-10-05",
+      "edition": "morning",
+      "byline": "Priya Raghunathan",
+      "category": "belmont-county",
+      "slug": "wall-that-heals-26-belmont-county-names",
+      "tags": [
+        "belmont-county",
+        "veterans",
+        "wall-that-heals",
+        "community",
+        "vietnam-veterans-memory"
+      ],
+      "sources": [
+        {
+          "type": "document",
+          "title": "The Wall That Heals - Belmont County, Ohio 2026",
+          "organization": "Belmont County Wall That Heals host committee; presented by American Legion St. Clairsville Post 159",
+          "retrieved": "2026-10-05",
+          "url": "https://wallthathealsohio2026.com/",
+          "note": "Display dates Oct. 1-4, 2026; open 24 hours; free admission; venue 45420 Roscoe Road, St. Clairsville, Ohio 43950; 58,281 names; three-quarter scale; Sept. 29 convoy from 1 Cabela Dr, Triadelphia, W.Va. with 1 p.m. arrival; Sept. 30 set-up 8:30 a.m.; Welcome Home opening ceremony noon Oct. 1; closing ceremony 1:45 p.m. and exhibit closed 2 p.m. Oct. 4."
+        },
+        {
+          "type": "document",
+          "title": "The American Legion Post 159 Presents: The Wall That Heals",
+          "organization": "Belmont County Tourism Council",
+          "retrieved": "2026-10-05",
+          "url": "https://www.visitbelmontcounty.com/event/the-wall-that-heals/",
+          "note": "58,281 names; Post 159 as presenter; one of just 31 communities nationwide; Welcome Home ceremony intended to give Vietnam Veterans a proper return welcome, which many did not receive; free and educational; venue and address."
+        },
+        {
+          "type": "document",
+          "title": "Wall That Heals Concludes Belmont County Stay",
+          "organization": "The Times Leader, by Shelley Hanson",
+          "retrieved": "2026-10-05",
+          "url": "https://www.timesleaderonline.com/news/local-news/2026/10/wall-that-heals-concludes-belmont-county-stay/",
+          "note": "The 58,318 figure, attributed to that paper; Tim Tetz's more than 8,000 people and his quoted remarks; Barnes's and Gianangeli's quoted remarks; JoAnn Copeland on music. Read, not copied. Every use is attributed to the Times Leader by name."
+        },
+        {
+          "type": "document",
+          "title": "Minutes of the regular session of the Belmont County Board of Commissioners, September 16, 2026",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/wp-content/uploads/bsk-pdf-manager/2026/09/SEPTEMBER-16-2026.pdf",
+          "note": "Signed minutes. Jackee Pugh, executive director of the Belmont County Tourism Council, tourism update: the event would run Oct. 1-4, 2026, and there are more than 58,000 service members' names on the wall, 26 of those names from Belmont County. Commissioner Gianangeli present."
+        },
+        {
+          "type": "document",
+          "title": "Meet the Commissioners",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/meet-the-commissioners-2/",
+          "note": "Vince Gianangeli is vice president of the three-member board, first term. Jerry Echemann is president."
+        },
+        {
+          "type": "document",
+          "title": "2026 minutes index",
+          "organization": "Belmont County Board of Commissioners",
+          "retrieved": "2026-10-05",
+          "url": "https://belmontcountycommissioners.com/2026-minutes",
+          "note": "Published minutes run Jan. 7 through Sept. 16, 2026 only. The basis for saying no county record of the Oct. 1-4 exhibit or the closing ceremony has been posted."
+        }
+      ]
+    },
     {
       "file": "content/2026/10/2026-10-03/margaret-vance--morning-briefing-2026-10-03.md",
       "title": "Morning Briefing for Saturday 2026-10-03: dry road, and the lead slot closed",
@@ -15,10 +492,33 @@
       "category": "morning-briefing",
       "slug": "morning-briefing-2026-10-03",
       "tags": [
-        {}
+        "weather",
+        "belmont-county",
+        "lead-call"
       ],
       "sources": [
-        {}
+        {
+          "type": "document",
+          "title": "Gridpoint forecast PBZ/50,48",
+          "organization": "National Weather Service, forecast office Pittsburgh PA",
+          "retrieved": "2026-10-02",
+          "url": "https://api.weather.gov/gridpoints/PBZ/50,48/forecast",
+          "note": "Grid of record. Point of record St. Clairsville OH 40.1006,-80.8501. Forecast zone OHZ059, county zone OHC013."
+        },
+        {
+          "type": "document",
+          "title": "Active alerts for zone OHZ059",
+          "organization": "National Weather Service",
+          "retrieved": "2026-10-02",
+          "url": "https://api.weather.gov/alerts/active?zone=OHZ059"
+        },
+        {
+          "type": "document",
+          "title": "Lead story recommendation, Belmont News issue BEL-24",
+          "organization": "Belmont News, Paperclip",
+          "retrieved": "2026-10-02",
+          "note": "On-record statement that the lead-story research closed with a recommendation that clears the sourcing test."
+        }
       ]
     },
     {
@@ -32,26 +532,201 @@
       "category": "lead-story-research",
       "slug": "wall-that-heals-last-chance-lead-recommendation",
       "tags": [
-        {}
+        "belmont-county",
+        "veterans",
+        "lead-call"
       ],
       "sources": [
-        {}
+        {
+          "type": "document",
+          "title": "The Wall That Heals - Belmont County, Ohio 2026, Event Schedule",
+          "organization": "Belmont County Wall That Heals host committee",
+          "retrieved": "2026-10-02",
+          "url": "https://wallthathealsohio2026.com",
+          "note": "Venue, address, hours, Taps at dusk Saturday, closing ceremony 1:45 p.m. Sunday. Presenting sponsor American Legion St. Clairsville Post 159; national partner Vietnam Veterans Memorial Fund."
+        },
+        {
+          "type": "document",
+          "title": "The American Legion Post 159 Presents: The Wall That Heals",
+          "organization": "Belmont County Tourism Council",
+          "retrieved": "2026-10-02",
+          "url": "https://visitbelmontcounty.com",
+          "note": "Run dates Sept 29 to Oct 4 2026, one of 31 communities nationwide, 58,281 names on the replica, free 24-hour viewing."
+        },
+        {
+          "type": "human",
+          "title": "Jackee Pugh",
+          "organization": "Executive Director, Belmont County Tourism Council; co-chair, Wall That Heals Committee",
+          "retrieved": "2026-10-02"
+        },
+        {
+          "type": "human",
+          "title": "J.P. Dutton",
+          "organization": "Belmont County Commissioner, Belmont County Board of Commissioners",
+          "retrieved": "2026-10-02"
+        },
+        {
+          "type": "human",
+          "title": "Ty Moore",
+          "organization": "Ohio State Representative, R-Caldwell, Ohio House of Representatives",
+          "retrieved": "2026-10-02"
+        },
+        {
+          "type": "human",
+          "title": "Roberta Raymond",
+          "organization": "Co-chair, Belmont County Wall That Heals Committee",
+          "retrieved": "2026-10-02"
+        },
+        {
+          "type": "document",
+          "title": "Opening ceremony coverage by Gage Vota, carried identically by The Intelligencer, The Times Leader, The Weirton Daily Times and The Herald Star",
+          "organization": "Ogden Newspapers",
+          "retrieved": "2026-10-02",
+          "note": "One newsroom, not four independent confirmations. Treated as a single source, and the crowd figures are held back accordingly."
+        }
+      ]
+    },
+    {
+      "file": "content/2026/10/2026-10-03/danica-hoyt--wall-that-heals-st-clairsville.md",
+      "title": "Last chance: The Wall That Heals closes Sunday at the Belmont County Fairgrounds",
+      "dek": "The traveling Vietnam memorial replica is free and open 24 hours today at the Belmont County Fairgrounds in St. Clairsville. Taps play at dusk Saturday. The closing ceremony is 1:45 p.m. Sunday, and the grounds close at 2.",
+      "date": "2026-10-03",
+      "edition": "morning",
+      "byline": "Danica Hoyt",
+      "category": "belmont-county",
+      "slug": "wall-that-heals-st-clairsville",
+      "tags": [
+        "belmont-county",
+        "veterans",
+        "last-call",
+        "things-to-do"
+      ],
+      "sources": [
+        {
+          "type": "document",
+          "title": "The Wall That Heals - Belmont County, Ohio 2026, Event Schedule page",
+          "organization": "Belmont County Wall That Heals host committee; presenting sponsor American Legion St. Clairsville Post 159",
+          "retrieved": "2026-10-02",
+          "url": "https://wallthathealsohio2026.com",
+          "note": "Escort procession Sept 29, installation Sept 30, public exhibit Oct 1 to Oct 4, 2026. Address 45420 Roscoe Rd, St. Clairsville OH 43950. Free, no fee to enter the grounds, open 24 hours a day. Saturday Oct 3: Taps at dusk. Sunday Oct 4: closing ceremony 1:45 p.m., exhibit closes 2:00 p.m. Sponsor tiers as published. Re-verified against the live page 2026-10-02."
+        },
+        {
+          "type": "document",
+          "title": "The American Legion Post 159 Presents: The Wall That Heals, event listing",
+          "organization": "Belmont County Tourism Council",
+          "retrieved": "2026-10-02",
+          "url": "https://www.visitbelmontcounty.com/event/the-wall-that-heals/",
+          "note": "Independent second body. Agrees on venue, address, zip, the Oct 1 to Oct 4 public window, continuous 24-hour access and the 2 p.m. Sunday close, and carries the listing title naming American Legion Post 159 and a Free category. Also the 58,281 names and the three-quarter-scale replica. It does not carry ceremony times, sponsor tiers or a committee roster; those rest on the host committee."
+        },
+        {
+          "type": "document",
+          "title": "The Wall That Heals sponsorship information",
+          "organization": "Belmont County Wall That Heals host committee",
+          "retrieved": "2026-10-02",
+          "url": "https://wallthathealsohio2026.com/docs/the-wall-that-heals-sponsorship-info.pdf",
+          "note": "Primary document for the sponsor tiers and the amount attached to each. It lists one flat amount per tier, not bands or ranges: Presenting $15,000; Freedom $7,500; Tribute $5,000; Honor $3,000; Community $1,500; Support $500; plus In-Kind Donations. Rotary of St. Clairsville is a Freedom Sponsor; UPMC and Whiteside Chevrolet are separate Tribute Sponsors, per the host site tiers. Re-read from the PDF 2026-10-03, cross-checked on two pages."
+        },
+        {
+          "type": "human",
+          "title": "Jackee Pugh",
+          "organization": "Belmont County Tourism Council",
+          "retrieved": "2026-10-02",
+          "url": "https://www.visitbelmontcounty.com/about/staff/",
+          "note": "The Council's own Meet the Team page lists Jackee Pugh as Executive Director. Carries the title used in the copy."
+        },
+        {
+          "type": "human",
+          "title": "Jackee Pugh",
+          "organization": "Co-chair, Belmont County Wall That Heals Committee; executive director, Belmont County Tourism Council",
+          "retrieved": "2026-10-02",
+          "url": "https://www.theintelligencer.net/news/top-headlines/2026/10/massive-crowd-attends-wall-that-heals-opening-ceremony/",
+          "note": "Gage Vota, The Intelligencer, 2026-10-02, names her as the Council executive director 'who co-chaired the committee and served as Thursday's emcee' and quotes her at length. Same report, same newsroom, in The Weirton Daily Times."
+        },
+        {
+          "type": "human",
+          "title": "Roberta Raymond",
+          "organization": "Co-chair, Belmont County Wall That Heals Committee",
+          "retrieved": "2026-10-02",
+          "url": "https://barnesvillenews.org/2026/09/15/meet-the-team-behind-the-wall-that-heals/",
+          "note": "Unsigned captioned photo feature, published 2026-09-15. The caption names 'Roberta Raymond (Co-Chair)' beside 'Jackee Pugh-Scarberry (Co-Chair)', so it is the one source in this file that names both co-chairs. It is a caption, not a bylined article, and is cited for what the caption says."
+        },
+        {
+          "type": "human",
+          "title": "Roberta Raymond",
+          "organization": "Co-chair, Belmont County Wall That Heals Committee",
+          "retrieved": "2026-10-02",
+          "url": "https://ledenews.com/bridgeport-schools-leading-the-way-prepping-for-the-wall-that-heals/",
+          "note": "Robert DeFrank, Lede News, 2026-02-10, quotes her on the record as 'co-chairwoman of the Belmont County The Wall That Heals Committee'. A second, separately owned newsroom for the role."
+        }
+      ],
+      "corrections": [
+        {
+          "date": "2026-10-03",
+          "correction": "Corrected the sponsorship source note. The note described the sponsorship tiers as price bands, giving a range for each one. The cited document sets no bands and carries no range language; it lists one flat amount per tier. The note left out the Support tier and the In-Kind Donations line, and the corrected note names both. No sentence in the article body changed and no sponsor was misnamed; the error was in the source note only. Belmont News does not render source notes on the story page, so no reader saw the withdrawn figures, and none of them are reprinted here."
+        }
       ]
     },
     {
       "file": "content/2026/10/2026-10-02/nathan-beausoleil--belmont-county-three-day-weather-roundup.md",
       "title": "Belmont County gets one last shot at rain tonight, then a dry, sunny weekend and a hard Monday night freeze",
-      "dek": "The National Weather Service Pittsburgh office calls for a 30 percent shower chance tonight before skies clear Saturday.",
+      "dek": "Four forecasts disagree on how likely tonight's showers are, and none of them disagrees on what to do about it: take a jacket before 8 p.m., then a dry, sunny weekend and a hard Monday night freeze.",
       "date": "2026-10-02",
       "edition": "evening",
       "byline": "Nathan Beausoleil",
       "category": "weather",
       "slug": "belmont-county-three-day-weather-roundup",
       "tags": [
-        {}
+        "weather",
+        "belmont-county",
+        "forecast"
       ],
       "sources": [
-        {}
+        {
+          "type": "document",
+          "title": "Gridpoint forecast PBZ/50,48, API generatedAt 2026-10-02T22:30:16+00:00",
+          "organization": "National Weather Service, forecast office Pittsburgh PA",
+          "retrieved": "2026-10-02",
+          "url": "https://api.weather.gov/gridpoints/PBZ/50,48/forecast",
+          "note": "Grid of record. Point of record St. Clairsville OH 40.1006,-80.8501. Forecast zone OHZ059, county zone OHC013."
+        },
+        {
+          "type": "document",
+          "title": "Zone Forecast Product OHZ059, Belmont, OH",
+          "organization": "National Weather Service, forecast office Pittsburgh PA",
+          "retrieved": "2026-10-02",
+          "url": "https://api.weather.gov/zones/forecast/OHZ059/forecast",
+          "note": "Second source. Narrative zone product, compared against the gridpoint numbers and disagreements reported in the post."
+        },
+        {
+          "type": "document",
+          "title": "Open-Meteo forecast, point 40.1006,-80.8501",
+          "organization": "Open-Meteo",
+          "retrieved": "2026-10-02",
+          "url": "https://api.open-meteo.com/v1/forecast",
+          "note": "Third source, model output. Comparison only; the National Weather Service numbers are the ones published."
+        },
+        {
+          "type": "document",
+          "title": "Active alerts for zone OHZ059",
+          "organization": "National Weather Service",
+          "retrieved": "2026-10-02",
+          "url": "https://api.weather.gov/alerts/active?zone=OHZ059",
+          "note": "Product checked for watch, warning, or advisory. None active at retrieval."
+        }
+      ],
+      "corrections": [
+        {
+          "date": "2026-10-05",
+          "correction": "The deck reads \"The National Weather Service Pittsburgh office calls for a 30 percent shower chance tonight before skies clear Saturday.\" The same bare figure is printed a second time in this post's own \"Headline and deck as they print\" block / The deck is replaced with \"Four forecasts disagree on how likely tonight's showers are, and none of them disagrees on what to do about it: take a jacket before 8 p.m., then a dry, sunny weekend and a hard Monday night freeze.\", and the composite headline line is re-cut to drop the figure and the false attribution. Two grounds, both real. The body prints four figures for that evening and states the spread, so a bare figure overstates its confidence; and the number the deck puts in the National Weather Service Pittsburgh office's mouth is the one number on this page that office did not publish: its gridpoint field is 33 percent and its Zone Forecast Product for OHZ059 is 40 percent. The 20-point spread is unchanged and is still printed."
+        },
+        {
+          "date": "2026-10-05",
+          "correction": "The post states that \"The higher figures from Open-Meteo and the ZFP are model-side, not official\", which reads on the ZFP as a claim that the National Weather Service Zone Forecast Product FPUS51 KPBZ 022102 is not an official product. It is one. This same post calls it \"National Weather Service, forecast office Pittsburgh PA\" in its Sources list and \"The NWS Zone Forecast Product for OHZ059\" in the heading of its disagreement paragraph / The sentence is replaced with \"Open-Meteo is a third-party model run and is not this desk's endpoint of record. The ZFP is not in that position: it is an official product of the same Pittsburgh office, and its 40 percent is set aside by the house anchor — the gridpoint structured field is the published figure — not by the standing of the product.\" The sentence was load-bearing: it was the only sourcing ground the post gave for setting the ZFP's 40 percent aside. Nothing is averaged; the ZFP's 40 percent is still printed as part of the disagreement."
+        },
+        {
+          "date": "2026-10-05",
+          "correction": "The post's \"Which one Belmont News is publishing and why\" paragraph publishes \"30 percent, the narrative figure stated inside the gridpoint forecast period itself\", and its \"What to do about it\" block reads \"Tonight (30 percent chance of showers before 8 p.m.)\" / The figure of record is 33 percent, the gridpoint structured precipitation field probabilityOfPrecipitation.value, and the 30, 40 and 50 percent figures stay printed as the disagreement between four sources and are not resolved. This newsroom prints the field value and states the disagreement rather than resolving it, which is the standing rule already written into this log in the entry dated 2026-10-03 against the morning briefing. The Friday day-by-day paragraph and the three-day table already carry 33 percent and are unchanged. The 20-point spread is unchanged."
+        }
       ]
     },
     {
@@ -65,10 +740,35 @@
       "category": "morning-briefing",
       "slug": "morning-briefing-2026-10-02-evening",
       "tags": [
-        {}
+        "weather",
+        "belmont-county",
+        "lead-call"
       ],
       "sources": [
-        {}
+        {
+          "type": "document",
+          "title": "Gridpoint forecast PBZ/50,48, API generatedAt 2026-10-02T20:32:27+00:00",
+          "organization": "National Weather Service, forecast office Pittsburgh PA",
+          "retrieved": "2026-10-02",
+          "url": "https://api.weather.gov/gridpoints/PBZ/50,48/forecast",
+          "note": "Grid of record. Point of record St. Clairsville OH 40.1006,-80.8501. Forecast zone OHZ059, county zone OHC013."
+        },
+        {
+          "type": "document",
+          "title": "Active alerts for zone OHZ059, product updated 2026-10-02T22:30:00+00:00",
+          "organization": "National Weather Service",
+          "retrieved": "2026-10-02",
+          "url": "https://api.weather.gov/alerts/active?zone=OHZ059",
+          "note": "Product checked for watch, warning, or advisory. Zero alerts returned."
+        },
+        {
+          "type": "document",
+          "title": "Open-Meteo forecast, point 40.1006,-80.8501",
+          "organization": "Open-Meteo",
+          "retrieved": "2026-10-02",
+          "url": "https://api.open-meteo.com/v1/forecast",
+          "note": "Second source, model output, elevation 350 m. Comparison only."
+        }
       ]
     }
   ]
