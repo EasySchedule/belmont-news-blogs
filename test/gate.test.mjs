@@ -7,7 +7,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -136,7 +136,14 @@ test('the forward window still refuses a post beyond --future-days', () => {
 });
 
 test('--future-days widens the forward window only', () => {
-  const posts = [post({ day: '2026-10-06', frontMatter: validPost({ date: '2026-10-06' }) + '\n' + VALID_SOURCES })];
+  // A current byline, not the fixture default. The default is a retired name and
+  // this post is dated after the retirement day, so leaving it would have this
+  // test measuring the retirement rule instead of the date window.
+  const posts = [post({
+    day: '2026-10-06',
+    author: 'dev-okafor',
+    frontMatter: validPost({ date: '2026-10-06', byline: 'Dev Okafor' }) + '\n' + VALID_SOURCES,
+  })];
   assert.equal(archive(posts, ['--check', '--today', '2026-10-02']).code, 1);
   assert.equal(archive(posts, ['--check', '--today', '2026-10-02', '--future-days', '7']).code, 0);
 });
@@ -355,6 +362,218 @@ test('the roster is the eight placeholders, the four reporters and one desk line
     'dev-okafor', 'priya-raghunathan', 'rosa-delgado', 'hana-ishikawa',
     'belmont-news-staff',
   ]);
+});
+
+// ------------------------------------------------------- retired bylines
+//
+// Keeping the eight placeholders on the roster is what keeps the published posts
+// valid: every one of them is bylined to a placeholder name, and dropping an
+// entry reds the gate on those posts and stops the site updating for everyone.
+// It also leaves those names fileable for new work, so a placeholder name could
+// sign tomorrow's story and the gate would pass it — a byline asserting
+// authorship for a writer who does not exist, which is the exact defect the gate
+// exists to catch, and the one already found once on the live site. A retired
+// entry closes that without touching the archive: valid up to its last day,
+// refused after it.
+
+test('every placeholder byline is retired and no real byline is', () => {
+  const roster = JSON.parse(ROSTER);
+  const placeholders = roster.agents.slice(0, 8).map((a) => a.slug);
+  for (const a of roster.agents) {
+    if (placeholders.includes(a.slug)) {
+      assert.match(a.retired || '', /^\d{4}-\d{2}-\d{2}$/, `${a.slug} must carry a retirement day`);
+    } else {
+      assert.equal(a.retired, undefined, `${a.slug} is a current byline and must not be marked retired`);
+    }
+  }
+  // One day, for all eight, and it is the newest post already filed under them.
+  const days = new Set(roster.agents.map((a) => a.retired).filter(Boolean));
+  assert.equal(days.size, 1, `the placeholders should retire on one day, got ${[...days]}`);
+});
+
+test('the retirement day is the newest published post under a placeholder byline', () => {
+  // If a post is ever filed under a placeholder byline dated after the
+  // retirement day, the archive and the gate disagree and the fix is wrong. This
+  // reads the archive rather than trusting the constant.
+  const roster = JSON.parse(ROSTER);
+  const retired = roster.agents.filter((a) => a.retired);
+  const names = new Set(retired.map((a) => a.name));
+  const days = new Set(retired.map((a) => a.retired));
+  assert.equal(days.size, 1, 'the eight placeholders must retire together');
+  const cutoff = [...days][0];
+
+  let newest = null;
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) { walk(full); continue; }
+      if (!entry.name.endsWith('.md')) continue;
+      const text = readFileSync(full, 'utf8');
+      const byline = /^byline:\s*(.+)$/m.exec(text)?.[1]?.trim();
+      const date = /^date:\s*(\d{4}-\d{2}-\d{2})$/m.exec(text)?.[1];
+      if (!byline || !date || !names.has(byline)) continue;
+      if (!newest || date > newest) newest = date;
+    }
+  };
+  walk(join(REPO, 'content'));
+  assert.ok(newest, 'no published post is bylined to a placeholder name');
+  assert.ok(newest <= cutoff,
+    `a published post is bylined to a placeholder on ${newest}, after the retirement day ${cutoff}`);
+});
+
+test('a malformed retirement day is refused at load, not silently ignored', () => {
+  // The rule compares `retired` as text against the post's date, so a malformed day
+  // does not fail where anyone would notice: it sorts wrong and the rule stops
+  // firing. An unpadded `2026-10-3` reads as later than every real day in October,
+  // so a post dated the 20th would be accepted under a byline meant to be closed,
+  // with the whole archive green. Measured on this branch before fixing it.
+  //
+  // So the day is validated when the roster loads, like `expires` is. The message
+  // has to name the entry and the value, because a roster typo has to be fixable
+  // from the message alone.
+  const root = writeArchive([post({
+    day: '2026-10-06',
+    author: 'danica-hoyt',
+    slug: 'new-work-after-a-malformed-retirement-day',
+    frontMatter: `${validPost({ date: '2026-10-06', byline: 'Danica Hoyt', slug: 'new-work-after-a-malformed-retirement-day' })}\n${VALID_SOURCES}`,
+  })]);
+  try {
+    for (const bad of ['2026-10-3', '2026-13-01', '2026-02-30', 'Oct 3 2026', '']) {
+      const roster = JSON.parse(ROSTER);
+      roster.agents.find((a) => a.slug === 'danica-hoyt').retired = bad;
+      writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+      const r = runGate(root, []);
+      assert.equal(r.code, 2, `retired ${JSON.stringify(bad)} must fail the build: ${r.stdout}${r.stderr}`);
+      assert.match(r.stderr, /'Danica Hoyt' has retired/);
+      assert.match(r.stderr, /real calendar day as YYYY-MM-DD/);
+    }
+    // A real day in the same field must still be accepted, or the check above would
+    // pass by refusing everything. The post is dated 2026-10-06, so a retirement on
+    // that same day is the boundary: on or before it may still sign the post.
+    const roster = JSON.parse(ROSTER);
+    roster.agents.find((a) => a.slug === 'danica-hoyt').retired = '2026-10-06';
+    writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+    const good = runGate(root, []);
+    assert.equal(good.code, 0, `a real retirement day must still be accepted: ${good.stderr}`);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('a retired byline is refused for new work', () => {
+  for (const a of JSON.parse(ROSTER).agents.filter((x) => x.retired)) {
+    const day = '2026-10-06';
+    assert.ok(day > a.retired, `${a.slug} must already be retired by ${day}`);
+    const r = archive([post({
+      day,
+      author: a.slug,
+      slug: 'new-work-under-a-retired-byline',
+      frontMatter: `${validPost({ date: day, byline: a.name, slug: 'new-work-under-a-retired-byline' })}\n${VALID_SOURCES}`,
+    })]);
+    assert.equal(r.code, 1, `${a.name} must not be able to sign a post dated ${day}: ${r.stderr}`);
+    assert.match(r.stderr, new RegExp(`byline '${a.name}' was retired after ${a.retired}`));
+    // The message has to say what to do, or the writer is left guessing.
+    assert.match(r.stderr, /archive only/);
+    assert.match(r.stderr, /file new work under a current byline/);
+  }
+});
+
+test('a retired byline is still accepted for the archive', () => {
+  // The fix must not invalidate filed work. The published posts are all dated on
+  // or before the retirement day, so they keep building.
+  for (const a of JSON.parse(ROSTER).agents.filter((x) => x.retired)) {
+    for (const day of [a.retired, '2026-10-02']) {
+      const r = archive([post({
+        day,
+        author: a.slug,
+        slug: 'archived-work-under-a-placeholder-byline',
+        frontMatter: `${validPost({ date: day, byline: a.name, slug: 'archived-work-under-a-placeholder-byline' })}\n${VALID_SOURCES}`,
+      })]);
+      assert.equal(r.code, 0, `${a.name} must still file an archive post dated ${day}: ${r.stderr}`);
+    }
+  }
+});
+
+test('the real newsroom is not affected by the retirement rule', () => {
+  for (const [slug, name] of [
+    ['dev-okafor', 'Dev Okafor'],
+    ['priya-raghunathan', 'Priya Raghunathan'],
+    ['rosa-delgado', 'Rosa Delgado'],
+    ['hana-ishikawa', 'Hana Ishikawa'],
+    ['belmont-news-staff', 'Belmont News staff'],
+  ]) {
+    const r = archive([post({
+      day: '2026-10-06',
+      author: slug,
+      slug: 'current-byline-new-work',
+      frontMatter: `${validPost({ date: '2026-10-06', byline: name, slug: 'current-byline-new-work' })}\n${VALID_SOURCES}`,
+    })]);
+    assert.equal(r.code, 0, `${name} must be able to file new work: ${r.stderr}`);
+  }
+});
+
+test('a reporter keeps the column ownership the roster gives them', () => {
+  // The two rulings have to hold together: Dev Okafor owns the County Desk and
+  // Priya Raghunathan the Community Desk, and retiring the placeholders must not
+  // cost either of them that.
+  for (const [slug, name, column] of [
+    ['dev-okafor', 'Dev Okafor', 'County Desk'],
+    ['priya-raghunathan', 'Priya Raghunathan', 'Community Desk'],
+  ]) {
+    const r = archive([post({
+      day: '2026-10-06',
+      author: slug,
+      slug: 'desk-column-from-the-real-desk',
+      frontMatter: `${validPost({
+        date: '2026-10-06',
+        edition: 'column',
+        column,
+        byline: name,
+        slug: 'desk-column-from-the-real-desk',
+      })}\n${VALID_SOURCES}`,
+    })]);
+    assert.equal(r.code, 0, `${name} must still be able to file the ${column}: ${r.stderr}`);
+  }
+
+  // The refusal is the half that matters. Everything above would still pass if the
+  // retirement rule had quietly widened who may file a column, because it only ever
+  // asks the gate to let someone through. This asks it to turn someone away.
+  const notHis = archive([post({
+    day: '2026-10-06',
+    author: 'rosa-delgado',
+    slug: 'county-desk-from-a-reporter-who-does-not-own-it',
+    frontMatter: `${validPost({
+      date: '2026-10-06',
+      edition: 'column',
+      column: 'County Desk',
+      byline: 'Rosa Delgado',
+      slug: 'county-desk-from-a-reporter-who-does-not-own-it',
+    })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(notHis.code, 1, 'a live reporter must still be refused a column nobody gave him');
+  assert.match(notHis.stderr, /byline 'Rosa Delgado' does not own the column 'County Desk'/);
+  assert.match(notHis.stderr, /owned by 'Dev Okafor'/);
+  // The refusal has to be about ownership, not retirement: Rosa Delgado is a current
+  // byline, so if the retirement rule were what stopped her the message would name a
+  // day instead of an owner.
+  assert.doesNotMatch(notHis.stderr, /retired/);
+
+  // And the other direction: a placeholder who still owns a column keeps it for the
+  // archive. Danica Hoyt retires on 2026-10-03 and owns Lead Desk, so on that day
+  // she may still sign it.
+  const archiveDay = archive([post({
+    day: '2026-10-03',
+    author: 'danica-hoyt',
+    slug: 'lead-desk-under-a-retired-byline',
+    frontMatter: `${validPost({
+      date: '2026-10-03',
+      edition: 'column',
+      column: 'Lead Desk',
+      byline: 'Danica Hoyt',
+      slug: 'lead-desk-under-a-retired-byline',
+    })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(archiveDay.code, 0, `a retired byline must still file its own column on its last day: ${archiveDay.stderr}`);
 });
 
 test('Margaret Vance and Mara Vance are two people, and only one of them files', () => {
@@ -604,12 +823,12 @@ test('expires does not weaken the date window or the sourcing rule', () => {
   // An old post with an expires field must still pass: expiry is a listing rule
   // and the date window keeps no backward half.
   const old = archive([
-    post({ day: '2026-09-01', frontMatter: frontMatterOf({
+    post({ day: '2026-09-01', author: 'dev-okafor', frontMatter: frontMatterOf({
       title: '"A headline long enough to clear the schema"',
       dek: '"One sentence under the headline."',
       date: '2026-09-01',
       edition: 'evening',
-      byline: 'Nathan Beausoleil',
+      byline: 'Dev Okafor',
       category: 'weather',
       slug: 'an-old-post',
       expires: '2026-09-02',

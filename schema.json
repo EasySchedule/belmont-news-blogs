@@ -47,7 +47,7 @@
       "type": "string",
       "minLength": 3,
       "maxLength": 80,
-      "description": "Full name exactly as registered in roster.json, capitalisation included. No shared bylines. The one desk line is 'Belmont News staff', for copy no single reporter files; it is not a substitute for a reporter's name."
+      "description": "Full name exactly as registered in roster.json, capitalisation included. No shared bylines. The one desk line is 'Belmont News staff', for copy no single reporter files; it is not a substitute for a reporter's name. An entry marked retired in roster.json is archive-only: the gate refuses it for any post dated after its retirement day."
     },
     "category": {
       "type": "string",
