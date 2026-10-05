@@ -289,12 +289,20 @@ test('a capitalised Staff is not the desk line', () => {
 // so a desk could have more than one reporter. The second reversed that half: a
 // column is owned by exactly one reporter, and a reporter who needs a column gets one
 // of his own. `Lead Desk` is Danica Hoyt's and stays hers, `Morning Briefing` is
-// Margaret Vance's, `News Desk` is Rosalind Kimbrough's. Dev Okafor owns
-// `County Desk` and Priya Raghunathan owns `Community Desk`, so no column is shared
-// and no published column changes hands. The assertion below is therefore the
+// Margaret Vance's. Dev Okafor owns `County Desk` and Priya Raghunathan owns
+// `Community Desk`, so no column is shared. The assertion below is therefore the
 // original BEL-55 one, byte for byte what it was on `a0a5031b`: one roster entry per
 // column. Misattribution is the failure this gate exists to catch, so the guard
 // against a column silently changing hands is not relaxed to clear a byline.
+//
+// BEL-192 moved one column. `News Desk` was registered under `Rosalind Kimbrough`,
+// a placeholder byline, and PR #18 retires that byline at 2026-10-03. A retired
+// byline may file the archive and nothing after it, so once #18 lands no byline at
+// all can file `News Desk`. The desk ruled the column transfers to a live byline,
+// `Rosa Delgado`. Nothing in the archive moves with it: no post has ever named
+// `News Desk` as its column, so there is no published post filed under the old owner
+// to go red. The transfer is a change of name in the registry, not a rewrite of
+// published bylines.
 
 test('every column the archive can file is owned by exactly one roster entry', () => {
   const roster = JSON.parse(ROSTER);
@@ -307,10 +315,10 @@ test('every column the archive can file is owned by exactly one roster entry', (
   }
   // Every column any filed post uses has to be one of these. A post naming a
   // column nobody registered is the exact shape of the BEL-55 failure.
-  for (const name of ['Morning Briefing', 'News Desk', 'Lead Desk']) {
+  for (const name of ['Morning Briefing', 'News Desk', 'Lead Desk', 'County Desk', 'Community Desk']) {
     assert.ok(owners.has(name), `no roster entry owns the column '${name}'`);
   }
-  assert.equal(owners.get('News Desk'), 'Rosalind Kimbrough');
+  assert.equal(owners.get('News Desk'), 'Rosa Delgado');
 });
 
 test('the real reporters own a column each, and no published column moved', () => {
@@ -322,11 +330,17 @@ test('the real reporters own a column each, and no published column moved', () =
   // failure BEL-116 was filed against.
   assert.deepEqual(by('margaret-vance').columns, ['Morning Briefing']);
   assert.deepEqual(by('danica-hoyt').columns, ['Lead Desk']);
-  assert.deepEqual(by('rosalind-kimbrough').columns, ['News Desk']);
+
+  // `News Desk` used to sit here and does not any more. Rosalind Kimbrough owns no
+  // column now: PR #18 retires her byline, so a column filed under her would be
+  // unfileable the moment that PR lands. Pinned because the move is the ruling and
+  // the suite is where the ruling stops drifting.
+  assert.deepEqual(by('rosalind-kimbrough').columns, []);
 
   // The reporters who need a column have one of their own, so nothing is shared.
   assert.deepEqual(by('dev-okafor').columns, ['County Desk']);
   assert.deepEqual(by('priya-raghunathan').columns, ['Community Desk']);
+  assert.deepEqual(by('rosa-delgado').columns, ['News Desk']);
 });
 
 test('the roster is the eight placeholders, the four reporters and one desk line', () => {
@@ -374,21 +388,44 @@ test('every real reporter may file a non-column edition', () => {
 
 test('the registered News Desk owner may file that column', () => {
   const r = archive([post({
-    day: '2026-10-03',
-    author: 'rosalind-kimbrough',
+    day: '2026-10-05',
+    author: 'rosa-delgado',
     frontMatter: `${frontMatterOf({
       title: '"A headline long enough to clear the schema"',
       dek: '"One sentence under the headline."',
-      date: '2026-10-03',
+      date: '2026-10-05',
       edition: 'column',
       column: 'News Desk',
-      byline: 'Rosalind Kimbrough',
+      byline: 'Rosa Delgado',
       category: 'news-desk',
-      slug: 'news-desk-2026-10-03',
+      slug: 'news-desk-2026-10-05',
     })}\n${VALID_SOURCES}`,
   })]);
   assert.equal(r.code, 0, r.stderr);
   assert.equal(r.index.posts[0].column, 'News Desk');
+});
+
+test('News Desk has a live owner, so the placeholder retirement cannot close it', () => {
+  // The BEL-192 defect, stated as an assertion. PR #18 retires eight placeholder
+  // bylines at 2026-10-03 and refuses them for anything dated after that day. While
+  // the only registered owner of `News Desk` was one of those bylines, the column had
+  // no fileable owner at all and the refusal named an owner who could no longer sign
+  // anything. A live owner is what closes it, so the roster entry is checked for the
+  // property the ruling is actually about: not retired, and a distinct person from
+  // the eight placeholders.
+  const roster = JSON.parse(ROSTER);
+  const newsDesk = roster.agents.find((a) => (a.columns || []).includes('News Desk'));
+  assert.ok(newsDesk, 'no roster entry owns the column \'News Desk\'');
+
+  const placeholders = [
+    'margaret-vance', 'grant-kowalczyk', 'nathan-beausoleil', 'elliot-bramwell',
+    'rosalind-kimbrough', 'thandiwe-okonjo', 'corinne-ashby', 'danica-hoyt',
+  ];
+  assert.ok(!placeholders.includes(newsDesk.slug),
+    `News Desk is owned by the placeholder byline '${newsDesk.name}', who PR #18 retires`);
+  // Only the retirement rule PR #18 adds can close a column, and it keys off this.
+  assert.equal(newsDesk.retired, undefined,
+    `the owner of News Desk is retired at ${newsDesk.retired}, so no byline can file it`);
 });
 
 test('a byline that does not own a registered column is told who does own it', () => {
@@ -400,7 +437,7 @@ test('a byline that does not own a registered column is told who does own it', (
   assert.equal(r.code, 1);
   assert.match(r.stderr, /byline 'Corinne Ashby' does not own the column 'News Desk'/);
   // The owner is named, so the writer does not have to guess.
-  assert.match(r.stderr, /owned by 'Rosalind Kimbrough'/);
+  assert.match(r.stderr, /owned by 'Rosa Delgado'/);
 });
 
 test('a reporter may file the column he owns, and only that one', () => {

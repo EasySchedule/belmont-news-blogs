@@ -42,13 +42,17 @@ a JSON Schema cannot express:
 5. **Slug unique** — no two posts share a slug.
 6. **Column owner** — a column is owned by **exactly one** roster entry: the one
    that lists it under `columns`, and no other, and the refusal message names that
-   owner. The Morning Briefing is owned by Margaret Vance, the News Desk by
-   Rosalind Kimbrough, and the Lead Desk by Danica Hoyt. A reporter who needs a
+   owner. The Morning Briefing is owned by Margaret Vance, the Lead Desk by
+   Danica Hoyt, and the News Desk by Rosa Delgado. A reporter who needs a
    column owns one of his own rather than sharing another byline's: Dev Okafor
    files the County Desk, Priya Raghunathan the Community Desk. Ownership is never
    *transferred* either: taking a column off the byline the
    published posts are filed under reds the gate on those posts, which is what
-   BEL-116 was filed about.
+   BEL-116 was filed about. The News Desk is the one transfer the desk has ruled:
+   it moved off Rosalind Kimbrough, a placeholder byline, because PR #18 retires
+   her for anything dated after 2026-10-03 and a column whose only owner is retired
+   can no longer be filed at all. Nothing in the archive moved with it — no post
+   has ever named the News Desk as its column.
    A column named in a post that **no** roster entry owns is refused for every
    byline, and the message says it is a missing registration in `roster.json`
    rather than a byline mistake, because no byline change can fix it.
@@ -81,9 +85,12 @@ Managing Editor and not a thing to undo in a plumbing change.
 | --- | --- | --- |
 | `dev-okafor` | `Dev Okafor` | County Desk |
 | `priya-raghunathan` | `Priya Raghunathan` | Community Desk |
-| `rosa-delgado` | `Rosa Delgado` | — |
+| `rosa-delgado` | `Rosa Delgado` | News Desk |
 | `hana-ishikawa` | `Hana Ishikawa` | — |
 | `belmont-news-staff` | `Belmont News staff` | — |
+
+`Rosa Delgado` holds the News Desk by the `BEL-192` ruling, not by `BEL-116`. She
+is the only reporter here whose column is not one the same ruling created.
 
 Not every agent in the company is on the roster, and adding one is a ruling
 rather than a convenience. An engineer or an editor on the roster becomes a valid
