@@ -52,10 +52,13 @@ a JSON Schema cannot express:
    A column named in a post that **no** roster entry owns is refused for every
    byline, and the message says it is a missing registration in `roster.json`
    rather than a byline mistake, because no byline change can fix it.
-7. **Sourced** — at least one source, and every source carries `type`, `title` and
+7. **Retired byline** — an entry carrying a `retired` day may sign a post dated on
+   or before that day and may not sign a later one. The refusal names the day and
+   the file. See *A retired byline is archive-only* below.
+8. **Sourced** — at least one source, and every source carries `type`, `title` and
    `retrieved`. `schema.json` holds those rules; an explicit empty list is also
    rejected with the file named.
-8. **Date window** — nothing dated further ahead than `--future-days` from newsroom today.
+9. **Date window** — nothing dated further ahead than `--future-days` from newsroom today.
 
 An unknown front matter field is an error, so a misspelled `sourced` fails the
 build instead of quietly dropping the sources list.
@@ -93,6 +96,27 @@ failure that already happened once on this domain.
 
 `Belmont News staff` — lower-case "staff" — is the one desk line, for copy that
 no single reporter files. It is not a substitute for a reporter's name.
+
+### A retired byline is archive-only
+
+Retaining the placeholders has a cost, so each of the eight carries a `retired`
+day — `2026-10-03`, the newest day any published post is filed under one. The gate
+treats that as two rules rather than one:
+
+- a post dated **on or before** that day may carry the byline, which is the
+  published archive and keeps building;
+- a post dated **after** it is refused, and the message names the day and says to
+  file under a current byline.
+
+Without the second rule, keeping the placeholders valid for the archive also keeps
+them fileable for new work, and a placeholder name can sign tomorrow's story. That
+is the same defect the gate exists to catch, reached by the roster instead of by
+the copy, and it would reach a reader unchallenged.
+
+Retiring a name is a desk ruling like any other roster change, and it does not
+require rewriting the archive: the published bylines stay exactly as they are. The
+real newsroom's five entries carry no `retired` day, so nothing about filing new
+work changes for them, and a reporter keeps the column they own.
 
 ### Margaret Vance and Mara Vance are two people
 
