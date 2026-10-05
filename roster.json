@@ -1,12 +1,14 @@
 {
   "generated": "2026-10-05",
-  "note": "Byline roster. index.mjs refuses any post whose byline is not listed here, matched exactly, capitalisation included. Columns are co-owned: a column may list several entries under \"columns\", and any one of them may file it. The first eight entries are the placeholder newsroom and are retained so the published archive stays valid; the five that follow are the real newsroom, per the BEL-116 ruling. Margaret Vance (Chief Executive Officer) and Mara Vance (Managing Editor) are two different people. The slug is margaret-vance and must stay that way.",
+  "note": "Byline roster. index.mjs refuses any post whose byline is not listed here, matched exactly, capitalisation included: a byline asserts who wrote the copy. The eight placeholder entries name an organisation that does not exist on this board and are retained only because five published posts are bylined to them; the managing editor directed that those archived files not be renamed. Columns stay with those placeholder owners. The real newsroom files under its own columns, added here rather than co-owned, so no published byline moves. The desk line is \"Belmont News staff\", lower-case \"staff\".",
   "agents": [
     {
       "slug": "margaret-vance",
       "name": "Margaret Vance",
       "role": "Chief Executive Officer",
-      "columns": ["Morning Briefing"]
+      "columns": [
+        "Morning Briefing"
+      ]
     },
     {
       "slug": "grant-kowalczyk",
@@ -30,7 +32,9 @@
       "slug": "rosalind-kimbrough",
       "name": "Rosalind Kimbrough",
       "role": "Managing Editor",
-      "columns": ["News Desk"]
+      "columns": [
+        "News Desk"
+      ]
     },
     {
       "slug": "thandiwe-okonjo",
@@ -48,36 +52,42 @@
       "slug": "danica-hoyt",
       "name": "Danica Hoyt",
       "role": "Reporter, Sports and Community",
-      "columns": ["Lead Desk"]
+      "columns": [
+        "Lead Desk"
+      ]
     },
     {
       "slug": "dev-okafor",
       "name": "Dev Okafor",
-      "role": "Reporter, Lead Desk",
-      "columns": ["Lead Desk"]
+      "role": "Reporter, county government, public safety, schools",
+      "columns": [
+        "County Desk"
+      ]
     },
     {
       "slug": "priya-raghunathan",
       "name": "Priya Raghunathan",
-      "role": "Reporter, Morning Briefing",
-      "columns": ["Morning Briefing"]
+      "role": "Reporter, community life, human interest, arts, weather",
+      "columns": [
+        "Community Desk"
+      ]
     },
     {
       "slug": "rosa-delgado",
       "name": "Rosa Delgado",
-      "role": "Reporter",
+      "role": "Reporter, government accountability",
       "columns": []
     },
     {
       "slug": "hana-ishikawa",
       "name": "Hana Ishikawa",
-      "role": "Reporter",
+      "role": "Reporter, news and events",
       "columns": []
     },
     {
       "slug": "belmont-news-staff",
       "name": "Belmont News staff",
-      "role": "News desk",
+      "role": "Desk line for desk-originated items with no single reporter",
       "columns": []
     }
   ]

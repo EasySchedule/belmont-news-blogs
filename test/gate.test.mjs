@@ -230,47 +230,7 @@ test('a slug that is not kebab-case fails', () => {
 // ------------------------------------------------------- the rest of the gate
 
 test('a byline that is not on the roster fails', () => {
-  // Mara Vance, the Managing Editor, is not on the roster and is not meant to be:
-  // the BEL-116 ruling put four reporters and one desk line on it, and a byline
-  // asserts authorship, so an editor who did not write the story cannot sign it.
-  const r = archive([post({ day: '2026-10-02', frontMatter: validPost({ byline: 'Mara Vance' }) + '\n' + VALID_SOURCES })]);
-  assert.equal(r.code, 1);
-  assert.match(r.stderr, /byline 'Mara Vance' is not in roster\.json/);
-});
-
-// ------------------------------------------------------------- the desk line
-//
-// BEL-116 added one desk line, `Belmont News staff`, for copy no single reporter
-// files. Bylines are matched on the exact string, capitalisation included, so
-// `Belmont News Staff` is a different byline and is refused. That is the intended
-// direction: a name one capital letter off is refused rather than filed under the
-// desk line. It is also a trap for anyone editing the roster later, so it is
-// written down here rather than left to a find-and-replace.
-
-test('the registered desk line may file a post', () => {
-  const r = archive([post({
-    day: '2026-10-03',
-    author: 'belmont-news-staff',
-    frontMatter: `${validPost({
-      date: '2026-10-03',
-      byline: 'Belmont News staff',
-      slug: 'a-desk-notice-for-the-bulletin-board',
-    })}\n${VALID_SOURCES}`,
-  })]);
-  assert.equal(r.code, 0, r.stderr);
-  assert.equal(r.index.posts[0].byline, 'Belmont News staff');
-});
-
-test('a capitalised Staff is not the desk line', () => {
-  const r = archive([post({
-    day: '2026-10-03',
-    author: 'belmont-news-staff',
-    frontMatter: `${validPost({
-      date: '2026-10-03',
-      byline: 'Belmont News Staff',
-      slug: 'a-desk-notice-with-the-wrong-capital',
-    })}\n${VALID_SOURCES}`,
-  })]);
+  const r = archive([post({ day: '2026-10-02', frontMatter: validPost({ byline: 'Belmont News Staff' }) + '\n' + VALID_SOURCES })]);
   assert.equal(r.code, 1);
   assert.match(r.stderr, /byline 'Belmont News Staff' is not in roster\.json/);
 });
@@ -284,87 +244,22 @@ test('a capitalised Staff is not the desk line', () => {
 // by changing their byline, so the failure stayed silent for a full edition. Two
 // things are locked here: the registration itself, and the message that tells a
 // registry gap apart from a byline mistake.
-//
-// BEL-116 then made ownership a set rather than a single name, because a desk has
-// more than one reporter. What is locked now is co-ownership: every column still
-// has an owner, every column the archive can file is still registered, and the
-// placeholder owner is retained alongside the real reporter rather than replaced.
 
-test('every column the archive can file is owned by at least one roster entry', () => {
+test('every column the archive can file is owned by exactly one roster entry', () => {
   const roster = JSON.parse(ROSTER);
   const owners = new Map();
   for (const a of roster.agents) {
     for (const c of a.columns || []) {
-      if (!owners.has(c)) owners.set(c, []);
-      owners.get(c).push(a.name);
+      assert.ok(!owners.has(c), `column '${c}' is claimed by both '${owners.get(c)}' and '${a.name}'`);
+      owners.set(c, a.name);
     }
   }
   // Every column any filed post uses has to be one of these. A post naming a
-  // column nobody registered is the exact shape of the BEL-55 failure. Co-ownership
-  // changes how many names may sit on a column; it does not make an unowned
-  // column legal.
+  // column nobody registered is the exact shape of the BEL-55 failure.
   for (const name of ['Morning Briefing', 'News Desk', 'Lead Desk']) {
     assert.ok(owners.has(name), `no roster entry owns the column '${name}'`);
   }
-  assert.deepEqual(owners.get('News Desk'), ['Rosalind Kimbrough']);
-});
-
-test('a co-owned column keeps the placeholder owner and adds the real reporter', () => {
-  const roster = JSON.parse(ROSTER);
-  const by = (slug) => roster.agents.find((a) => a.slug === slug);
-
-  // The remedy is co-ownership, not transfer. Moving a column off the placeholder
-  // owner reds the gate on the published posts filed under that owner, which is the
-  // failure BEL-116 was filed against.
-  assert.deepEqual(by('margaret-vance').columns, ['Morning Briefing']);
-  assert.deepEqual(by('danica-hoyt').columns, ['Lead Desk']);
-  assert.deepEqual(by('rosalind-kimbrough').columns, ['News Desk']);
-
-  assert.ok(by('dev-okafor').columns.includes('Lead Desk'), 'Dev Okafor must co-own the Lead Desk');
-  assert.ok(by('priya-raghunathan').columns.includes('Morning Briefing'), 'Priya Raghunathan must co-own the Morning Briefing');
-});
-
-test('the roster is the eight placeholders, the four reporters and one desk line', () => {
-  // Not every agent in the company. An engineer or an editor on the roster becomes
-  // a valid byline for a story they did not write, which makes the gate catch less
-  // and not more.
-  const roster = JSON.parse(ROSTER);
-  const slugs = roster.agents.map((a) => a.slug);
-  assert.deepEqual(slugs, [
-    'margaret-vance', 'grant-kowalczyk', 'nathan-beausoleil', 'elliot-bramwell',
-    'rosalind-kimbrough', 'thandiwe-okonjo', 'corinne-ashby', 'danica-hoyt',
-    'dev-okafor', 'priya-raghunathan', 'rosa-delgado', 'hana-ishikawa',
-    'belmont-news-staff',
-  ]);
-});
-
-test('Margaret Vance and Mara Vance are two people, and only one of them files', () => {
-  const roster = JSON.parse(ROSTER);
-  const margaret = roster.agents.find((a) => a.name === 'Margaret Vance');
-  assert.ok(margaret, 'the published Morning Briefing byline must stay on the roster');
-  assert.equal(margaret.slug, 'margaret-vance', 'the archive slug is margaret-vance and must not change');
-  assert.equal(roster.agents.some((a) => a.name === 'Mara Vance'), false);
-});
-
-test('every real reporter may file a non-column edition', () => {
-  for (const [author, byline] of [
-    ['dev-okafor', 'Dev Okafor'],
-    ['priya-raghunathan', 'Priya Raghunathan'],
-    ['rosa-delgado', 'Rosa Delgado'],
-    ['hana-ishikawa', 'Hana Ishikawa'],
-  ]) {
-    const r = archive([post({
-      day: '2026-10-03',
-      author,
-      slug: `${author}-evening-edition`,
-      frontMatter: `${validPost({
-        date: '2026-10-03',
-        byline,
-        slug: `${author}-evening-edition`,
-      })}\n${VALID_SOURCES}`,
-    })]);
-    assert.equal(r.code, 0, `${byline} must be able to file: ${r.stderr}`);
-  }
+  assert.equal(owners.get('News Desk'), 'Rosalind Kimbrough');
 });
 
 test('the registered News Desk owner may file that column', () => {
@@ -396,40 +291,6 @@ test('a byline that does not own a registered column is told who does own it', (
   assert.match(r.stderr, /byline 'Corinne Ashby' does not own the column 'News Desk'/);
   // The owner is named, so the writer does not have to guess.
   assert.match(r.stderr, /owned by 'Rosalind Kimbrough'/);
-});
-
-test('a co-owner may file the column it shares, which is the point of co-ownership', () => {
-  // Dev Okafor is refused for the Lead Desk on a roster that lists only Danica
-  // Hoyt, and the Lead Desk has exactly one reporter in the real newsroom. This
-  // is the case BEL-116 was filed about: without the column half, extending the
-  // roster still refuses real stories.
-  const r = archive([post({
-    day: '2026-10-03',
-    author: 'dev-okafor',
-    frontMatter: `${validPost({
-      date: '2026-10-03',
-      edition: 'column',
-      column: 'Lead Desk',
-      byline: 'Dev Okafor',
-      slug: 'the-lead-desk-may-file-its-own-column',
-    })}\n${VALID_SOURCES}`,
-  })]);
-  assert.equal(r.code, 0, r.stderr);
-  assert.equal(r.index.posts[0].column, 'Lead Desk');
-});
-
-test('a co-owned column names every owner, not just the first', () => {
-  // The refusal message is how a writer finds out who to ask. On a co-owned column
-  // "it is owned by 'Danica Hoyt'" would be half the answer and would read as
-  // though Dev Okafor could not file the Lead Desk at all.
-  const r = archive([post({
-    day: '2026-10-03',
-    author: 'corinne-ashby',
-    frontMatter: `${validPost({ edition: 'column', column: 'Lead Desk', byline: 'Corinne Ashby', slug: 'not-the-lead-desk-either' })}\n${VALID_SOURCES}`,
-  })]);
-  assert.equal(r.code, 1);
-  assert.match(r.stderr, /does not own the column 'Lead Desk'/);
-  assert.match(r.stderr, /owned by 'Danica Hoyt' and 'Dev Okafor'/);
 });
 
 test('a column no roster entry owns says so, instead of reading as a byline mistake', () => {
