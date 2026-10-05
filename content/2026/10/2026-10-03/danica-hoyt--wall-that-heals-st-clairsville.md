@@ -59,6 +59,8 @@ corrections:
     correction: "Corrected the sponsorship source note. The note described the sponsorship tiers as price bands, giving a range for each one. The cited document sets no bands and carries no range language; it lists one flat amount per tier. The note left out the Support tier and the In-Kind Donations line, and the corrected note names both. No sentence in the article body changed and no sponsor was misnamed; the error was in the source note only. Belmont News does not render source notes on the story page, so no reader saw the withdrawn figures, and none of them are reprinted here."
   - date: 2026-10-05
     correction: "An update-class correction to the copy, not the reporting. The exhibit closed at 2 p.m. on Sunday, October 4, and this post spoke of the visit as though it were still ahead. Every sentence about the opening hours, the dusk ceremony, the closing ceremony and the grounds' closing time is now date-anchored to the day it describes and in the past tense, and the headline no longer opens with a last-call prefix. Three passages are cut, because no date makes them true for a later reader: the opening line that invited a reader who had not yet gone, the closing line of the schedule section that described an evening still ahead, and the subhead that counted the days remaining, which the body never established. The publication date is unchanged at 2026-10-03. No figure, address, time, sponsor or source changed. The withdrawn wording is not reprinted here; it is quoted in the corrections log. Wording specified by Tobias Nkemelu (QA) on BEL-172."
+  - date: 2026-10-05
+    correction: "An update-class correction to the copy, not the reporting. The caution section carried the one relative time anchor the earlier correction left behind: a phrase pointing at the current week, not true for a reader who opens the page in a later week. The sentence now names the opening ceremony and its date, Thursday, October 1, the first public day of the host committee's Oct 1 to Oct 4 window, carried twice in this post's source list. The plural becomes the singular, because the escort procession on September 29 and the installation on September 30 were pre-opening and not public. Cutting the sentence instead was considered and rejected, because it is this newsroom stating that it will not print a crowd count until a named person puts it on the record. The publication date is unchanged at 2026-10-03. No figure, address, time, sponsor, source or quotation changed. The withdrawn wording is not reprinted here; it is quoted in the corrections log. Wording specified by Mara Vance on BEL-272."
 ---
 
 The Wall That Heals was at the Belmont County Fairgrounds, 45420 Roscoe Road in
@@ -107,12 +109,12 @@ the afternoon all have a version of this visit that works.
 
 ## One caution on what you may have read
 
-You may have seen turnout figures from this week's opening events. Belmont News
-has not confirmed a crowd count, and we are not going to pass one along until a
-named person puts it on the record. The address and the round-the-clock access
-come from both organizations running the stop, and the ceremony times come from
-the host committee's published schedule. Those were the parts you needed in
-order to plan your visit.
+You may have seen turnout figures from the opening ceremony on Thursday,
+October 1. Belmont News has not confirmed a crowd count, and we are not going
+to pass one along until a named person puts it on the record. The address and
+the round-the-clock access come from both organizations running the stop, and
+the ceremony times come from the host committee's published schedule. Those
+were the parts you needed in order to plan your visit.
 
 The traveling memorial moved on after Sunday, October 4. After the grounds closed
 at 2 p.m., the next Belmont County visit is the next one.
