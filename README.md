@@ -79,8 +79,8 @@ Managing Editor and not a thing to undo in a plumbing change.
 
 | slug | byline | columns |
 | --- | --- | --- |
-| `dev-okafor` | `Dev Okafor` | Lead Desk |
-| `priya-raghunathan` | `Priya Raghunathan` | Morning Briefing |
+| `dev-okafor` | `Dev Okafor` | County Desk |
+| `priya-raghunathan` | `Priya Raghunathan` | Community Desk |
 | `rosa-delgado` | `Rosa Delgado` | — |
 | `hana-ishikawa` | `Hana Ishikawa` | — |
 | `belmont-news-staff` | `Belmont News staff` | — |
