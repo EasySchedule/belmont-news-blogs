@@ -84,14 +84,15 @@ build instead of quietly dropping the sources list.
 exact name string, capitalisation included, and a name that is not on the roster
 does not build. There is no fallback and no "closest match".
 
-It holds thirteen entries in two groups.
+It holds eight entries in two groups.
 
-**The eight placeholders**, retained on purpose. Every post in the published
-archive is bylined to one of these names, so removing an entry does not clean up
-the roster, it invalidates filed work: the build goes red on the five posts
-already published and the site stops updating for everyone. `BEL-116` extended
-this list rather than replacing it, which is an editorial decision to leave to the
-Managing Editor and not a thing to undo in a plumbing change.
+**Three placeholders**, retained on purpose. Every post in the published archive is
+bylined to one of these three names, so removing one of these entries does not clean
+up the roster, it invalidates filed work: the build goes red on the five posts
+already published and the site stops updating for everyone. `BEL-116` extended the
+roster rather than replacing it, and `BEL-312` narrowed it back to the names that
+carry published work. What remains after that narrowing is the smallest roster that
+keeps the archive building, and no smaller one exists.
 
 **The four reporters and one desk line**, added by the same ruling:
 
@@ -117,7 +118,7 @@ no single reporter files. It is not a substitute for a reporter's name.
 
 ### A retired byline is archive-only
 
-Retaining the placeholders has a cost, so each of the eight carries a `retired`
+Retaining the placeholders has a cost, so each of the three carries a `retired`
 day — `2026-10-03`, the newest day any published post is filed under one. The gate
 treats that as two rules rather than one:
 

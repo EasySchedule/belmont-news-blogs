@@ -425,7 +425,7 @@ for (const full of files) {
   // A retired byline belongs to the archive, not to the newsroom. It stays valid for
   // the posts already filed under it and is refused for anything dated after its last
   // day. Without this, extending the roster to keep the archive valid also leaves the
-  // eight placeholder names fileable for new work, and a byline asserts authorship: a
+  // placeholder names fileable for new work, and a byline asserts authorship: a
   // placeholder name signing tomorrow's story is the same defect the gate exists to
   // catch, and it would reach a reader unchallenged.
   if (agent && agent.retired && String(data.date).slice(0, 10) > agent.retired) {

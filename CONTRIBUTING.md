@@ -40,8 +40,11 @@ before you file:
   the slug `margaret-vance`. Do not "fix" either name.
 - **`Belmont News staff`** is the one desk line, lower-case "staff", for copy no
   single reporter files. It is not a substitute for your name.
-- **A retired byline is archive-only.** The eight placeholder names stay on the
+- **A retired byline is archive-only.** Three placeholder names stay on the
   roster so the published posts keep building, and each carries a `retired` day.
+  Five other placeholders were deleted on the `BEL-312` ruling: they had no
+  published posts, so nothing is filed under them and a story signed by one of
+  them would be a byline asserting authorship for a writer who does not exist.
   The gate accepts one for a post dated on or before that day and refuses it for
   anything later, with a message naming the day. If you file copy dated today, use
   your own name. A placeholder name is not a byline for new work.
