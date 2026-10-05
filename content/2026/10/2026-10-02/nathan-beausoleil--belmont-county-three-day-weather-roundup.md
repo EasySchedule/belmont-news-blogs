@@ -1,6 +1,6 @@
 ---
 title: "Belmont County gets one last shot at rain tonight, then a dry, sunny weekend and a hard Monday night freeze"
-dek: "The National Weather Service Pittsburgh office calls for a 30 percent shower chance tonight before skies clear Saturday."
+dek: "Four forecasts disagree on how likely tonight's showers are, and none of them disagrees on what to do about it: take a jacket before 8 p.m., then a dry, sunny weekend and a hard Monday night freeze."
 date: 2026-10-02
 edition: evening
 byline: Nathan Beausoleil
@@ -35,13 +35,20 @@ sources:
     retrieved: 2026-10-02
     url: "https://api.weather.gov/alerts/active?zone=OHZ059"
     note: "Product checked for watch, warning, or advisory. None active at retrieval."
+corrections:
+  - date: 2026-10-05
+    correction: The deck reads "The National Weather Service Pittsburgh office calls for a 30 percent shower chance tonight before skies clear Saturday." The same bare figure is printed a second time in this post's own "Headline and deck as they print" block / The deck is replaced with "Four forecasts disagree on how likely tonight's showers are, and none of them disagrees on what to do about it: take a jacket before 8 p.m., then a dry, sunny weekend and a hard Monday night freeze.", and the composite headline line is re-cut to drop the figure and the false attribution. Two grounds, both real. The body prints four figures for that evening and states the spread, so a bare figure overstates its confidence; and the number the deck puts in the National Weather Service Pittsburgh office's mouth is the one number on this page that office did not publish: its gridpoint field is 33 percent and its Zone Forecast Product for OHZ059 is 40 percent. The 20-point spread is unchanged and is still printed.
+  - date: 2026-10-05
+    correction: The post states that "The higher figures from Open-Meteo and the ZFP are model-side, not official", which reads on the ZFP as a claim that the National Weather Service Zone Forecast Product FPUS51 KPBZ 022102 is not an official product. It is one. This same post calls it "National Weather Service, forecast office Pittsburgh PA" in its Sources list and "The NWS Zone Forecast Product for OHZ059" in the heading of its disagreement paragraph / The sentence is replaced with "Open-Meteo is a third-party model run and is not this desk's endpoint of record. The ZFP is not in that position: it is an official product of the same Pittsburgh office, and its 40 percent is set aside by the house anchor — the gridpoint structured field is the published figure — not by the standing of the product." The sentence was load-bearing: it was the only sourcing ground the post gave for setting the ZFP's 40 percent aside. Nothing is averaged; the ZFP's 40 percent is still printed as part of the disagreement.
+  - date: 2026-10-05
+    correction: The post's "Which one Belmont News is publishing and why" paragraph publishes "30 percent, the narrative figure stated inside the gridpoint forecast period itself", and its "What to do about it" block reads "Tonight (30 percent chance of showers before 8 p.m.)" / The figure of record is 33 percent, the gridpoint structured precipitation field probabilityOfPrecipitation.value, and the 30, 40 and 50 percent figures stay printed as the disagreement between four sources and are not resolved. This newsroom prints the field value and states the disagreement rather than resolving it, which is the standing rule already written into this log in the entry dated 2026-10-03 against the morning briefing. The Friday day-by-day paragraph and the three-day table already carry 33 percent and are unchanged. The 20-point spread is unchanged.
 ---
 
 *Headline and deck as they print. The reporter's text follows unchanged.*
 
 **Headline:** Belmont County gets one last shot at rain tonight, then a dry, sunny
-weekend and a hard Monday night freeze, with the National Weather Service's Pittsburgh
-office calling for a 30 percent shower chance tonight before skies clear Saturday.
+weekend and a hard Monday night freeze, with four forecasts disagreeing on how likely
+tonight's showers are and none of them disagreeing on what to do about it.
 
 ---
 
@@ -158,16 +165,19 @@ Forecast Product for OHZ059 says "Chance of rain 40 percent." Open-Meteo says 50
 percent. That is a spread of 20 percentage points across four retrievals of the same
 evening.
 
-*Which one Belmont News is publishing and why:* **30 percent**, the narrative figure
-stated inside the gridpoint forecast period itself, because that is the same endpoint
-of record that supplies every other number in the table and it is the number a reader
-will hear re-read to them. The 33 percent structured field is in the same JSON
-document a few lines away, and the discrepancy is carried forward to the morning desk
-rather than hidden — the three values are all quoted here so a reader can see the
-spread. The operational point is unchanged across all of them: this is a chance of
-showers before 8 p.m., not a soaking rain, and no source in this roundup puts
-Belmont County above a 50 percent chance of rain for the evening. The higher figures
-from Open-Meteo and the ZFP are model-side, not official.
+*Which one Belmont News is publishing and why:* **33 percent**, the gridpoint
+structured precipitation field for this period, because this desk prints the field
+value and states the disagreement rather than resolving it. The 30 percent narrative
+figure is in the same JSON document a few lines away, the Zone Forecast Product for
+OHZ059 says 40, and Open-Meteo says 50; all of them are quoted here rather than hidden
+or blended, so a reader can see the spread. The operational point is unchanged across
+all of them: this is a chance of showers before 8 p.m., not a soaking rain, and no
+source in this roundup puts Belmont County above a 50 percent chance of rain for the
+evening. Open-Meteo is a third-party model run and is not this desk's endpoint of
+record. The ZFP is not in that position: it is an official product of the same
+Pittsburgh office, and its 40 percent is set aside by the house anchor — the
+gridpoint structured field is the published figure — not by the standing of the
+product.
 
 **Disagreement 2 — Sunday's high.** The NWS gridpoint forecast says 73 °F. The NWS
 Zone Forecast Product for OHZ059 says "Highs in the lower 70s," which is consistent
@@ -197,7 +207,7 @@ answered.
 
 ## What to do about it
 
-- **Tonight (30 percent chance of showers before 8 p.m.):** carry a jacket. After
+- **Tonight (33 percent chance of showers before 8 p.m.):** carry a jacket. After
   8 p.m. it is dry and you can drop the umbrella.
 - **Saturday (0 percent):** the best outdoor day of the weekend. No weather action needed.
 - **Sunday (6 percent):** a trace at most. No action needed.
