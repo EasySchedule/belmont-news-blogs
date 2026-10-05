@@ -68,6 +68,10 @@ a JSON Schema cannot express:
    A column named in a post that **no** roster entry owns is refused for every
    byline, and the message says it is a missing registration in `roster.json`
    rather than a byline mistake, because no byline change can fix it.
+   A column may appear on more than one entry, but **only one entry may hold it
+   with no end day**. Two current owners is refused when the roster loads, for any
+   roster: two bylines filing one column means neither file is a byline mistake,
+   so the gate has nothing to refuse and the misattribution reaches a reader.
 7. **Retired byline** — an entry carrying a `retired` day may sign a post dated on
    or before that day and may not sign a later one. The refusal names the day and
    the file. See *A retired byline is archive-only* below.
@@ -77,7 +81,9 @@ a JSON Schema cannot express:
 9. **Date window** — nothing dated further ahead than `--future-days` from newsroom today.
 
 A malformed `retired` day and a malformed column `until` day are both refused when
-`roster.json` loads, and so is a column entry with no usable `name`. Both days are
+`roster.json` loads, and so is a column entry with no usable `name` — in either the
+object form or the bare string form, so a blank `"   "` cannot sit in the roster
+looking registered. Both days are
 compared as text against the post's date, so an unpadded `2026-10-3` sorts after
 every real day in October and the rule it feeds silently stops firing — a
 byline that left the newsroom would go on signing new work, or a handover the desk

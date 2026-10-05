@@ -996,6 +996,85 @@ test('a column entry with no usable name is refused at load', () => {
   }
 });
 
+test('a blank string column name is refused at load too', () => {
+  // The object form above checks its `name`; the string form carried no check at
+  // all, so `""` and `"   "` loaded clean. That matters because the ruled shape is
+  // the string form: most of the roster is written as bare names, and a blank one
+  // looks registered. It matches no post and files none, so it is a column that
+  // can never be used, present without a word from the build.
+  for (const bad of ['', '   ']) {
+    const root = writeArchive([]);
+    try {
+      const roster = JSON.parse(ROSTER);
+      roster.agents.find((a) => a.slug === 'margaret-vance').columns = [bad];
+      writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+      const r = runGate(root, []);
+      assert.equal(r.code, 2, `a blank column name ${JSON.stringify(bad)} must fail the build: ${r.stdout}${r.stderr}`);
+      assert.match(r.stderr, /has an empty column name/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+});
+
+test('a column with two current owners is refused at load, not left to a test on the committed roster', () => {
+  // The rule that stops two bylines signing one column. This has to be enforced
+  // where the roster is read, because the roster the gate is handed need not be
+  // the roster a test pinned: `every column the archive can file has exactly one
+  // current owner` walks the committed file, so without this a roster passed to
+  // `--roster` could name two live owners and both would file. Measured before
+  // the fix: `Dev Okafor` and `Rosa Delgado` both accepted on Lead Desk, exit 0.
+  //
+  // Ended holders are not a clash — that is the ruled handover shape, and both
+  // `until` sides have to keep loading.
+const root = writeArchive([columnPost({
+    day: '2026-10-06',
+    author: 'hana-ishikawa',
+    byline: 'Hana Ishikawa',
+    column: 'County Desk',
+    slug: 'county-desk-from-two-live-bylines',
+  })]);
+  try {
+    const roster = JSON.parse(ROSTER);
+    const hana = roster.agents.find((a) => a.slug === 'hana-ishikawa');
+    const rosa = roster.agents.find((a) => a.slug === 'rosa-delgado');
+    hana.columns = ['County Desk'];
+    rosa.columns = ['County Desk'];
+    writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+    const r = runGate(root, []);
+    assert.equal(r.code, 2, `two current owners of one column must fail the build: ${r.stdout}${r.stderr}`);
+    assert.match(r.stderr, /the column 'County Desk' has no end day on both/);
+    assert.match(r.stderr, /exactly one current owner/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+
+  // And an ended holder beside a current one is the ruled handover shape, so it
+  // must still load. `Morning Briefing` is used here rather than `County Desk`
+  // because `Dev Okafor` already holds `County Desk`, and adding Rosa beside him
+  // would be a genuine second current owner — the mistake asserted above.
+  const ok = writeArchive([columnPost({
+    day: '2026-10-06',
+    author: 'hana-ishikawa',
+    byline: 'Hana Ishikawa',
+    column: 'Morning Briefing',
+    slug: 'morning-briefing-after-a-ruled-handover',
+  })]);
+  try {
+    const roster = JSON.parse(ROSTER);
+    const margaret = roster.agents.find((a) => a.slug === 'margaret-vance');
+    const hana = roster.agents.find((a) => a.slug === 'hana-ishikawa');
+    margaret.columns = [{ name: 'Morning Briefing', until: '2026-10-03' }];
+    hana.columns = ['Morning Briefing'];
+    writeFileSync(join(ok, 'roster.json'), JSON.stringify(roster, null, 2));
+    const r = runGate(ok, ['--check', '--today', '2026-10-06']);
+    assert.equal(r.code, 0, `an ended holder and a current holder are one owner today, and must load: ${r.stdout}${r.stderr}`);
+    assert.match(r.stdout, /1 post\(s\) pass the gate/);
+  } finally {
+    rmSync(ok, { recursive: true, force: true });
+  }
+});
+
 // ------------------------------------------------------- the list parser
 
 test('a list of scalars parses as scalars and survives the schema', () => {

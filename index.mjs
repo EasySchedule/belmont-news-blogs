@@ -387,12 +387,20 @@ for (const agent of roster.values()) {
 // real day in October, the old owner keeps the column for the whole month, and
 // the handover the desk ruled stays half-open with the build green. That is the
 // opposite of the intended reading, and it is silent. So the day is refused at
-// load, and so is an object entry whose `name` is not a non-empty string: a typo
-// there does not reopen the handover, it registers a column nobody owns and
-// quietly closes the one that was real.
+// load, and so is any entry whose name is not a usable column name: a typo there
+// does not reopen the handover, it registers a column nobody owns and quietly
+// closes the one that was real. An empty or whitespace-only name is refused in
+// the string form for the same reason the object form is — `""` is a column that
+// matches no post and files none, and it loads clean, so it would sit in the
+// roster looking registered.
 for (const agent of roster.values()) {
   for (const c of agent.columns || []) {
-    if (typeof c === 'string') continue;
+    if (typeof c === 'string') {
+      if (!c.trim()) {
+        fatal(`roster.json: '${agent.name}' has an empty column name: ${JSON.stringify(c)}. A column name is the text of a column, matched exactly; a blank one matches no post and files none, so it registers a column that cannot be used. Write the column as "columns": ["County Desk"], or carry an end day as { "name": "County Desk", "until": "YYYY-MM-DD" }.`);
+      }
+      continue;
+    }
     if (!c || typeof c !== 'object' || typeof c.name !== 'string' || !c.name.trim()) {
       fatal(`roster.json: '${agent.name}' has a column entry that is neither a column name nor an object with a name: ${JSON.stringify(c)}. A column is written as "columns": ["County Desk"], and carries an end day only as { "name": "County Desk", "until": "YYYY-MM-DD" }.`);
     }
@@ -414,13 +422,27 @@ for (const agent of roster.values()) {
 // two failures look identical from the writer's side and only one of them is
 // fixed by changing the byline. BEL-55 sat unfixed for a full edition for
 // exactly this reason.
+//
+// A second holder carrying no end day is refused here, not merely tested for in
+// the committed roster. Without that, a roster handed to `--roster` can name two
+// current owners of one column and both file it, which is the misattribution this
+// rule exists to prevent: two bylines signing the same column, neither of them
+// wrong. A test over the committed roster cannot catch it, because the roster it
+// checks is not the roster the gate was given.
 const columnHolders = new Map(); // column name -> [{ byline, until }]
 for (const a of roster.values()) {
   for (const c of a.columns || []) {
     const name = typeof c === 'string' ? c : c.name;
     const until = typeof c === 'string' ? null : (c.until ?? null);
     if (!columnHolders.has(name)) columnHolders.set(name, []);
-    columnHolders.get(name).push({ byline: a.name, until });
+    const holders = columnHolders.get(name);
+    if (until === null) {
+      const other = holders.find((h) => h.until === null);
+      if (other) {
+        fatal(`roster.json: the column '${name}' has no end day on both '${other.byline}' and '${a.name}'. A column has exactly one current owner: give the earlier holder an "until" day, or remove one of them. Two current owners means two bylines can file the same column, and neither file is a byline mistake, so the gate would have nothing to refuse.`);
+      }
+    }
+    holders.push({ byline: a.name, until });
   }
 }
 
