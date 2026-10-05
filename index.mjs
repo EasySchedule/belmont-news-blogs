@@ -16,8 +16,11 @@
 //   3. filename       the author segment equals the roster slug of the byline
 //   4. slug match     the optional second filename segment equals the front matter slug
 //   5. slug unique    no two posts share a slug
-//   6. column owner   only the roster owner of a column may file it, and a
-//                     column no roster entry owns is named as a registry gap
+//   6. column owner   only the byline that held a column on the post's date may
+//                     file it, so a column may change hands without touching the
+//                     archive; the refusal names the owner holding it on that
+//                     date, and a column no roster entry owns is named as a
+//                     registry gap
 //   7. retired byline an entry with a `retired` day may sign a post dated on or
 //                     before that day and not one dated later, so a byline that
 //                     leaves the newsroom stops being fileable
@@ -372,17 +375,87 @@ for (const agent of roster.values()) {
   }
 }
 
-// Every column any roster entry owns. A column that appears in a post and appears
-// in none of these is not a byline mistake: it is a column nobody registered. The
-// gate has to say so, because the two failures look identical from the writer's
-// side and only one of them is fixed by changing the byline. BEL-55 sat unfixed
-// for a full edition for exactly this reason.
-const registeredColumns = new Map(); // column name -> [owning byline, ...]
+// A column entry is either a bare string — the byline holds it, and still holds
+// it — or an object carrying the last day it was held:
+//
+//   "columns": ["County Desk"]
+//   "columns": [{ "name": "Morning Briefing", "until": "2026-10-03" }]
+//
+// The end day is the same device as `retired` and is validated for the same
+// reason. It is compared as text against the post's date, so a malformed one does
+// not fail where you would notice it: an unpadded `2026-10-3` sorts after every
+// real day in October, the old owner keeps the column for the whole month, and
+// the handover the desk ruled stays half-open with the build green. That is the
+// opposite of the intended reading, and it is silent. So the day is refused at
+// load, and so is any entry whose name is not a usable column name: a typo there
+// does not reopen the handover, it registers a column nobody owns and quietly
+// closes the one that was real. An empty or whitespace-only name is refused in
+// the string form for the same reason the object form is — `""` is a column that
+// matches no post and files none, and it loads clean, so it would sit in the
+// roster looking registered.
+for (const agent of roster.values()) {
+  for (const c of agent.columns || []) {
+    if (typeof c === 'string') {
+      if (!c.trim()) {
+        fatal(`roster.json: '${agent.name}' has an empty column name: ${JSON.stringify(c)}. A column name is the text of a column, matched exactly; a blank one matches no post and files none, so it registers a column that cannot be used. Write the column as "columns": ["County Desk"], or carry an end day as { "name": "County Desk", "until": "YYYY-MM-DD" }.`);
+      }
+      continue;
+    }
+    if (!c || typeof c !== 'object' || typeof c.name !== 'string' || !c.name.trim()) {
+      fatal(`roster.json: '${agent.name}' has a column entry that is neither a column name nor an object with a name: ${JSON.stringify(c)}. A column is written as "columns": ["County Desk"], and carries an end day only as { "name": "County Desk", "until": "YYYY-MM-DD" }.`);
+    }
+    if (c.until !== undefined && !isRealDay(c.until)) {
+      fatal(`roster.json: '${agent.name}' holds the column '${c.name}' until ${JSON.stringify(c.until)}, which is not a real calendar day as YYYY-MM-DD. The gate compares it as text, so a malformed day would leave the handover open and let a byline that no longer holds the column keep filing it.`);
+    }
+  }
+}
+
+// Every column any roster entry holds, and every byline that holds it. A column
+// appears on more than one entry once ownership is date-aware: the byline that
+// held it up to a day, and the byline that holds it now. Which of them owns a
+// given post is decided on the post's date, below, so an old post keeps building
+// under the byline that filed it and a new post needs the byline that holds the
+// column today.
+//
+// A column that appears in a post and appears in none of these is not a byline
+// mistake: it is a column nobody registered. The gate has to say so, because the
+// two failures look identical from the writer's side and only one of them is
+// fixed by changing the byline. BEL-55 sat unfixed for a full edition for
+// exactly this reason.
+//
+// A second holder carrying no end day is refused here, not merely tested for in
+// the committed roster. Without that, a roster handed to `--roster` can name two
+// current owners of one column and both file it, which is the misattribution this
+// rule exists to prevent: two bylines signing the same column, neither of them
+// wrong. A test over the committed roster cannot catch it, because the roster it
+// checks is not the roster the gate was given.
+const columnHolders = new Map(); // column name -> [{ byline, until }]
 for (const a of roster.values()) {
   for (const c of a.columns || []) {
-    if (!registeredColumns.has(c)) registeredColumns.set(c, []);
-    registeredColumns.get(c).push(a.name);
+    const name = typeof c === 'string' ? c : c.name;
+    const until = typeof c === 'string' ? null : (c.until ?? null);
+    if (!columnHolders.has(name)) columnHolders.set(name, []);
+    const holders = columnHolders.get(name);
+    if (until === null) {
+      const other = holders.find((h) => h.until === null);
+      if (other) {
+        fatal(`roster.json: the column '${name}' has no end day on both '${other.byline}' and '${a.name}'. A column has exactly one current owner: give the earlier holder an "until" day, or remove one of them. Two current owners means two bylines can file the same column, and neither file is a byline mistake, so the gate would have nothing to refuse.`);
+      }
+    }
+    holders.push({ byline: a.name, until });
   }
+}
+
+// The byline that holds `column` on `day`, or null. `until` is inclusive, the
+// same boundary `retired` uses: a byline holds a column up to and including the
+// day it hands it over, so a post filed on the handover day still builds under the
+// byline that filed it.
+function holdsColumnOn(agent, column, day) {
+  return (agent.columns || []).some((c) => {
+    const name = typeof c === 'string' ? c : c.name;
+    const until = typeof c === 'string' ? null : (c.until ?? null);
+    return name === column && (until === null || day <= until);
+  });
 }
 
 const today = opts.today || newsroomToday();
@@ -447,11 +520,27 @@ for (const full of files) {
   if (data.edition === 'column' && !data.column) {
     errors.push(`${rel}: edition is column but no 'column' field is set`);
   }
-  if (data.column && agent && !(agent.columns || []).includes(data.column)) {
-    const owners = registeredColumns.get(data.column);
-    errors.push(owners
-      ? `${rel}: byline '${data.byline}' does not own the column '${data.column}'. It is owned by ${owners.map((n) => `'${n}'`).join(' and ')}.`
-      : `${rel}: byline '${data.byline}' does not own the column '${data.column}', and no agent in roster.json owns that column at all. This is a missing registration in roster.json, not a byline mistake: no byline will pass it until an owner is added under that agent's "columns".`);
+  if (data.column && agent) {
+    const day = String(data.date).slice(0, 10);
+    if (!holdsColumnOn(agent, data.column, day)) {
+      const holders = columnHolders.get(data.column);
+      if (!holders) {
+        errors.push(`${rel}: byline '${data.byline}' does not own the column '${data.column}', and no agent in roster.json owns that column at all. This is a missing registration in roster.json, not a byline mistake: no byline will pass it until an owner is added under that agent's "columns".`);
+      } else {
+        // Name who holds it on the post's date, and who holds it now. A writer who
+        // hits this needs to know who to ask, not who used to: the byline that used
+        // to hold the column cannot answer, and listing it alongside today's owner
+        // reads as though both can. Only when nobody holds it on that date at all
+        // does the current owner become the thing to say.
+        const then = holders.filter((h) => h.until === null || day <= h.until).map((h) => h.byline);
+        const now = holders.filter((h) => h.until === null).map((h) => h.byline);
+        errors.push(then.length
+          ? `${rel}: byline '${data.byline}' does not own the column '${data.column}' on ${day}. It is owned by ${then.map((n) => `'${n}'`).join(' and ')}.`
+          : `${rel}: byline '${data.byline}' does not own the column '${data.column}' on ${day}, and no byline holds it on that date. ${now.length
+            ? `It is owned now by ${now.map((n) => `'${n}'`).join(' and ')}.`
+            : 'It is owned now by no byline in roster.json at all, so the column cannot be filed until an owner is added or an end day is extended in roster.json.'}`);
+      }
+    }
   }
   // The date window is a forward window, as documented: it stops a post filed
   // beyond the newsroom's planning horizon. It deliberately has no backward

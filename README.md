@@ -51,22 +51,27 @@ a JSON Schema cannot express:
 3. **Filename** — the author segment equals the roster slug of the byline.
 4. **Slug match** — the optional second filename segment equals the front matter slug.
 5. **Slug unique** — no two posts share a slug.
-6. **Column owner** — a column is owned by **exactly one** roster entry: the one
-   that lists it under `columns`, and no other, and the refusal message names that
-   owner. The Morning Briefing is owned by Margaret Vance, the Lead Desk by
-   Danica Hoyt, and the News Desk by Rosa Delgado. A reporter who needs a
-   column owns one of his own rather than sharing another byline's: Dev Okafor
-   files the County Desk, Priya Raghunathan the Community Desk. Ownership is never
-   *transferred* either: taking a column off the byline the
-   published posts are filed under reds the gate on those posts, which is what
-   BEL-116 was filed about. The News Desk is the one transfer the desk has ruled:
-   it moved off Rosalind Kimbrough, a placeholder byline, because PR #18 retires
-   her for anything dated after 2026-10-03 and a column whose only owner is retired
-   can no longer be filed at all. Nothing in the archive moved with it — no post
-   has ever named the News Desk as its column.
+6. **Column owner** — a column is owned by the one roster entry that holds it on
+   the **post's date**. An entry lists a column as a bare name when it holds the
+   column with no end day, or as `{ "name": ..., "until": "YYYY-MM-DD" }` when it
+   held the column up to and including that day. So a column may change hands
+   without touching the archive: an old post keeps building under the byline that
+   filed it, and a new post needs the byline that holds the column today. Morning
+   Briefing is `Hana Ishikawa`'s and Lead Desk is `Rosa Delgado`'s, each closed
+   against `Margaret Vance` and `Danica Hoyt` on 2026-10-03. The News Desk is
+   `Rosa Delgado`'s. A reporter who needs a column owns one of his own rather than
+   sharing another byline's: Dev Okafor files the County Desk, Priya Raghunathan
+   the Community Desk.
+   The refusal names the byline that holds the column **on that post's date**,
+   because that is who the writer has to ask; where nobody holds it on that date it
+   says who holds it now, and where nobody does it says the column cannot be filed.
    A column named in a post that **no** roster entry owns is refused for every
    byline, and the message says it is a missing registration in `roster.json`
    rather than a byline mistake, because no byline change can fix it.
+   A column may appear on more than one entry, but **only one entry may hold it
+   with no end day**. Two current owners is refused when the roster loads, for any
+   roster: two bylines filing one column means neither file is a byline mistake,
+   so the gate has nothing to refuse and the misattribution reaches a reader.
 7. **Retired byline** — an entry carrying a `retired` day may sign a post dated on
    or before that day and may not sign a later one. The refusal names the day and
    the file. See *A retired byline is archive-only* below.
@@ -74,6 +79,15 @@ a JSON Schema cannot express:
    `retrieved`. `schema.json` holds those rules; an explicit empty list is also
    rejected with the file named.
 9. **Date window** — nothing dated further ahead than `--future-days` from newsroom today.
+
+A malformed `retired` day and a malformed column `until` day are both refused when
+`roster.json` loads, and so is a column entry with no usable `name` — in either the
+object form or the bare string form, so a blank `"   "` cannot sit in the roster
+looking registered. Both days are
+compared as text against the post's date, so an unpadded `2026-10-3` sorts after
+every real day in October and the rule it feeds silently stops firing — a
+byline that left the newsroom would go on signing new work, or a handover the desk
+ruled would stay open, with the build green.
 
 An unknown front matter field is an error, so a misspelled `sourced` fails the
 build instead of quietly dropping the sources list.
@@ -99,12 +113,35 @@ Managing Editor and not a thing to undo in a plumbing change.
 | --- | --- | --- |
 | `dev-okafor` | `Dev Okafor` | County Desk |
 | `priya-raghunathan` | `Priya Raghunathan` | Community Desk |
-| `rosa-delgado` | `Rosa Delgado` | News Desk |
-| `hana-ishikawa` | `Hana Ishikawa` | — |
+| `rosa-delgado` | `Rosa Delgado` | News Desk, Lead Desk |
+| `hana-ishikawa` | `Hana Ishikawa` | Morning Briefing |
 | `belmont-news-staff` | `Belmont News staff` | — |
 
-`Rosa Delgado` holds the News Desk by the `BEL-192` ruling, not by `BEL-116`. She
-is the only reporter here whose column is not one the same ruling created.
+`Rosa Delgado` holds the News Desk by the `BEL-192` ruling and the Lead Desk by
+`BEL-245`, so she holds two. That is arithmetic rather than drift: there are five
+columns and four current reporters, so reviving both columns the placeholder
+bylines used to own forces somebody to hold two. `BEL-116` is about who owns a
+column, not about how many one reporter may hold, and the alternative — leaving the
+Lead Desk with a byline that retires — is the dead column `BEL-245` was filed
+about.
+
+The Lead Desk and Morning Briefing changed hands by the `BEL-245` ruling, off
+`Danica Hoyt` and `Margaret Vance`. Both are placeholder bylines that PR #18 retires
+at 2026-10-03, so both columns went dead for new work the moment that landed — and
+unlike the News Desk, neither could be moved by renaming the registry entry, because
+three published posts are filed under them under the byline being moved off. So
+those two entries keep the columns with an end day:
+
+```json
+{ "slug": "margaret-vance", "columns": [{ "name": "Morning Briefing", "until": "2026-10-03" }] },
+{ "slug": "danica-hoyt",     "columns": [{ "name": "Lead Desk", "until": "2026-10-03" }] }
+```
+
+`2026-10-03` is the newest day any published post is filed under either column, so
+all three still build under the byline that filed them. Nothing under `content/`
+moved. Taking a column off a byline the published posts are filed under, without an
+end day, still reds the gate on those posts — which is what `BEL-116` was filed
+about — and that failure is asserted in the test suite.
 
 Not every agent in the company is on the roster, and adding one is a ruling
 rather than a convenience. An engineer or an editor on the roster becomes a valid
@@ -138,8 +175,9 @@ work changes for them, and a reporter keeps the column they own.
 
 ### Margaret Vance and Mara Vance are two people
 
-`Margaret Vance`, Chief Executive Officer, is on the roster, owns the Morning
-Briefing, and has two published posts filed under the slug `margaret-vance`.
+`Margaret Vance`, Chief Executive Officer, is on the roster, held the Morning
+Briefing until 2026-10-03, and has two published posts filed under the slug
+`margaret-vance`.
 `Mara Vance` is the Managing Editor, is not on the roster, and takes corrections
 credit lines rather than bylines.
 
