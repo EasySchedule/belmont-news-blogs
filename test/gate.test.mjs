@@ -421,6 +421,45 @@ test('the retirement day is the newest published post under a placeholder byline
     `a published post is bylined to a placeholder on ${newest}, after the retirement day ${cutoff}`);
 });
 
+test('a malformed retirement day is refused at load, not silently ignored', () => {
+  // The rule compares `retired` as text against the post's date, so a malformed day
+  // does not fail where anyone would notice: it sorts wrong and the rule stops
+  // firing. An unpadded `2026-10-3` reads as later than every real day in October,
+  // so a post dated the 20th would be accepted under a byline meant to be closed,
+  // with the whole archive green. Measured on this branch before fixing it.
+  //
+  // So the day is validated when the roster loads, like `expires` is. The message
+  // has to name the entry and the value, because a roster typo has to be fixable
+  // from the message alone.
+  const root = writeArchive([post({
+    day: '2026-10-06',
+    author: 'danica-hoyt',
+    slug: 'new-work-after-a-malformed-retirement-day',
+    frontMatter: `${validPost({ date: '2026-10-06', byline: 'Danica Hoyt', slug: 'new-work-after-a-malformed-retirement-day' })}\n${VALID_SOURCES}`,
+  })]);
+  try {
+    for (const bad of ['2026-10-3', '2026-13-01', '2026-02-30', 'Oct 3 2026', '']) {
+      const roster = JSON.parse(ROSTER);
+      roster.agents.find((a) => a.slug === 'danica-hoyt').retired = bad;
+      writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+      const r = runGate(root, []);
+      assert.equal(r.code, 2, `retired ${JSON.stringify(bad)} must fail the build: ${r.stdout}${r.stderr}`);
+      assert.match(r.stderr, /'Danica Hoyt' has retired/);
+      assert.match(r.stderr, /real calendar day as YYYY-MM-DD/);
+    }
+    // A real day in the same field must still be accepted, or the check above would
+    // pass by refusing everything. The post is dated 2026-10-06, so a retirement on
+    // that same day is the boundary: on or before it may still sign the post.
+    const roster = JSON.parse(ROSTER);
+    roster.agents.find((a) => a.slug === 'danica-hoyt').retired = '2026-10-06';
+    writeFileSync(join(root, 'roster.json'), JSON.stringify(roster, null, 2));
+    const good = runGate(root, []);
+    assert.equal(good.code, 0, `a real retirement day must still be accepted: ${good.stderr}`);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('a retired byline is refused for new work', () => {
   for (const a of JSON.parse(ROSTER).agents.filter((x) => x.retired)) {
     const day = '2026-10-06';
@@ -495,6 +534,46 @@ test('a reporter keeps the column ownership the roster gives them', () => {
     })]);
     assert.equal(r.code, 0, `${name} must still be able to file the ${column}: ${r.stderr}`);
   }
+
+  // The refusal is the half that matters. Everything above would still pass if the
+  // retirement rule had quietly widened who may file a column, because it only ever
+  // asks the gate to let someone through. This asks it to turn someone away.
+  const notHis = archive([post({
+    day: '2026-10-06',
+    author: 'rosa-delgado',
+    slug: 'county-desk-from-a-reporter-who-does-not-own-it',
+    frontMatter: `${validPost({
+      date: '2026-10-06',
+      edition: 'column',
+      column: 'County Desk',
+      byline: 'Rosa Delgado',
+      slug: 'county-desk-from-a-reporter-who-does-not-own-it',
+    })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(notHis.code, 1, 'a live reporter must still be refused a column nobody gave him');
+  assert.match(notHis.stderr, /byline 'Rosa Delgado' does not own the column 'County Desk'/);
+  assert.match(notHis.stderr, /owned by 'Dev Okafor'/);
+  // The refusal has to be about ownership, not retirement: Rosa Delgado is a current
+  // byline, so if the retirement rule were what stopped her the message would name a
+  // day instead of an owner.
+  assert.doesNotMatch(notHis.stderr, /retired/);
+
+  // And the other direction: a placeholder who still owns a column keeps it for the
+  // archive. Danica Hoyt retires on 2026-10-03 and owns Lead Desk, so on that day
+  // she may still sign it.
+  const archiveDay = archive([post({
+    day: '2026-10-03',
+    author: 'danica-hoyt',
+    slug: 'lead-desk-under-a-retired-byline',
+    frontMatter: `${validPost({
+      date: '2026-10-03',
+      edition: 'column',
+      column: 'Lead Desk',
+      byline: 'Danica Hoyt',
+      slug: 'lead-desk-under-a-retired-byline',
+    })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(archiveDay.code, 0, `a retired byline must still file its own column on its last day: ${archiveDay.stderr}`);
 });
 
 test('Margaret Vance and Mara Vance are two people, and only one of them files', () => {

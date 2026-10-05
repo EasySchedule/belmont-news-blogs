@@ -148,8 +148,10 @@ files nobody touched. That is the reason a writer must never backdate or delete
 a published post to make the gate pass: nothing in the gate asks you to.
 
 So `node index.mjs --check --today 2026-10-03` exits 0 on an archive whose newest
-post is dated 2026-10-02, and it will keep exiting 0 on every later date. The only
-date rule that can fail your post is the forward one.
+post is dated 2026-10-02, and it will keep exiting 0 on every later date. `--today`
+never fails a post for being old. Two rules read the post's own `date`: the forward
+window, and a retired byline's cut-off, which refuses a post dated after the day
+that byline was retired. Nothing else reaches back in time.
 
 ## Front matter
 
