@@ -116,7 +116,7 @@
         "additionalProperties": false,
         "properties": {
           "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
-          "correction": { "type": "string", "minLength": 10, "maxLength": 1600 }
+          "correction": { "type": "string", "minLength": 10, "maxLength": 1000 }
         }
       }
     }
