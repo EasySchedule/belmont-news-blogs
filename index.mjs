@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // index.mjs - validate Belmont News posts and build the post index.
 //
-//   node index.mjs                       # validate content/, write build/posts-index.json
+//   node index.mjs                       # validate content/, write build/posts-index.json (untracked)
 //   node index.mjs --check               # validate only, write nothing
 //   node index.mjs --out ../site/build/posts-index.json
 //   node index.mjs --today 2026-10-03    # pin newsroom today for the date-window gate
@@ -26,6 +26,11 @@
 // never a floor the archive has to stay above: the archive keeps yesterday's
 // posts forever, so a backward half would turn the whole archive red one day
 // after each post was filed. Pin `--today` forward as far as you like.
+//
+// The index file is generated output and is not tracked. `build/` is ignored,
+// so a writer run leaves build/posts-index.json in your working tree and no
+// commit ever carries it. That is deliberate: a committed index is a snapshot
+// of one run, it drifts on every filed post, and nothing reads it. See BEL-198.
 
 import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync } from 'node:fs';
 import { join, resolve, basename, dirname } from 'node:path';
