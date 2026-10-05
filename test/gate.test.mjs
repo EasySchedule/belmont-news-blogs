@@ -338,11 +338,13 @@ test('the real reporters own a column each, and no published column moved', () =
   assert.deepEqual(by('margaret-vance').columns, ['Morning Briefing']);
   assert.deepEqual(by('danica-hoyt').columns, ['Lead Desk']);
 
-  // `News Desk` used to sit here and does not any more. Rosalind Kimbrough owns no
-  // column now: PR #18 retires her byline, so a column filed under her would be
-  // unfileable the moment that PR lands. Pinned because the move is the ruling and
-  // the suite is where the ruling stops drifting.
-  assert.deepEqual(by('rosalind-kimbrough').columns, []);
+  // `News Desk` used to sit on a placeholder byline and does not any more. PR #18
+  // retired that byline, which would have made a column filed under her unfileable,
+  // and the BEL-312 ruling then deleted her entry outright. Pinned because the move
+  // is the ruling and the suite is where the ruling stops drifting.
+  assert.equal(by('rosalind-kimbrough'), undefined,
+    'Rosalind Kimbrough was deleted from the roster on the BEL-312 ruling, having published nothing');
+  assert.equal(by('rosa-delgado').columns.includes('News Desk'), true);
 
   // The reporters who need a column have one of their own, so nothing is shared.
   assert.deepEqual(by('dev-okafor').columns, ['County Desk']);
@@ -350,18 +352,75 @@ test('the real reporters own a column each, and no published column moved', () =
   assert.deepEqual(by('rosa-delgado').columns, ['News Desk']);
 });
 
-test('the roster is the eight placeholders, the four reporters and one desk line', () => {
+test('the roster is the three placeholder bylines with published work, the four reporters and one desk line', () => {
   // Not every agent in the company. An engineer or an editor on the roster becomes
   // a valid byline for a story they did not write, which makes the gate catch less
   // and not more.
+  //
+  // The BEL-312 ruling narrows this list to eight. The five placeholders it deletes
+  // each had zero published posts, so nothing in the archive was filed under any of
+  // them and dropping them reds no post. This is the pin that stops one of them
+  // creeping back onto the roster as a valid byline for a story nobody wrote.
   const roster = JSON.parse(ROSTER);
   const slugs = roster.agents.map((a) => a.slug);
   assert.deepEqual(slugs, [
-    'margaret-vance', 'grant-kowalczyk', 'nathan-beausoleil', 'elliot-bramwell',
-    'rosalind-kimbrough', 'thandiwe-okonjo', 'corinne-ashby', 'danica-hoyt',
+    'margaret-vance', 'nathan-beausoleil', 'danica-hoyt',
     'dev-okafor', 'priya-raghunathan', 'rosa-delgado', 'hana-ishikawa',
     'belmont-news-staff',
   ]);
+  assert.equal(slugs.length, 8);
+});
+
+test('the five deleted placeholders are gone and named nowhere in the roster', () => {
+  // The point of the narrowing, as a property rather than as a count. Each of these
+  // published nothing, so none can be a valid byline. Pinning the names means a
+  // future edit that restores one of them fails here instead of quietly making a
+  // person who does not exist fileable for new work.
+  const roster = JSON.parse(ROSTER);
+  const slugs = roster.agents.map((a) => a.slug);
+  const deleted = [
+    'grant-kowalczyk', 'elliot-bramwell', 'rosalind-kimbrough',
+    'thandiwe-okonjo', 'corinne-ashby',
+  ];
+  for (const slug of deleted) {
+    assert.ok(!slugs.includes(slug), `'${slug}' is on the roster again, with nothing published`);
+  }
+});
+
+test('the three retained placeholders are the only ones with published work', () => {
+  // Why three survive the narrowing. Every one of them is bylined on a post that is
+  // already published, so deleting the entry would red that post and stop the site
+  // building. This reads the archive rather than trusting the roster comment: if the
+  // set of names on the roster ever stops matching the set of names in the archive,
+  // the roster is wrong in whichever direction that happens, and this says which.
+  const roster = JSON.parse(ROSTER);
+  const retained = roster.agents.filter((a) => a.retired).map((a) => a.name);
+
+  const published = new Set();
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) { walk(full); continue; }
+      if (!entry.name.endsWith('.md')) continue;
+      const byline = /^byline:\s*(.+)$/m.exec(readFileSync(full, 'utf8'))?.[1]?.trim();
+      if (byline) published.add(byline);
+    }
+  };
+  walk(join(REPO, 'content'));
+
+  assert.deepEqual(retained.sort(), ['Danica Hoyt', 'Margaret Vance', 'Nathan Beausoleil']);
+  // Every retained placeholder has a post, so none of them is deletable.
+  for (const name of retained) {
+    assert.ok(published.has(name),
+      `${name} is retained with no published post, so the entry can be deleted too`);
+  }
+  // And nothing outside the roster still needs one: a post bylined to a name the
+  // roster does not carry is a post the gate would refuse, which is the whole defect
+  // this roster exists to prevent.
+  for (const name of published) {
+    assert.ok(roster.agents.some((a) => a.name === name),
+      `a published post is bylined to '${name}', who is not on the roster`);
+  }
 });
 
 // ------------------------------------------------------- retired bylines
@@ -377,8 +436,12 @@ test('the roster is the eight placeholders, the four reporters and one desk line
 // refused after it.
 
 test('every placeholder byline is retired and no real byline is', () => {
+  // The placeholders are named, not taken by position. Before the BEL-312 narrowing
+  // they were the first eight entries and `slice(0, 8)` would do; after it there are
+  // three, and reading them off an index would silently start checking real reporters
+  // as placeholders, which passes for the wrong reason.
   const roster = JSON.parse(ROSTER);
-  const placeholders = roster.agents.slice(0, 8).map((a) => a.slug);
+  const placeholders = ['margaret-vance', 'nathan-beausoleil', 'danica-hoyt'];
   for (const a of roster.agents) {
     if (placeholders.includes(a.slug)) {
       assert.match(a.retired || '', /^\d{4}-\d{2}-\d{2}$/, `${a.slug} must carry a retirement day`);
@@ -386,9 +449,12 @@ test('every placeholder byline is retired and no real byline is', () => {
       assert.equal(a.retired, undefined, `${a.slug} is a current byline and must not be marked retired`);
     }
   }
-  // One day, for all eight, and it is the newest post already filed under them.
+  // One day, for all three, and it is the newest post already filed under them.
   const days = new Set(roster.agents.map((a) => a.retired).filter(Boolean));
   assert.equal(days.size, 1, `the placeholders should retire on one day, got ${[...days]}`);
+  // Every placeholder is on the list, so the loop above cannot pass by checking none.
+  assert.deepEqual(roster.agents.filter((a) => a.retired).map((a) => a.slug).sort(),
+    [...placeholders].sort(), 'the retired entries and the placeholder list disagree');
 });
 
 test('the retirement day is the newest published post under a placeholder byline', () => {
@@ -399,7 +465,7 @@ test('the retirement day is the newest published post under a placeholder byline
   const retired = roster.agents.filter((a) => a.retired);
   const names = new Set(retired.map((a) => a.name));
   const days = new Set(retired.map((a) => a.retired));
-  assert.equal(days.size, 1, 'the eight placeholders must retire together');
+  assert.equal(days.size, 1, 'the placeholders must retire together');
   const cutoff = [...days][0];
 
   let newest = null;
@@ -625,36 +691,36 @@ test('the registered News Desk owner may file that column', () => {
 });
 
 test('News Desk has a live owner, so the placeholder retirement cannot close it', () => {
-  // The BEL-192 defect, stated as an assertion. PR #18 retires eight placeholder
+  // The BEL-192 defect, stated as an assertion. PR #18 retired the placeholder
   // bylines at 2026-10-03 and refuses them for anything dated after that day. While
   // the only registered owner of `News Desk` was one of those bylines, the column had
   // no fileable owner at all and the refusal named an owner who could no longer sign
   // anything. A live owner is what closes it, so the roster entry is checked for the
   // property the ruling is actually about: not retired, and a distinct person from
-  // the eight placeholders.
+  // the placeholders.
   const roster = JSON.parse(ROSTER);
   const newsDesk = roster.agents.find((a) => (a.columns || []).includes('News Desk'));
   assert.ok(newsDesk, 'no roster entry owns the column \'News Desk\'');
 
-  const placeholders = [
-    'margaret-vance', 'grant-kowalczyk', 'nathan-beausoleil', 'elliot-bramwell',
-    'rosalind-kimbrough', 'thandiwe-okonjo', 'corinne-ashby', 'danica-hoyt',
-  ];
+  const placeholders = ['margaret-vance', 'nathan-beausoleil', 'danica-hoyt'];
   assert.ok(!placeholders.includes(newsDesk.slug),
-    `News Desk is owned by the placeholder byline '${newsDesk.name}', who PR #18 retires`);
+    `News Desk is owned by the placeholder byline '${newsDesk.name}', who is retired`);
   // Only the retirement rule PR #18 adds can close a column, and it keys off this.
   assert.equal(newsDesk.retired, undefined,
     `the owner of News Desk is retired at ${newsDesk.retired}, so no byline can file it`);
 });
 
 test('a byline that does not own a registered column is told who does own it', () => {
+  // Filed by a real reporter who owns a column of his own and is reaching for one
+  // that is not his, which is the mistake the message has to make correctable. It
+  // used to be filed by Corinne Ashby, deleted from the roster on the BEL-312 ruling.
   const r = archive([post({
     day: '2026-10-03',
-    author: 'corinne-ashby',
-    frontMatter: `${validPost({ edition: 'column', column: 'News Desk', byline: 'Corinne Ashby', slug: 'not-the-news-desk' })}\n${VALID_SOURCES}`,
+    author: 'priya-raghunathan',
+    frontMatter: `${validPost({ date: '2026-10-03', edition: 'column', column: 'News Desk', byline: 'Priya Raghunathan', slug: 'not-the-news-desk' })}\n${VALID_SOURCES}`,
   })]);
   assert.equal(r.code, 1);
-  assert.match(r.stderr, /byline 'Corinne Ashby' does not own the column 'News Desk'/);
+  assert.match(r.stderr, /byline 'Priya Raghunathan' does not own the column 'News Desk'/);
   // The owner is named, so the writer does not have to guess.
   assert.match(r.stderr, /owned by 'Rosa Delgado'/);
 });
@@ -699,8 +765,8 @@ test('a reporter may file the column he owns, and only that one', () => {
 test('a column no roster entry owns says so, instead of reading as a byline mistake', () => {
   const r = archive([post({
     day: '2026-10-03',
-    author: 'rosalind-kimbrough',
-    frontMatter: `${validPost({ edition: 'column', column: 'Evening Desk', byline: 'Rosalind Kimbrough', slug: 'unregistered-column' })}\n${VALID_SOURCES}`,
+    author: 'hana-ishikawa',
+    frontMatter: `${validPost({ date: '2026-10-03', edition: 'column', column: 'Evening Desk', byline: 'Hana Ishikawa', slug: 'unregistered-column' })}\n${VALID_SOURCES}`,
   })]);
   assert.equal(r.code, 1);
   // No byline change fixes this one. The message has to say that it is a missing

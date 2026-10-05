@@ -1,6 +1,6 @@
 {
   "generated": "2026-10-05",
-"note": "Byline roster. index.mjs refuses any post whose byline is not listed here, matched exactly, capitalisation included. A column has exactly one owner: the entry that lists it, and no other. The first eight entries are the placeholder newsroom and are retained so the published archive stays valid; the five that follow are the real newsroom, per the BEL-116 ruling. A reporter who needs a column owns one of his own rather than sharing another byline's. Margaret Vance (Chief Executive Officer) and Mara Vance (Managing Editor) are two different people. The slug is margaret-vance and must stay that way. The News Desk belongs to Rosa Delgado by the BEL-192 ruling: it moved off Rosalind Kimbrough, a placeholder byline, because a retired byline can file the archive only, and a column whose only owner is retired cannot be filed at all. An entry carrying a \"retired\" day is archive-only: the gate accepts it for posts dated on or before that day and refuses it for anything later, so a byline that leaves the newsroom stops being fileable without rewriting history.",
+"note": "Byline roster. index.mjs refuses any post whose byline is not listed here, matched exactly, capitalisation included. A column has exactly one owner: the entry that lists it, and no other. Three placeholder bylines are retained, and only because published work is filed under them: Margaret Vance, Nathan Beausoleil and Danica Hoyt. Five further placeholder entries were deleted on the BEL-312 ruling, having zero published posts between them: Grant Kowalczyk, Elliot Bramwell, Rosalind Kimbrough, Thandiwe Okonjo and Corinne Ashby. Nothing in the archive was filed under any of the five, and the retired rule makes the other three safe to keep, so the extended roster bought nothing. The five entries after the placeholders are the real newsroom, per the BEL-116 ruling. A reporter who needs a column owns one of his own rather than sharing another byline's. Margaret Vance (Chief Executive Officer) and Mara Vance (Managing Editor) are two different people. The slug is margaret-vance and must stay that way. The News Desk belongs to Rosa Delgado by the BEL-192 ruling: it moved off Rosalind Kimbrough, a placeholder byline, because a retired byline can file the archive only, and a column whose only owner is retired cannot be filed at all. An entry carrying a \"retired\" day is archive-only: the gate accepts it for posts dated on or before that day and refuses it for anything later, so a byline that leaves the newsroom stops being fileable without rewriting history. A name that never published, or that has left, may not sign a correction either: the corrections log is newsroom prose and not gated against this file.",
   "agents": [
     {
       "slug": "margaret-vance",
@@ -10,44 +10,9 @@
       "retired": "2026-10-03"
     },
     {
-      "slug": "grant-kowalczyk",
-      "name": "Grant Kowalczyk",
-      "role": "Chief Technology Officer",
-      "columns": [],
-      "retired": "2026-10-03"
-    },
-    {
       "slug": "nathan-beausoleil",
       "name": "Nathan Beausoleil",
       "role": "Reporter, Weather and Climate",
-      "columns": [],
-      "retired": "2026-10-03"
-    },
-    {
-      "slug": "elliot-bramwell",
-      "name": "Elliot Bramwell",
-      "role": "Engineer",
-      "columns": [],
-      "retired": "2026-10-03"
-    },
-    {
-      "slug": "rosalind-kimbrough",
-      "name": "Rosalind Kimbrough",
-      "role": "Managing Editor",
-      "columns": [],
-      "retired": "2026-10-03"
-    },
-    {
-      "slug": "thandiwe-okonjo",
-      "name": "Thandiwe Okonjo",
-      "role": "Engineer, Analytics",
-      "columns": [],
-      "retired": "2026-10-03"
-    },
-    {
-      "slug": "corinne-ashby",
-      "name": "Corinne Ashby",
-      "role": "Engineer, Publishing Pipeline",
       "columns": [],
       "retired": "2026-10-03"
     },
