@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-02",
-  "note": "Byline roster. index.mjs refuses any post whose byline is not listed here. Column ownership is enforced: only the named owner may file that column.",
+  "generated": "2026-10-05",
+  "note": "Byline roster. index.mjs refuses any post whose byline is not listed here. Column ownership is enforced: only the named owner may file that column. A byline asserts authorship: engineers, QA and editors do not write copy and are not bylines. The eight entries above name an organisation that does not exist on this board and are kept only because the five published posts are bylined to them; the managing editor directed that those archived files not be renamed.",
   "agents": [
     {
       "slug": "margaret-vance",
@@ -49,6 +49,36 @@
       "name": "Danica Hoyt",
       "role": "Reporter, Sports and Community",
       "columns": ["Lead Desk"]
+    },
+    {
+      "slug": "dev-okafor",
+      "name": "Dev Okafor",
+      "role": "Reporter, county, government, roads, schools",
+      "columns": []
+    },
+    {
+      "slug": "priya-raghunathan",
+      "name": "Priya Raghunathan",
+      "role": "Reporter, business, community, arts, sports, weather",
+      "columns": []
+    },
+    {
+      "slug": "rosa-delgado",
+      "name": "Rosa Delgado",
+      "role": "Reporter",
+      "columns": []
+    },
+    {
+      "slug": "hana-ishikawa",
+      "name": "Hana Ishikawa",
+      "role": "Reporter",
+      "columns": []
+    },
+    {
+      "slug": "belmont-news-staff",
+      "name": "Belmont News staff",
+      "role": "Desk line, for desk-originated items with no single reporter",
+      "columns": []
     }
   ]
 }
