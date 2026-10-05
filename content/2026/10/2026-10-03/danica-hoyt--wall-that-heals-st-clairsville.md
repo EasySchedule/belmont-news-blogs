@@ -1,6 +1,6 @@
 ---
-title: "Last chance: The Wall That Heals closes Sunday at the Belmont County Fairgrounds"
-dek: "The traveling Vietnam memorial replica is free and open 24 hours today at the Belmont County Fairgrounds in St. Clairsville. Taps play at dusk Saturday. The closing ceremony is 1:45 p.m. Sunday, and the grounds close at 2."
+title: "The Wall That Heals ran through Sunday, October 4 at the Belmont County Fairgrounds"
+dek: "The traveling Vietnam memorial replica was free and open around the clock at the Belmont County Fairgrounds in St. Clairsville through Sunday, October 4. Taps played at dusk. The closing ceremony was at 1:45 p.m. Sunday, October 4, and the grounds closed at 2 p.m."
 date: 2026-10-03
 edition: morning
 byline: Danica Hoyt
@@ -57,14 +57,15 @@ sources:
 corrections:
   - date: 2026-10-03
     correction: "Corrected the sponsorship source note. The note described the sponsorship tiers as price bands, giving a range for each one. The cited document sets no bands and carries no range language; it lists one flat amount per tier. The note left out the Support tier and the In-Kind Donations line, and the corrected note names both. No sentence in the article body changed and no sponsor was misnamed; the error was in the source note only. Belmont News does not render source notes on the story page, so no reader saw the withdrawn figures, and none of them are reprinted here."
+  - date: 2026-10-05
+    correction: "An update-class correction to the copy, not the reporting. The exhibit closed at 2 p.m. on Sunday, October 4, and this post spoke of the visit as though it were still ahead. Every sentence about the opening hours, the dusk ceremony, the closing ceremony and the grounds' closing time is now date-anchored to the day it describes and in the past tense, and the headline no longer opens with a last-call prefix. Three passages are cut, because no date makes them true for a later reader: the opening line that invited a reader who had not yet gone, the closing line of the schedule section that described an evening still ahead, and the subhead that counted the days remaining, which the body never established. The publication date is unchanged at 2026-10-03. No figure, address, time, sponsor or source changed. The withdrawn wording is not reprinted here; it is quoted in the corrections log. Wording specified by Tobias Nkemelu (QA) on BEL-172."
 ---
 
-If you have not gone yet, you can still go.
-
-The Wall That Heals is at the Belmont County Fairgrounds, 45420 Roscoe Road in
-St. Clairsville, and the grounds are free and open 24 hours today, Saturday,
-October 3. Taps are played at dusk. The closing ceremony is at 1:45 p.m. Sunday,
-October 4, and the exhibit closes at 2 p.m., when the ceremony ends.
+The Wall That Heals was at the Belmont County Fairgrounds, 45420 Roscoe Road in
+St. Clairsville, and the grounds were free and open around the clock through
+Sunday, October 4. Taps were played at dusk. The closing ceremony was at 1:45
+p.m. Sunday, October 4, and the exhibit closed at 2 p.m., when the ceremony
+ended.
 
 The host committee's published schedule and the Belmont County Tourism
 Council's event listing agree on the address, on 24-hour public access and
@@ -90,15 +91,12 @@ Jackee Pugh, executive director of the Belmont County Tourism Council, is a
 co-chair of the local Wall That Heals Committee. Roberta Raymond is the other
 co-chair.
 
-## Two days left
+Because the exhibit stayed open around the clock, there was no gate to arrive
+before and no closing hour to work around.
 
-Because the exhibit stays open around the clock, there is no gate to arrive
-before and no closing hour to work around tonight. You can come early evening,
-late evening, or in the middle of the afternoon, and the wall is there.
-
-Saturday's one scheduled moment is Taps at dusk. Sunday is the short end. The
-closing ceremony begins at 1:45 p.m., and the fairgrounds close at 2 p.m., so a
-family that wants to see the ceremony should be on the grounds before 1:45.
+The one scheduled moment on Saturday, October 3 was Taps at dusk. Sunday,
+October 4 was the short end: the closing ceremony began at 1:45 p.m. and the
+fairgrounds closed at 2 p.m.
 
 The host committee takes group tours through the site. Both the host committee
 and the tourism council describe the grounds as staying accessible without
@@ -107,17 +105,14 @@ exhibit. A shift worker finishing at midnight, a student with a late game, a
 family with children in bed and a Sunday afternoon that will not run to 1:45 in
 the afternoon all have a version of this visit that works.
 
-If Saturday has been the week that got away from you, tonight is open and there
-is nothing to buy and nothing to book.
-
 ## One caution on what you may have read
 
 You may have seen turnout figures from this week's opening events. Belmont News
 has not confirmed a crowd count, and we are not going to pass one along until a
 named person puts it on the record. The address and the round-the-clock access
 come from both organizations running the stop, and the ceremony times come from
-the host committee's published schedule. Those are the parts you need in order
-to plan your visit.
+the host committee's published schedule. Those were the parts you needed in
+order to plan your visit.
 
-The traveling memorial moves on after Sunday. After the grounds close at 2 p.m.,
-the next Belmont County visit is the next one.
+The traveling memorial moved on after Sunday, October 4. After the grounds closed
+at 2 p.m., the next Belmont County visit is the next one.
