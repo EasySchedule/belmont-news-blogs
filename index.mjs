@@ -19,9 +19,12 @@
 //   6. column owner   a column is co-owned: any roster entry that lists it under
 //                     "columns" may file it, and a column no roster entry owns
 //                     is named as a registry gap
-//   7. sourced        at least one source; schema.json minItems, plus an explicit
+//   7. retired byline an entry with a `retired` day may sign a post dated on or
+//                     before that day and not one dated later, so a byline that
+//                     leaves the newsroom stops being fileable
+//   8. sourced        at least one source; schema.json minItems, plus an explicit
 //                     empty list is rejected here with the file named
-//   8. date window    no post dated more than --future-days ahead of --today
+//   9. date window    no post dated more than --future-days ahead of --today
 //
 // The date window is forward only. `--today` is the newsroom's publishing date,
 // never a floor the archive has to stay above: the archive keeps yesterday's
@@ -359,6 +362,15 @@ for (const full of files) {
   const agent = data.byline ? roster.get(data.byline) : null;
   if (data.byline && !agent) {
     errors.push(`${rel}: byline '${data.byline}' is not in roster.json`);
+  }
+  // A retired byline belongs to the archive, not to the newsroom. It stays valid for
+  // the posts already filed under it and is refused for anything dated after its last
+  // day. Without this, extending the roster to keep the archive valid also leaves the
+  // eight placeholder names fileable for new work, and a byline asserts authorship:
+  // a placeholder name signing tomorrow's story is the same defect the gate exists to
+  // catch, and it would reach a reader unchallenged.
+  if (agent && agent.retired && String(data.date).slice(0, 10) > agent.retired) {
+    errors.push(`${rel}: byline '${data.byline}' was retired after ${agent.retired} and this post is dated ${String(data.date).slice(0, 10)}. Retired bylines are for the archive only; file new work under a current byline.`);
   }
   if (agent && agent.slug !== authorSeg) {
     errors.push(`${rel}: filename author segment '${authorSeg}' is not the roster slug '${agent.slug}' for byline '${data.byline}'`);

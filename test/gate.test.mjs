@@ -136,7 +136,14 @@ test('the forward window still refuses a post beyond --future-days', () => {
 });
 
 test('--future-days widens the forward window only', () => {
-  const posts = [post({ day: '2026-10-06', frontMatter: validPost({ date: '2026-10-06' }) + '\n' + VALID_SOURCES })];
+  // A current byline, not the fixture default. The default is a retired name and
+  // this post is dated after the retirement day, so leaving it would have this
+  // test measuring the retirement rule instead of the date window.
+  const posts = [post({
+    day: '2026-10-06',
+    author: 'dev-okafor',
+    frontMatter: validPost({ date: '2026-10-06', byline: 'Dev Okafor' }) + '\n' + VALID_SOURCES,
+  })];
   assert.equal(archive(posts, ['--check', '--today', '2026-10-02']).code, 1);
   assert.equal(archive(posts, ['--check', '--today', '2026-10-02', '--future-days', '7']).code, 0);
 });
@@ -336,6 +343,102 @@ test('the roster is the eight placeholders, the four reporters and one desk line
     'dev-okafor', 'priya-raghunathan', 'rosa-delgado', 'hana-ishikawa',
     'belmont-news-staff',
   ]);
+});
+
+// ------------------------------------------------------- retired bylines
+//
+// Keeping the eight placeholders on the roster is what keeps the five published
+// posts valid. It also left them fileable for new work, so a placeholder name
+// could sign tomorrow's story and the gate would pass it — a byline asserting
+// authorship for a writer who does not exist, which is the exact defect the gate
+// exists to catch, and the one already found once on the live site. A retired
+// entry closes that without touching the archive: valid up to its last day,
+// refused after it.
+
+test('every placeholder byline is retired and no real byline is', () => {
+  const roster = JSON.parse(ROSTER);
+  const placeholders = roster.agents.slice(0, 8).map((a) => a.slug);
+  const real = roster.agents.slice(8).map((a) => a.slug);
+  for (const a of roster.agents) {
+    if (placeholders.includes(a.slug)) {
+      assert.match(a.retired || '', /^\d{4}-\d{2}-\d{2}$/, `${a.slug} must carry a retirement day`);
+    } else {
+      assert.equal(a.retired, undefined, `${a.slug} is a current byline and must not be marked retired`);
+    }
+  }
+  // One day, for all eight, and it is the newest post already filed under them.
+  const days = new Set(roster.agents.map((a) => a.retired).filter(Boolean));
+  assert.equal(days.size, 1, `the placeholders should retire on one day, got ${[...days]}`);
+});
+
+test('a retired byline is refused for new work', () => {
+  for (const a of JSON.parse(ROSTER).agents.filter((x) => x.retired)) {
+    const day = '2026-10-06';
+    assert.ok(day > a.retired, `${a.slug} must already be retired by ${day}`);
+    const r = archive([post({
+      day,
+      author: a.slug,
+      slug: 'new-work-under-a-retired-byline',
+      frontMatter: `${validPost({ date: day, byline: a.name, slug: 'new-work-under-a-retired-byline' })}\n${VALID_SOURCES}`,
+    })]);
+    assert.equal(r.code, 1, `${a.name} must not be able to sign a post dated ${day}: ${r.stderr}`);
+    assert.match(r.stderr, new RegExp(`byline '${a.name}' was retired after ${a.retired}`));
+    // The message has to say what to do, or the writer is left guessing.
+    assert.match(r.stderr, /archive only/);
+    assert.match(r.stderr, /file new work under a current byline/);
+  }
+});
+
+test('a retired byline is still accepted for the archive', () => {
+  // The fix must not invalidate filed work. The published posts are all dated on
+  // or before the retirement day, so they keep building.
+  for (const a of JSON.parse(ROSTER).agents.filter((x) => x.retired)) {
+    for (const day of [a.retired, '2026-10-02']) {
+      const r = archive([post({
+        day,
+        author: a.slug,
+        slug: 'archived-work-under-a-placeholder-byline',
+        frontMatter: `${validPost({ date: day, byline: a.name, slug: 'archived-work-under-a-placeholder-byline' })}\n${VALID_SOURCES}`,
+      })]);
+      assert.equal(r.code, 0, `${a.name} must still file an archive post dated ${day}: ${r.stderr}`);
+    }
+  }
+});
+
+test('the real newsroom is not affected by the retirement rule', () => {
+  for (const [slug, name] of [
+    ['dev-okafor', 'Dev Okafor'],
+    ['priya-raghunathan', 'Priya Raghunathan'],
+    ['rosa-delgado', 'Rosa Delgado'],
+    ['hana-ishikawa', 'Hana Ishikawa'],
+    ['belmont-news-staff', 'Belmont News staff'],
+  ]) {
+    const r = archive([post({
+      day: '2026-10-06',
+      author: slug,
+      slug: 'current-byline-new-work',
+      frontMatter: `${validPost({ date: '2026-10-06', byline: name, slug: 'current-byline-new-work' })}\n${VALID_SOURCES}`,
+    })]);
+    assert.equal(r.code, 0, `${name} must be able to file new work: ${r.stderr}`);
+  }
+});
+
+test('a co-owned column still files after the placeholders are retired', () => {
+  // The two halves have to hold together: a real reporter keeps the column access
+  // BEL-116 bought, and the placeholder owner keeps it for the archive.
+  const r = archive([post({
+    day: '2026-10-06',
+    author: 'dev-okafor',
+    slug: 'lead-desk-from-the-real-desk',
+    frontMatter: `${validPost({
+      date: '2026-10-06',
+      edition: 'column',
+      column: 'Lead Desk',
+      byline: 'Dev Okafor',
+      slug: 'lead-desk-from-the-real-desk',
+    })}\n${VALID_SOURCES}`,
+  })]);
+  assert.equal(r.code, 0, r.stderr);
 });
 
 test('Margaret Vance and Mara Vance are two people, and only one of them files', () => {
@@ -559,12 +662,12 @@ test('expires does not weaken the date window or the sourcing rule', () => {
   // An old post with an expires field must still pass: expiry is a listing rule
   // and the date window keeps no backward half.
   const old = archive([
-    post({ day: '2026-09-01', frontMatter: frontMatterOf({
+    post({ day: '2026-09-01', author: 'dev-okafor', frontMatter: frontMatterOf({
       title: '"A headline long enough to clear the schema"',
       dek: '"One sentence under the headline."',
       date: '2026-09-01',
       edition: 'evening',
-      byline: 'Nathan Beausoleil',
+      byline: 'Dev Okafor',
       category: 'weather',
       slug: 'an-old-post',
       expires: '2026-09-02',

@@ -27,7 +27,7 @@ misspelled `sourced` fails the build instead of quietly dropping the sources.
 ## Bylines
 
 Your `byline` has to be a `name` in `roster.json`, matched exactly. There is no
-fallback, so a name one capital letter off does not build. Two things to know
+fallback, so a name one capital letter off does not build. Four things to know
 before you file:
 
 - **Columns are co-owned.** Any entry that lists a column under `columns` may file
@@ -39,6 +39,11 @@ before you file:
   the slug `margaret-vance`. Do not "fix" either name.
 - **`Belmont News staff`** is the one desk line, lower-case "staff", for copy no
   single reporter files. It is not a substitute for your name.
+- **A retired byline is archive-only.** The eight placeholder names stay on the
+  roster so the published posts keep building, and each carries a `retired` day.
+  The gate accepts one for a post dated on or before that day and refuses it for
+  anything later, with a message naming the day. If you file copy dated today, use
+  your own name. A placeholder name is not a byline for new work.
 
 ## The sources rule
 
