@@ -37,31 +37,31 @@ sources:
     url: "https://www.transportation.ohio.gov/travel/driving/traffic-advisories/traffic-belmont"
     note: "Did not render. ODOT's own Belmont County traffic advisory page loaded with no advisory entries and then began returning HTTP 404, so no advisory claim in this post rests on it. The road-work facts come from the Sept. 26 District 11 update republished by Lede News."
   - type: document
-    title: "I-70 / State Route 149 (Exit 208) Interchange Improvement Project," PID 120547"
+    title: "ODOT project page, I-70 / SR 149 (Exit 208) Interchange Improvement, PID 120547"
     organization: "Ohio Department of Transportation"
     retrieved: 2026-10-05
     url: "https://www.transportation.ohio.gov/travel/projects/120547"
-    note: "District 11, Belmont County, begin construction fall 2025, end construction summer 2029, est. cost $25,340,000"
+    note: "ODOT project page for PID 120547. Carries District 11, Belmont County, begin construction fall 2025, end construction summer 2029, and an estimated construction cost of $25,340,000. This URL returned HTTP 404 when checked on 2026-10-05: the whole transportation.ohio.gov domain is serving an identical 5,160-byte 404 at its root and on every path, so the page could not be re-read at filing time. The figures above were verified against it by QA on BEL-7 at 08:55Z."
   - type: document
-    title: "ODOT Project Updates – Belmont County," Sept. 26, 2026"
+    title: "ODOT Project Updates – Belmont County, Sept. 26, 2026"
     organization: "Lede News, republishing ODOT District 11"
     retrieved: 2026-10-05
     url: "https://ledenews.com/odot-project-updates-belmont-county-5/"
     note: "ODOT District 11's weekly construction update, republished. Carries the SR 148 Captina Creek bridge repair reduced to one lane with temporary signals, estimated completion Nov. 30, 2026; the SR 147 slide repair west of Key from Wegee Road to Tiber Road with temporary signals maintaining traffic, estimated completion Oct. 31, 2026; and the SR 149, US 40 and SR 7 items dated to finish before this week. ODOT's own site was down, so this republication is the on-record carrier."
   - type: document
-    title: "Local briefs," Oct. 3, 2026"
+    title: "Local briefs, Oct. 3, 2026"
     organization: "The Times Leader"
     retrieved: 2026-10-05
     url: "https://www.timesleaderonline.com/news/community/2026/10/local-briefs-90/"
     note: "Bellaire committee meetings Oct. 6; Belmont-Harrison VSD BOE Oct. 19; annual Belmont County Township Trustee meeting Oct. 8"
   - type: document
-    title: "Teens to Explore What's Next at Career & Transition Expo," Oct. 2, 2026"
+    title: "Teens to Explore What's Next at Career & Transition Expo, Oct. 2, 2026"
     organization: "Barnesville Area News Company"
     retrieved: 2026-10-05
     url: "https://barnesvillenews.org/2026/10/02/teens-to-explore-whats-next-at-career-transition-expo/"
     note: "Oct. 7, 9 a.m.–noon, ECO Center, 68332 Bannock Road"
   - type: document
-    title: "History finds a new home at Morristown's Black Horse Inn," Sept. 17, 2026"
+    title: "History finds a new home at Morristown's Black Horse Inn, Sept. 17, 2026"
     organization: "The Times Leader"
     retrieved: 2026-10-05
     url: "https://www.timesleaderonline.com/news/local-news/2026/09/history-finds-a-new-home-at-morristowns-black-horse-inn/"
@@ -77,13 +77,13 @@ sources:
     organization: "Belmont County Tourism Council"
     retrieved: 2026-10-05
     url: "https://www.visitbelmontcounty.com/event/akc-dog-show/"
-    note: ""On October 10 & 11, the AKC is hosting a dog show at the Belmont County Fairgrounds with obedience and rally trials." Organizer St. Clairsville Kennel Club; 45420 Roscoe Road."
+    note: '"On October 10 & 11, the AKC is hosting a dog show at the Belmont County Fairgrounds with obedience and rally trials." Organizer St. Clairsville Kennel Club; 45420 Roscoe Road.'
   - type: document
     title: "Pumpkin Smash Softball Tournament detail page"
     organization: "Belmont County Tourism Council"
     retrieved: 2026-10-05
     url: "https://www.visitbelmontcounty.com/event/pumpkin-smash-softball-tournament/"
-    note: ""October 10 - October 11." Organizer: St. Clairsville Parks and Recreation"
+    note: '"October 10 - October 11." Organizer: St. Clairsville Parks and Recreation'
   - type: document
     title: "Ohio Valley Mall events calendar"
     organization: "Ohio Valley Mall"
@@ -95,13 +95,13 @@ sources:
     organization: "U.S. Census Bureau"
     retrieved: 2026-10-05
     url: "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/1/query?where=STATE%3D%2739%27%20AND%20COUNTY%3D%27013%27&outFields=NAME,STATE,COUNTY,GEOID&returnGeometry=false&f=json"
-    note: "`NAME: "Belmont County", STATE: "39", COUNTY: "013", GEOID: "39013"`"
+    note: 'TIGERweb record: NAME "Belmont County", STATE "39", COUNTY "013", GEOID "39013". Confirms Belmont County, Ohio, since four US counties share the name.'
   - type: document
-    title: "Deployed bundle `/assets/index-D6HrUjAX.js` (400,513 bytes)"
+    title: "Deployed bundle /assets/index-D6HrUjAX.js (400,513 bytes)"
     organization: "Belmont News"
     retrieved: 2026-10-05
     url: "https://belmont-news.bolt.host/assets/index-D6HrUjAX.js"
-    note: ""Belmont, Ohio 43718"; "Serving Belmont, Ohio 43718 since 2025"
+    note: 'Live bundle carries the strings "Belmont, Ohio 43718" and "Serving Belmont, Ohio 43718 since 2025". Our own deployed site, used to confirm the county and state this story covers.'
 ---
 **Two state road work zones are still active in Belmont County this week, one of them until the end of
 November.** The Board of Commissioners meets Wednesday morning, a career expo for area teens runs the same
