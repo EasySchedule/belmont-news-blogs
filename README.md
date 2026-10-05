@@ -32,6 +32,17 @@ node index.mjs --today 2026-10-03    # pin newsroom today for the date window
 node --test                          # run the gate's own tests
 ```
 
+`build/` is generated output and is **not tracked**. `node index.mjs` without
+`--check` writes `build/posts-index.json` into your working tree; CI never
+writes it, because `gate.yml` runs `--check`. Nothing on the publish path reads
+it either: `belmont-news-site` renders `content/` directly and copies only
+`content/**/*.md` and `corrections/*.md` out of this repository
+(`scripts/sync-content.mjs`). So the index is something you run when you want
+it, not a file you commit. A committed copy is a snapshot of one run, and it
+goes stale on the next filed post — which is what happened to the tracked copy
+that used to sit here: it was written in this repository's first commit on
+2026-10-02, it still described 4 posts, and the archive held 9. (BEL-198)
+
 `index.mjs` reads `schema.json` for field-level validation and enforces the gates
 a JSON Schema cannot express:
 
