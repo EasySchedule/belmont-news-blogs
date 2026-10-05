@@ -16,9 +16,8 @@
 //   3. filename       the author segment equals the roster slug of the byline
 //   4. slug match     the optional second filename segment equals the front matter slug
 //   5. slug unique    no two posts share a slug
-//   6. column owner   a column is co-owned: any roster entry that lists it under
-//                     "columns" may file it, and a column no roster entry owns
-//                     is named as a registry gap
+//   6. column owner   only the roster owner of a column may file it, and a
+//                     column no roster entry owns is named as a registry gap
 //   7. sourced        at least one source; schema.json minItems, plus an explicit
 //                     empty list is rejected here with the file named
 //   8. date window    no post dated more than --future-days ahead of --today
@@ -227,6 +226,59 @@ function scalar(raw) {
   return raw;
 }
 
+// ------------------------------------- serialised API response in a post body
+//
+// A post body is prose. BEL-132 published one that was not: a publish step took
+// a document API response and wrote the whole envelope into the markdown below
+// the front matter, instead of the envelope's `body` field. The front matter
+// was correct, so the schema, the path, the byline, the roster and the sources
+// all passed, the build succeeded and the deploy went out. The reader received
+// a page whose entire body was one HTML-escaped JSON object.
+//
+// This is deliberately a shape test and not a key-name test. Naming
+// `companyId` or `latestRevisionId` would only catch that one document store's
+// envelope; the next store names its fields differently and the same mistake
+// publishes again. What does not vary is that the body parses as a JSON object
+// carrying a nested string body, which is what a response envelope is.
+//
+// The check is on the trimmed body alone and ignores a fenced code block, so a
+// post that legitimately quotes a JSON document still passes. A code fence is
+// the honest way to publish a JSON sample and the gate should not argue with it.
+//
+// Returns an error string, or null when the body is prose.
+function apiEnvelopeError(body, rel) {
+  const prose = stripFencedCode(body).trim();
+  if (!prose.startsWith('{') || !prose.endsWith('}')) return null;
+
+  let parsed;
+  try {
+    parsed = JSON.parse(prose);
+  } catch {
+    // Not valid JSON. Prose that opens with a brace is common enough, and a
+    // parse failure here is not evidence of an envelope.
+    return null;
+  }
+  if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+
+  // An envelope carries the article inside a string field. Require that shape
+  // rather than accepting any object, so a post that is legitimately a JSON
+  // document about the weather is not refused for being an object.
+  const inner = typeof parsed.body === 'string' ? parsed.body : null;
+  if (inner === null || !inner.trim()) return null;
+
+  return `${rel}: the post body is a serialised API response object, not prose. `
+    + `The whole response was written here instead of its "body" field, so the `
+    + `article is trapped inside a JSON string and the store's internal ids are `
+    + `published in reader-facing HTML. Write the body's own text as the post `
+    + `body. If this post genuinely has to show a JSON sample, put it in a `
+    + `fenced code block.`;
+}
+
+// Remove fenced code blocks so a quoted JSON sample is not read as the body.
+function stripFencedCode(body) {
+  return String(body).replace(/^```[\s\S]*?^```/gm, '');
+}
+
 // --------------------------------------------- JSON Schema subset validator
 
 function validate(schema, value, pointer, errors, path) {
@@ -299,22 +351,11 @@ const rosterDoc = readJson('roster', opts.roster);
 const roster = new Map((rosterDoc.agents || []).map((a) => [a.name, a]));
 if (!roster.size) fatal('roster.json lists no agents');
 
-// Bylines are matched on the exact name string, capitalisation included, because a
-// byline asserts authorship: a name that is one capital letter off is a different
-// name, and treating it as the same one would file copy under a writer who did not
-// write it. The desk line is `Belmont News staff`, lower-case "staff".
-
-// Every column any roster entry owns, and every entry that owns it. A column that
-// appears in a post and appears in none of these is not a byline mistake: it is a
-// column nobody registered. The gate has to say so, because the two failures look
-// identical from the writer's side and only one of them is fixed by changing the
-// byline. BEL-55 sat unfixed for a full edition for exactly this reason.
-//
-// The value is a list, not a single owner, because columns are co-owned (BEL-116).
-// A desk has more than one reporter, so ownership is the set of bylines that may
-// file the column. Co-ownership is the reason the error below names every owner:
-// when a byline is refused, the writer needs to know who to ask, and "it is owned
-// by 'Dev Okafor'" is wrong the moment a second name is on the column.
+// Every column any roster entry owns. A column that appears in a post and appears
+// in none of these is not a byline mistake: it is a column nobody registered. The
+// gate has to say so, because the two failures look identical from the writer's
+// side and only one of them is fixed by changing the byline. BEL-55 sat unfixed
+// for a full edition for exactly this reason.
 const registeredColumns = new Map(); // column name -> [owning byline, ...]
 for (const a of roster.values()) {
   for (const c of a.columns || []) {
@@ -413,6 +454,27 @@ for (const full of files) {
   if (Array.isArray(data.sources) && data.sources.length === 0) {
     errors.push(`${rel}: has an empty sources list. An unsourced post does not build.`);
   }
+
+  // A post body that is a serialised API response object, rather than prose.
+  //
+  // BEL-132. A publish step fetched a document and pasted the whole response
+  // envelope into the markdown instead of the response's `body` field. The
+  // front matter was correct, so every other gate passed and the site built and
+  // deployed cleanly. The reader got a page whose body was one escaped JSON
+  // object: no headings, the article visible only as a JSON string, and the
+  // store's internal companyId, issueId, id, createdByAgentId and
+  // latestRevisionId printed in reader-facing HTML.
+  //
+  // It survived because the post had expired, so it dropped off the front page
+  // and out of feed.xml and no QA pass ever opened it, while sitemap.xml and
+  // build-info.json still pointed at it.
+  //
+  // This checks the shape rather than one document's key names. A body is prose
+  // or it is not, and a JSON object is not prose. The front matter cannot be
+  // used to tell the two apart: the envelope was pasted below it, so the front
+  // matter was perfect and the page still rendered a string of JSON.
+  const blob = apiEnvelopeError(body, rel);
+  if (blob) errors.push(blob);
 
   posts.push({ file: rel, frontMatter: data, body: body.trim() });
 }
