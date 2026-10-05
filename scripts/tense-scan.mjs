@@ -257,6 +257,20 @@ function readAllowances(fmLines, rel) {
   return { entries: out, problems };
 }
 
+// True when the hit at `index` sits inside the allowance's context substring.
+//
+// The context is located by position, and the FIRST occurrence on the line is
+// the one that counts. An allowance naming a context that appears twice on one
+// line therefore covers the earlier pair and not the later, which is the correct
+// reading of "the occurrence this entry is about": the entry was written against
+// a specific piece of text, and if that text genuinely occurs twice the reporter
+// owes the reader two entries.
+function covers(context, line, index) {
+  const at = line.indexOf(context);
+  if (at < 0) return false;
+  return index >= at && index < at + context.length;
+}
+
 function readField(text) {
   const kv = /^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$/.exec(text.trim());
   if (!kv) return null;
@@ -274,12 +288,51 @@ function readField(text) {
 // is the whole difference. Fence detection is otherwise identical, so the two
 // cannot disagree about *whether* a line is inside a fence.
 
+// Fence detection follows CommonMark, because getting it wrong is not a cosmetic
+// problem here.
+//
+// index.mjs strips fenced code with a regex that recognises backtick runs of any
+// length and ignores tildes. That is fine for its job, which is one shape test
+// on the whole body. This is not that job: this has to decide, line by line,
+// whether a given line is prose a reader reads. Two ways to get it wrong:
+//
+//   - A `~~~` fence is not recognised, so its contents are read as prose and a
+//     JSON or transcript sample produces false hits.
+//   - A close must use the opener's character and be at least as long. With a
+//     naive "line starts with ```" rule, a ``` line inside a ```` block closes it
+//     early. Everything after is then read as prose, and — worse — the real
+//     prose after the block is blanked as if it were still inside the fence.
+//
+// That second one is the failure this file must never have: silently not reading
+// real prose is precisely how a gate that reads nothing still exits 0. Line
+// numbers stay correct either way, which is what makes it easy to miss.
+//
+// The two files therefore differ here on purpose: this one is correct about
+// fences, index.mjs is unchanged and stays narrow. They check different things,
+// and a stricter fence rule here can only remove false hits, never add one.
 function blankFencedCode(lines) {
   const out = [];
-  let inFence = false;
+  let fence = null; // { ch, len } of the open fence, or null
   for (const line of lines) {
-    if (/^```/.test(line.trim())) { inFence = !inFence; out.push(''); continue; }
-    out.push(inFence ? '' : line);
+    const m = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
+    if (fence) {
+      // A line closes the fence only with the opener's character, at least as
+      // long, and nothing after it on the line.
+      if (m && m[1][0] === fence.ch && m[1].length >= fence.len && m[2].trim() === '') {
+        fence = null;
+      }
+      out.push('');
+      continue;
+    }
+    // An opener is a fence, not a close. A backtick fence's info string may not
+    // itself contain a backtick, which is what stops "```json" being read as a
+    // close by the line above.
+    if (m && !(m[1][0] === '`' && m[2].includes('`'))) {
+      fence = { ch: m[1][0], len: m[1].length };
+      out.push('');
+      continue;
+    }
+    out.push(line);
   }
   return out;
 }
@@ -404,8 +457,26 @@ function run(opts, listing) {
       const line = lines[i];
       if (!line.trim()) continue;
       const lineNo = consumed + i + 1;
+      // One allowance covers ONE occurrence, and this is where that is enforced.
+      //
+      // An entry matches when the token is the same word and the hit's position
+      // falls inside the entry's context. Position matters: a line can carry the
+      // same word twice — the career-expo promotions line reads both "Today" and
+      // "today" — and a context that happens to span both would otherwise let one
+      // entry silence both, which is the hole Tobias ruled shut on BEL-316.
+      //
+      // An entry is also consumed by the hit it covers, so one entry cannot
+      // silence the same context repeated on a later line. Without that, a
+      // context string is a licence for the word everywhere it recurs, which is
+      // what "one entry per occurrence" in schema.json and in the README says and
+      // what this used not to do.
       for (const f of scanLine(line)) {
-        const allowance = entries.find((e) => e.token === f.token.toLowerCase() && line.includes(e.context));
+        const used = entries.find((e) =>
+          !e.used
+          && e.token === f.token.toLowerCase()
+          && covers(e.context, line, f.index));
+        if (used) used.used = true;
+        const allowance = used || null;
         hits.push({
           file: rel,
           line: lineNo,

@@ -1284,6 +1284,89 @@ test('eventEnds is accepted as a real day and refused as a phrase', () => {
   }
 });
 
+test('a tilde fence is a fence, and a short backtick run inside a long one does not close it', () => {
+  // Two fence bugs that a naive "line starts with ```" toggle gets wrong, both of
+  // them found by CodeRabbit on PR #52 and neither of them caught by the cases
+  // above. A tilde fence is not a backtick fence, so its contents were being read
+  // as prose and a transcript sample produced false hits. And a close must be at
+  // least as long as its opener, so a ``` line inside a ```` block used to close
+  // it early - which is the dangerous direction: the real prose AFTER the block
+  // was then blanked as though it were still inside the fence.
+  //
+  // That second failure is the one this file cannot have. Silently not reading
+  // real prose is how a gate that reads nothing still exits 0.
+  const body = [
+    'A transcript follows.',
+    '',
+    '~~~',
+    'Council meets tonight.',
+    '~~~',
+    '',
+    'And the prose after the fence reads Council meets tomorrow.',
+  ].join('\n') + '\n';
+  const tildes = scanFixture([fixturePost({ slug: 'tilde-fence', body })], ['--today', '2026-10-06']);
+  assert.equal(tildes.report.hits.length, 1, `only the prose after the fence: ${JSON.stringify(tildes.report.hits)}`);
+  assert.match(tildes.report.hits[0].text, /^And the prose after/);
+
+  const long = [
+    'A transcript follows.',
+    '',
+    '````',
+    '```',
+    'Council meets tonight.',
+    '```',
+    '````',
+    '',
+    'And the prose after the fence reads Council meets tomorrow.',
+  ].join('\n') + '\n';
+  const inner = scanFixture([fixturePost({ slug: 'long-fence', body: long })], ['--today', '2026-10-06']);
+  assert.equal(inner.report.hits.length, 1, `the prose after a long fence must still be read: ${JSON.stringify(inner.report.hits)}`);
+  assert.match(inner.report.hits[0].text, /^And the prose after/);
+});
+
+test('one allowance covers one occurrence, not every copy of the word on the line', () => {
+  // Found by CodeRabbit on PR #52, and it contradicts what schema.json and the
+  // README promise: "One entry covers one occurrence." The lookup used to test
+  // `line.includes(context)`, which says nothing about *where* the hit is, so an
+  // entry whose context happened to span two copies of the word silenced both.
+  // The promotions line is the real case - it reads both "Today" and "today".
+  const front = validPost({ slug: 'one-occurrence' }) + '\n' + VALID_SOURCES + '\n' + [
+    'quotedTokens:',
+    '  - token: today',
+    '    context: "**Today, Mon. Oct. 5**"',
+    '    reason: "Barnesville News report of 2026-10-04, quoted in the block below"',
+  ].join('\n');
+  const body = '- **Today, Mon. Oct. 5** - Promotions begin today and run through Oct. 26.\n';
+  const { report } = scanFixture([fixturePost({ slug: 'one-occurrence', frontMatter: front, body })], ['--today', '2026-10-06']);
+
+  assert.equal(report.allowed.length, 1, 'the covered occurrence is allowed');
+  assert.match(report.allowed[0].match, /^Today$/);
+  assert.equal(report.hits.length, 1, 'the second copy of the same word is still reported');
+  assert.match(report.hits[0].match, /^today$/);
+});
+
+test('one allowance does not silence the same context on a later line', () => {
+  // Also CodeRabbit, and the same contract. An entry was never consumed, so a
+  // context string that recurred was a licence for the word on every line it
+  // appeared on. One entry, one occurrence.
+  const front = validPost({ slug: 'one-use' }) + '\n' + VALID_SOURCES + '\n' + [
+    'quotedTokens:',
+    '  - token: tonight',
+    '    context: "Council meets tonight."',
+    '    reason: "NWS Zone Forecast Product FPUS51 KPBZ 022102, issued 2026-10-02"',
+  ].join('\n');
+  const body = [
+    'Council meets tonight. The hall fills up.',
+    '',
+    'Council meets tonight. And again on the later line.',
+  ].join('\n') + '\n';
+  const { report } = scanFixture([fixturePost({ slug: 'one-use', frontMatter: front, body })], ['--today', '2026-10-06']);
+
+  assert.equal(report.allowed.length, 1, 'exactly one use');
+  assert.equal(report.hits.length, 1, 'the repeat is still reported');
+  assert.match(report.hits[0].text, /^Council meets tonight\. And again/);
+});
+
 test('the scan exits 0 even when it cannot run', () => {
   // The one property that makes this safe to put in a workflow at all. If this
   // case ever fails, the scan has become a failing gate and BEL-317 is void.
