@@ -234,7 +234,34 @@ function scalar(raw) {
   return raw;
 }
 
-// ------------------------------------- serialised API response in a post body
+// eventEnds accepts a real calendar day, optionally with a time on it.
+//
+// The schema pattern can check the shape. It cannot check that the day exists,
+// and `2026-13-45` matches any shape you like and is not a date. isRealDay is
+// the same round-trip the expires check uses, for the same reason: a value that
+// only looks like a day compares after every real one and so never ages out.
+//
+// Ruled on BEL-317, and the day part is the day the event, opening period,
+// forecast period or deadline window the post describes ended. Not relative,
+// never "now". Omitting the field is a complete answer for anything that has no
+// end, so there is deliberately no check that compares it to the post's date:
+// the post may describe something that has not ended yet.
+function isRealDayOrDateTime(v) {
+  if (typeof v !== 'string') return false;
+  const m = /^(\d{4}-\d{2}-\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}))?(Z|[+-]\d{2}:\d{2})?)?$/.exec(v.trim());
+  if (!m) return false;
+  if (!isRealDay(m[1])) return false;
+  if (m[2] === undefined) return true; // a plain day, nothing more to check
+  if (Number(m[2]) > 23 || Number(m[3]) > 59) return false;
+  if (m[4] !== undefined && Number(m[4]) > 59) return false;
+  const off = m[5];
+  // ISO 8601 caps a UTC offset at 14 hours, and a larger one is a typo that
+  // would move the event a day when somebody reads it.
+  if (off && off !== 'Z' && Number(off.slice(1, 3)) > 14) return false;
+  return true;
+}
+
+// ------------------------------------------------- serialised API response in a post body
 //
 // A post body is prose. BEL-132 published one that was not: a publish step took
 // a document API response and wrote the whole envelope into the markdown below
@@ -479,6 +506,12 @@ for (const full of files) {
       errors.push(`${rel}: expires must be a real calendar day as YYYY-MM-DD, got ${JSON.stringify(data.expires)}. A time of day is not accepted: the newsroom changes offset on 2026-11-01 and the listing rule cannot choose one for you.`);
     } else if (data.date && value < String(data.date).slice(0, 10)) {
       errors.push(`${rel}: expires ${value} is before the post's own date ${String(data.date).slice(0, 10)}. A post that expires on the day it is filed is a typo; set a later day or drop the field.`);
+    }
+  }
+  if (data.eventEnds !== undefined && data.eventEnds !== null && String(data.eventEnds).trim() !== '') {
+    const value = String(data.eventEnds).trim();
+    if (!isRealDayOrDateTime(value)) {
+      errors.push(`${rel}: eventEnds must be a real calendar day as YYYY-MM-DD, or a day with a time on it, got ${JSON.stringify(data.eventEnds)}. eventEnds is the day the thing this post describes ended. It is not a relative phrase, not "now", and not the listing window - expires above is that. Omit the field entirely if the post's subject has no end: a desk note, a profile and most weather background describe something that has not ended, and leaving the field out is a complete and correct answer.`);
     }
   }
   if (Array.isArray(data.sources) && data.sources.length === 0) {

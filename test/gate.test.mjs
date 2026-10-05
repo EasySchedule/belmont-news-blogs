@@ -944,3 +944,370 @@ test('an object with no body field is not treated as an envelope', () => {
   })]);
   assert.equal(r.code, 0, r.stderr);
 });
+
+// ============================================================ the tense scan
+//
+// BEL-309, authorised on BEL-317 (Mara Vance) and shaped on BEL-316 (Tobias
+// Nkemelu). scripts/tense-scan.mjs reports candidate time-anchored phrases as
+// pull-request annotations. It exits 0 always, writes nothing, and is never a
+// reason to stop a merge.
+//
+// What these cases protect, in order of how badly it would hurt if they broke:
+//
+//   1. That the scan still finds anything. A warning tool that quietly finds
+//      nothing is the same failure as a gate that quietly reads no source, and
+//      this repo has already paid for that twice.
+//   2. That the line numbers are the numbers in the file. The entire value of
+//      the tool is "open this line". A line number off by one and the person
+//      opens the wrong sentence and stops trusting it.
+//   3. That an allowance covers ONE occurrence, and only with a reason.
+//   4. That it cannot fail a build, including when it is broken itself.
+//
+// The counts here are against a frozen fixture, never against the live archive.
+// Mara's correction on BEL-317: the moment somebody corrects a post the live
+// count drops and a word-list assertion fails, which is the failing gate she
+// banned arriving through the test suite instead of the workflow. The live
+// archive gets exit 0 and a printed window value, and nothing else.
+
+const SCAN = join(REPO, 'scripts', 'tense-scan.mjs');
+
+function runScan(contentDir, args = []) {
+  const r = { code: 0, stdout: '', stderr: '' };
+  try {
+    r.stdout = execFileSync('node', [SCAN, '--content', contentDir, ...args], {
+      cwd: REPO, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+    });
+  } catch (e) {
+    r.code = e.status;
+    r.stdout = e.stdout || '';
+    r.stderr = e.stderr || '';
+  }
+  return r;
+}
+
+function scanFixture(posts, args = []) {
+  const root = mkdtempSync(join(tmpdir(), 'belmont-tense-'));
+  try {
+    for (const p of posts) {
+      const full = join(root, 'content', p.file);
+      mkdirSync(dirname(full), { recursive: true });
+      writeFileSync(full, `---\n${p.frontMatter}\n---\n\n${p.body}`);
+    }
+    const r = runScan(join(root, 'content'), ['--json', ...args]);
+    let report = null;
+    try { report = JSON.parse(r.stdout); } catch { /* left null so the assertion says so */ }
+    return { ...r, report };
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+// The known hits, frozen. Nine hits across eight lines, which is what the
+// archive carries for QA's token list on BEL-162, copied out of `main` at 4164531
+// as literals so this suite does not start failing because a desk corrected a
+// post. That is the whole point of freezing them. One line carries two hits
+// (the career-expo promotions line reads both "Today" and "today"), which is
+// why the count and the line count are not the same number.
+//
+// Four of the nine are the National Weather Service period name "Tonight" and
+// three are copy the human pass has already ruled correct. One is the live
+// defect: "Council meets tonight." in a post with no weather source of any kind.
+// slug, the line as the post writes it, and the hits that line carries, in the
+// casing the post uses. A line can carry more than one: the promotions line
+// below reads both "Today" and "today", which is why nine hits live on eight
+// lines and why this is a list of lists rather than a list of words.
+const KNOWN_LINES = [
+  ['morning-briefing-2026-10-02', 'period "Tonight". Cleared.', ['Tonight']],
+  ['weather-roundup', 'Its OHZ059 segment reads: tonight, "Considerable cloudiness."', ['tonight']],
+  ['wall-that-heals-lead', '**last chance** - hours, address, what happened that evening.', ['last chance']],
+  ['morning-briefing-2026-10-03', 'Source: NWS, period 1 "Tonight" (2026-10-02T18:00).', ['Tonight']],
+  ['barnesville', 'Council meets tonight. The village posted a notice.', ['tonight']],
+  ['career-expo-lanes', 'Two lanes are currently maintained on I-70 in both directions.', ['currently']],
+  ['career-expo-promos', '- **Today, Mon. Oct. 5** - Promotions begin today and run through Oct. 26.', ['Today', 'today']],
+  ['wall-that-heals-26', 'A re-check at roughly 09:2x-09:3x EDT today, to a plain fetch.', ['today']],
+];
+
+const KNOWN_HITS = KNOWN_LINES.flatMap(([, , hits]) => hits);
+
+function fixturePost({ day = '2026-10-03', slug, frontMatter, body = 'Body copy.\n' }) {
+  return post({ day, slug, author: 'nathan-beausoleil', frontMatter: frontMatter ?? validPost({ date: day }), body });
+}
+
+test('the scan finds all nine known lines and reports each one', () => {
+  const posts = KNOWN_LINES.map(([slug, line]) => fixturePost({
+    slug,
+    body: `## Section\n\n${line}\n`,
+  }));
+  const { code, report } = scanFixture(posts, ['--today', '2026-10-06']);
+  assert.equal(code, 0, `the scan must exit 0: ${JSON.stringify(report)?.slice(0, 400)}`);
+  assert.ok(report, 'the scan must print a report');
+  assert.equal(report.hits.length, 9, 'nine hits are known here, across eight lines');
+  // `token` is the canonical word from QA's list; `match` is what the post
+  // actually says. Comparing the match pins the casing as well, which is part
+  // of what a reader sees on the line.
+  const found = report.hits.map((h) => h.match).sort();
+  assert.deepEqual(
+    found,
+    KNOWN_HITS.slice().sort(),
+    'every known hit must still be found, with the casing the post uses. If this fails, the scan has stopped reading the prose and the tool is worse than nothing.',
+  );
+});
+
+test('every hit carries the file, the line, the date and the window it read', () => {
+  const posts = KNOWN_LINES.map(([slug, line]) => fixturePost({
+    slug,
+    body: `## Section\n\n${line}\n`,
+  }));
+  const { report } = scanFixture(posts, ['--today', '2026-10-06']);
+  assert.equal(report.listingDays, 2, 'the window must be read from scripts/listing-days.mjs');
+  assert.equal(report.listingDaysSource, 'scripts/listing-days.mjs');
+  for (const h of report.hits) {
+    assert.match(h.file, /\.md$/, 'a hit must name its file');
+    assert.ok(Number.isInteger(h.line) && h.line > 0, `a hit must name its line: ${JSON.stringify(h)}`);
+    assert.equal(h.date, '2026-10-03', 'a hit must carry the post date');
+    assert.equal(h.window, 'out-of-window', `2026-10-03 is out of a 2-day window on 2026-10-06: ${h.window}`);
+    assert.equal(h.eventEnds, null, 'eventEnds is absent, which is a complete answer');
+  }
+});
+
+test('a hit carries the line number a human sees in the file', () => {
+  // The one property the whole tool rests on: the printed line is the line in
+  // the editor. Front matter is skipped, so the body line numbers must not
+  // restart at 1. This pins an off-by-one that would otherwise ship silently.
+  const front = [
+    'title: "A headline long enough to clear the schema"',
+    'dek: "One sentence under the headline."',
+    'date: 2026-10-03',
+    'edition: evening',
+    'byline: Nathan Beausoleil',
+    'category: weather',
+    'slug: line-numbers',
+    'tags:',
+    '  - weather',
+    'corrections:',
+    '  - date: 2026-10-05',
+    '    correction: "The headline read showers, and the sentence said tonight."',
+  ].join('\n');
+  const body = 'Line one.\n\nLine two.\n\nCouncil meets tonight.\n\nLine four.\n';
+  const { report } = scanFixture([fixturePost({ slug: 'line-numbers', frontMatter: front, body })], ['--today', '2026-10-06']);
+
+  assert.equal(report.hits.length, 1, `exactly one hit expected: ${JSON.stringify(report.hits)}`);
+  // 13 front matter lines, plus the opening and closing delimiters, plus the
+  // blank line index.mjs writes: the body's first line is 16.
+  const written = body.split('\n').findIndex((l) => l.includes('tonight')) + 1;
+  assert.equal(report.hits[0].line, 15 + written, `line number must match the body text, got ${report.hits[0].line} for body line ${written}`);
+});
+
+test('front matter is skipped, so the record of a correction is not a live hit', () => {
+  // Two of the nine known hits on `main` are corrections[] entries recording the
+  // 2026-10-05 correction for this exact defect. A scan that flags the record of
+  // a fix teaches reporters to hate it.
+  const front = validPost({ slug: 'fm-skip' }) + '\n' + VALID_SOURCES + '\n' + [
+    'corrections:',
+    '  - date: 2026-10-05',
+    '    correction: "The headline read showers before eight tonight, and the sentence agreed."',
+  ].join('\n');
+  const { report } = scanFixture([fixturePost({ slug: 'fm-skip', frontMatter: front, body: 'Ordinary copy with no bare token.\n' })], ['--today', '2026-10-06']);
+  assert.deepEqual(report.hits, [], 'front matter must not be scanned');
+});
+
+test('fenced code is skipped, and a fenced line keeps its number', () => {
+  const body = [
+    'Council meets tonight.',            // line 1 of the body
+    '',
+    'A reader sent us this transcript:',
+    '',
+    '```',
+    'Tonight  Clear.  Cleared.  tonight.',
+    '```',
+    '',
+    'It parsed clean on the first try.',
+  ].join('\n');
+  const { report } = scanFixture([fixturePost({ slug: 'fenced', body: body + '\n' })], ['--today', '2026-10-06']);
+  assert.equal(report.hits.length, 1, `only the prose line is a hit: ${JSON.stringify(report.hits)}`);
+  assert.match(report.hits[0].text, /^Council meets tonight/);
+});
+
+test('there is no block-quote exemption, deliberately', () => {
+  // BEL-317 condition 6: skip front matter and fenced code, nothing else. On
+  // `main` there are three block-quote lines in the whole archive, all of them a
+  // street address, and the authorised-looking NWS hit is our own prose OUTSIDE
+  // the quotation marks. A block-quote skip would exempt nothing. Pinned so a
+  // future reader does not add one on the assumption that it helps.
+  const { report } = scanFixture([fixturePost({
+    slug: 'quoted',
+    body: '> Council meets tonight and the hall fills up.\n',
+  })], ['--today', '2026-10-06']);
+  assert.equal(report.hits.length, 1, 'a block-quoted line is still reported');
+  assert.equal(report.hits[0].token, 'tonight');
+});
+
+test('an allowance needs context and a reason, and covers one occurrence only', () => {
+  // Ruled on BEL-316: context is the verbatim substring of the line the token
+  // sits on, so an entry exempts that occurrence. Mara on BEL-317: no reason, no
+  // allowance. Both enforced here, and the schema enforces them independently.
+  const front = validPost({ slug: 'allowance' }) + '\n' + VALID_SOURCES + '\n' + [
+    'quotedTokens:',
+    '  - token: tonight',
+    '    context: "segment reads: tonight"',
+    '    reason: "NWS Zone Forecast Product FPUS51 KPBZ 022102, issued 2026-10-02"',
+  ].join('\n');
+  const body = [
+    'Its OHZ059 segment reads: tonight, "Considerable cloudiness."',
+    '',
+    'Council meets tonight, and the hall fills up.',
+  ].join('\n') + '\n';
+  const { report } = scanFixture([fixturePost({ slug: 'allowance', frontMatter: front, body })], ['--today', '2026-10-06']);
+
+  assert.deepEqual(report.allowanceProblems, [], 'a complete allowance must raise no problem');
+  assert.equal(report.allowed.length, 1, 'the covered occurrence is recorded as allowed');
+  assert.match(report.allowed[0].reason, /FPUS51 KPBZ 022102/);
+  assert.equal(report.hits.length, 1, 'the second occurrence of the same word is still reported');
+  assert.match(report.hits[0].text, /^Council meets tonight/);
+});
+
+test('an allowance whose context is not the line does not exempt anything', () => {
+  const front = validPost({ slug: 'bad-context' }) + '\n' + VALID_SOURCES + '\n' + [
+    'quotedTokens:',
+    '  - token: tonight',
+    '    context: "Tonight, capitalised, and the wrong line"',
+    '    reason: "NWS Zone Forecast Product FPUS51 KPBZ 022102, issued 2026-10-02"',
+  ].join('\n');
+  const { report } = scanFixture([fixturePost({
+    slug: 'bad-context',
+    frontMatter: front,
+    body: 'Its OHZ059 segment reads: tonight, "Considerable cloudiness."\n',
+  })], ['--today', '2026-10-06']);
+  assert.equal(report.allowed.length, 0, 'a context that is not on the line exempts nothing');
+  assert.equal(report.hits.length, 1, 'the hit is still reported');
+});
+
+test('an allowance with no reason is not an allowance', () => {
+  const front = validPost({ slug: 'no-reason' }) + '\n' + VALID_SOURCES + '\n' + [
+    'quotedTokens:',
+    '  - token: tonight',
+    '    context: "segment reads: tonight"',
+  ].join('\n');
+  const { report } = scanFixture([fixturePost({
+    slug: 'no-reason',
+    frontMatter: front,
+    body: 'Its OHZ059 segment reads: tonight, "Considerable cloudiness."\n',
+  })], ['--today', '2026-10-06']);
+  assert.equal(report.allowed.length, 0, 'no reason, no allowance');
+  assert.equal(report.hits.length, 1, 'the hit is still reported');
+  assert.match(report.allowanceProblems.join('\n'), /no reason/);
+});
+
+test('an inline quotedTokens array is refused by the gate, and the block form is not', () => {
+  // The ruling on BEL-316 rests on this: index.mjs reads front matter with a
+  // hand-rolled reader whose scalar() has no inline-array support, so
+  // `quotedTokens: ["tonight"]` parses to a string and the gate rejects it. If a
+  // future change gives index.mjs a YAML library, this case starts failing and
+  // that is the moment to re-read the ruling rather than relax the test.
+  const inline = [
+    'title: "A headline long enough to clear the schema"',
+    'dek: "One sentence under the headline."',
+    'date: 2026-10-02',
+    'edition: evening',
+    'byline: Nathan Beausoleil',
+    'category: weather',
+    'slug: belmont-county-three-day-weather-roundup',
+    'sources:',
+    '  - type: document',
+    '    title: "Gridpoint forecast PBZ/50,48"',
+    '    retrieved: 2026-10-02',
+    'quotedTokens: ["tonight"]',
+  ].join('\n');
+  const bad = archive([post({ day: '2026-10-02', frontMatter: inline, body: 'Copy.\n' })]);
+  assert.notEqual(bad.code, 0, 'an inline array must not pass the gate');
+  assert.match(bad.stderr, /expected array, got string/);
+
+  const block = inline.replace('quotedTokens: ["tonight"]', [
+    'quotedTokens:',
+    '  - token: tonight',
+    '    context: "segment reads: tonight"',
+    '    reason: "NWS Zone Forecast Product FPUS51 KPBZ 022102, issued 2026-10-02"',
+  ].join('\n'));
+  const good = archive([post({ day: '2026-10-02', frontMatter: block, body: 'Copy.\n' })]);
+  assert.equal(good.code, 0, `the block form must pass: ${good.stderr}`);
+});
+
+test('an allowance with no reason is refused by the gate, not only by the scan', () => {
+  // Belt and braces. Mara's condition 8 has to hold for a post whose author never
+  // runs the scan, and schema.json is what every pull request goes through.
+  const front = [
+    'title: "A headline long enough to clear the schema"',
+    'dek: "One sentence under the headline."',
+    'date: 2026-10-02',
+    'edition: evening',
+    'byline: Nathan Beausoleil',
+    'category: weather',
+    'slug: belmont-county-three-day-weather-roundup',
+    'sources:',
+    '  - type: document',
+    '    title: "Gridpoint forecast PBZ/50,48"',
+    '    retrieved: 2026-10-02',
+    'quotedTokens:',
+    '  - token: tonight',
+    '    context: "segment reads: tonight"',
+  ].join('\n');
+  const r = archive([post({ day: '2026-10-02', frontMatter: front, body: 'Copy.\n' })]);
+  assert.notEqual(r.code, 0, 'an allowance with no reason must not pass the gate');
+  assert.match(r.stderr, /missing required field 'reason'/);
+});
+
+test('eventEnds is accepted as a real day and refused as a phrase', () => {
+  const withField = (v) => [
+    'title: "A headline long enough to clear the schema"',
+    'dek: "One sentence under the headline."',
+    'date: 2026-10-02',
+    'edition: evening',
+    'byline: Nathan Beausoleil',
+    'category: weather',
+    'slug: belmont-county-three-day-weather-roundup',
+    'sources:',
+    '  - type: document',
+    '    title: "Gridpoint forecast PBZ/50,48"',
+    '    retrieved: 2026-10-02',
+    `eventEnds: ${v}`,
+  ].join('\n');
+
+  const absent = archive([post({ day: '2026-10-02', frontMatter: withField('2026-10-04'), body: 'Copy.\n' })]);
+  assert.equal(absent.code, 0, `a real day must pass: ${absent.stderr}`);
+
+  const datetime = archive([post({ day: '2026-10-02', frontMatter: withField('2026-10-04T14:00:00-04:00'), body: 'Copy.\n' })]);
+  assert.equal(datetime.code, 0, `a date-time must pass: ${datetime.stderr}`);
+
+  for (const phrase of ['Sunday', 'now', '2026-13-45', '""']) {
+    const r = archive([post({ day: '2026-10-02', frontMatter: withField(phrase), body: 'Copy.\n' })]);
+    assert.notEqual(r.code, 0, `"${phrase}" is not a date and must not pass`);
+  }
+});
+
+test('the scan exits 0 even when it cannot run', () => {
+  // The one property that makes this safe to put in a workflow at all. If this
+  // case ever fails, the scan has become a failing gate and BEL-317 is void.
+  for (const args of [
+    ['--content', join(tmpdir(), 'belmont-tense-does-not-exist-' + process.pid)],
+    ['--content', 'content', '--listing-days', '0'],
+    ['--content', 'content', '--today', 'not-a-day'],
+    ['--content', 'content', '--nonsense'],
+  ]) {
+    const r = runScan(args[1], args.slice(2));
+    assert.equal(r.code, 0, `must exit 0 for ${args.join(' ')}: ${r.stderr}`);
+  }
+});
+
+test('the scan over the live archive exits 0 and prints the window it read', () => {
+  // Deliberately asserts nothing about how many hits there are. That number
+  // goes down every time a desk corrects a post, and a test that fails when the
+  // newsroom improves is the failing gate arriving through the suite. See
+  // BEL-317 condition 1 and the note above.
+  const r = runScan(join(REPO, 'content'), ['--today', '2026-10-06', '--json']);
+  assert.equal(r.code, 0, `the live archive must scan clean: ${r.stderr}`);
+  const report = JSON.parse(r.stdout);
+  assert.equal(report.listingDays, 2);
+  assert.equal(report.listingDaysSource, 'scripts/listing-days.mjs');
+  assert.ok(report.postsScanned > 0, 'it must actually have read the posts');
+  assert.equal(report.exitCode, 0, 'the report states its own exit code, and it is 0');
+});

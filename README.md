@@ -78,6 +78,56 @@ a JSON Schema cannot express:
 An unknown front matter field is an error, so a misspelled `sourced` fails the
 build instead of quietly dropping the sources list.
 
+## The tense scan
+
+```
+node scripts/tense-scan.mjs                     # report, never block
+node scripts/tense-scan.mjs --today 2026-10-06  # pin the newsroom day
+node scripts/tense-scan.mjs --json              # machine-readable, for a test
+```
+
+This one is **not a gate.** It is a step in the `gate` job marked
+`continue-on-error`, it exits 0 even when its own parsing throws, and it is not
+part of the standard. A hit is a pointer for a human, not a verdict, and it can
+never stop a merge. The QA gate on draft review is the enforcement point, and it
+stays there — see [BEL-317](/BEL/issues/BEL-317) and
+[expired-post-standard](/BEL/issues/BEL-139).
+
+It exists because the gate above reads structure and front matter and never reads
+the prose, and because three posts shipped with false present tense having passed
+it three times ([BEL-309](/BEL/issues/BEL-309)). What it adds is not a judgement.
+It puts `file:line` on the pull request diff, because every instance of the
+defect was copy whose meaning came from the *line after it* — "Council meets
+tonight." is not wrong until you read the next line — and a word list can only be
+the reason somebody reads both.
+
+- **The token list is QA's**, from
+  [time-anchored-copy-check](/BEL/issues/BEL-162). Copied, not paraphrased. The
+  drift between QA's list and a scanner's list is how this got through three
+  times. `at press time` is deliberately absent: it is a reporter's hedge about our
+  own access, not a claim about the world's state, and it does not rot.
+- **It skips front matter and fenced code, and nothing else.** There is no
+  block-quote exemption on purpose: the archive has three block-quote lines in
+  total, all of them a street address, and the authorised-looking NWS hit is our
+  own prose labelling a period *outside* the quotation marks, so a structural skip
+  would not have exempted it anyway.
+- **`quotedTokens` is the only exemption,** and it is declared by a human in the
+  post's own front matter, with the verbatim `context` it applies to and a
+  `reason`. One entry covers one occurrence. There is no structural way to find
+  these exemptions, so they have to be written down; and an entry without a reason
+  is not an allowance, which `schema.json` enforces.
+- **It reads the listing window from `scripts/listing-days.mjs`** and prints the
+  value and where it read it. That file mirrors `DEFAULT_LISTING_DAYS` in
+  `belmont-news-site`, and it cannot prove the mirror still matches. If the site
+  window changes and that file does not, every "in-window" the scan prints is
+  wrong and nothing here will notice. Change both in the same pull request.
+
+Two things it deliberately does **not** do, printed on every run so nobody reads a
+clean report as more than it is: it does not judge forecast framing that implies a
+live forecast period (ruled at BEL-162, unimplementable as a word list), and it
+does not scan the dek, because skipping front matter skips the dek and that is
+what BEL-316 ruled.
+
 ## The roster
 
 `roster.json` is the list of bylines the gate accepts. A byline is matched on the
@@ -178,6 +228,11 @@ category: "kebab-case desk slug"
 slug: "url-slug, unique across the archive"
 tags:
   - weather
+eventEnds: 2026-10-04       # optional. The day the thing this post describes ended
+quotedTokens:               # optional. One entry per occurrence, never per word
+  - token: tonight
+    context: "OHZ059 segment reads: tonight"
+    reason: "NWS Zone Forecast Product FPUS51 KPBZ 022102, issued 2026-10-02"
 sources:
   - type: document          # document | human
     title: "Document title, or the person's name when type is human"
